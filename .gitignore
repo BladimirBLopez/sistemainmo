@@ -1,0 +1,9 @@
+node_modules/
+.next/
+.vercel/
+.env*
+*.log
+*.bak
+backups/
+respaldos/
+x-test.mjs
