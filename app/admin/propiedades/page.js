@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { FiHome, FiImage, FiSearch } from "react-icons/fi";
@@ -17,9 +18,18 @@ export default async function PropiedadesPage() {
   }
 
   const propiedades = await sql`
-    SELECT id, titulo, tipo, ciudad, zona, estado_publicacion
-    FROM public.propiedades
-    ORDER BY creado_en DESC
+    SELECT
+      p.id, p.titulo, p.tipo, p.ciudad,
+      p.zona, p.estado_publicacion,
+      (
+        SELECT i.secure_url
+        FROM public.propiedad_imagenes AS i
+        WHERE i.propiedad_id = p.id
+          AND i.es_portada = TRUE
+        LIMIT 1
+      ) AS portada_url
+    FROM public.propiedades AS p
+    ORDER BY p.creado_en DESC
     LIMIT 100
   `;
 
@@ -90,6 +100,23 @@ export default async function PropiedadesPage() {
                     key={String(propiedad.id)}
                     className="rounded-xl border border-slate-200 p-5"
                   >
+                    <div className="relative mb-4 aspect-video overflow-hidden rounded-xl bg-slate-100">
+                      {propiedad.portada_url ? (
+                        <Image
+                          src={propiedad.portada_url}
+                          alt={`Portada de ${propiedad.titulo}`}
+                          fill
+                          sizes="(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 33vw"
+                          className="object-cover"
+                        />
+                      ) : (
+                        <div className="flex h-full flex-col items-center justify-center gap-2 text-slate-400">
+                          <FiHome size={40} />
+                          <span className="text-xs">Sin fotografía</span>
+                        </div>
+                      )}
+                    </div>
+
                     <div className="flex items-center justify-between gap-3">
                       <FiHome size={26} className="text-blue-600" />
                       <span className="rounded-full bg-blue-50 px-3 py-1 text-xs font-medium text-blue-700">
