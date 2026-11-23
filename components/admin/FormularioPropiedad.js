@@ -168,6 +168,41 @@ export default function FormularioPropiedad() {
         </select>
       </div>
 
+      <div className="grid gap-5 sm:grid-cols-3">
+        <div>
+          <label htmlFor="tipo_operacion" className="mb-2 block text-sm font-medium">
+            Operacion *
+          </label>
+          <select id="tipo_operacion" name="tipo_operacion" required
+            defaultValue="" className="w-full rounded-xl border border-slate-300 p-3">
+            <option value="" disabled>Seleccionar</option>
+            <option value="venta">Venta</option>
+            <option value="alquiler">Alquiler</option>
+          </select>
+        </div>
+
+        <div>
+          <label htmlFor="precio" className="mb-2 block text-sm font-medium">
+            Precio *
+          </label>
+          <input id="precio" name="precio" type="number" required
+            min="0.01" step="0.01" placeholder="Ej. 85000"
+            className="w-full rounded-xl border border-slate-300 p-3" />
+        </div>
+
+        <div>
+          <label htmlFor="moneda" className="mb-2 block text-sm font-medium">
+            Moneda *
+          </label>
+          <select id="moneda" name="moneda" required
+            defaultValue="" className="w-full rounded-xl border border-slate-300 p-3">
+            <option value="" disabled>Seleccionar</option>
+            <option value="BOB">Bs (BOB)</option>
+            <option value="USD">USD</option>
+          </select>
+        </div>
+      </div>
+
       <div>
         <label htmlFor="descripcion" className="mb-2 block text-sm font-medium">
           Descripcion

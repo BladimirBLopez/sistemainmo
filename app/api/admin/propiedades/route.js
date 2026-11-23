@@ -127,16 +127,35 @@ export async function POST(request) {
     );
   }
 
+  const operacion = datos.tipo_operacion;
+  const moneda = datos.moneda;
+  const precio = datos.precio;
+
+  if (
+    !["venta", "alquiler"].includes(operacion) ||
+    !["BOB", "USD"].includes(moneda) ||
+    typeof precio !== "string" ||
+    !/^\d{1,12}(\.\d{1,2})?$/.test(precio) ||
+    Number(precio) <= 0
+  ) {
+    return NextResponse.json(
+      { error: "Operacion, precio o moneda invalidos" },
+      { status: 400 }
+    );
+  }
+
   try {
     const [propiedad] = await sql`
       INSERT INTO public.propiedades (
         titulo, tipo, descripcion, departamento,
-        ciudad, zona, direccion_privada
+        ciudad, zona, direccion_privada,
+        tipo_operacion, precio, moneda
       )
       VALUES (
         ${titulo}, ${tipo}, ${limpiar("descripcion")},
         ${limpiar("departamento")}, ${limpiar("ciudad")},
-        ${limpiar("zona")}, ${limpiar("direccion_privada")}
+        ${limpiar("zona")}, ${limpiar("direccion_privada")},
+        ${operacion}, ${precio}, ${moneda}
       )
       RETURNING id
     `;

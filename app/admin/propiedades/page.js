@@ -21,6 +21,8 @@ export default async function PropiedadesPage() {
     SELECT
       p.id, p.titulo, p.tipo, p.ciudad,
       p.zona, p.estado_publicacion,
+      p.tipo_operacion, p.precio,
+      p.moneda, p.estado_comercial,
       (
         SELECT i.secure_url
         FROM public.propiedad_imagenes AS i
@@ -136,6 +138,25 @@ export default async function PropiedadesPage() {
                       {[propiedad.zona, propiedad.ciudad]
                         .filter(Boolean)
                         .join(", ") || "Ubicación no registrada"}
+                    </p>
+
+                    <div className="mt-4 flex flex-wrap gap-2">
+                      <span className="rounded-full bg-blue-50 px-3 py-1 text-xs font-semibold text-blue-700">
+                        {propiedad.tipo_operacion === "venta"
+                          ? "Venta"
+                          : propiedad.tipo_operacion === "alquiler"
+                            ? "Alquiler"
+                            : "Sin operacion"}
+                      </span>
+                      <span className="rounded-full bg-emerald-50 px-3 py-1 text-xs font-semibold capitalize text-emerald-700">
+                        {propiedad.estado_comercial || "Sin estado"}
+                      </span>
+                    </div>
+
+                    <p className="mt-3 text-xl font-bold text-slate-900">
+                      {propiedad.precio != null && propiedad.moneda
+                        ? `${propiedad.moneda === "BOB" ? "Bs" : "USD"} ${Number(propiedad.precio).toLocaleString("es-BO", { maximumFractionDigits: 2 })}`
+                        : "Precio no registrado"}
                     </p>
 
                     <Link
