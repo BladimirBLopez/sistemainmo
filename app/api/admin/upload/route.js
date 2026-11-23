@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 import { COOKIE_NAME, verificarSesion } from "@/lib/auth";
 import { subirImagen } from "@/lib/subir-imagen";
+import { cloudinary } from "@/lib/cloudinary";
+import { sql } from "@/lib/db";
 
 export const runtime = "nodejs";
 
@@ -89,12 +91,80 @@ export async function POST(request) {
       );
     }
 
+    const propiedadId = form.get("propiedad_id");
+
+    if (typeof propiedadId !== "string" ||
+        !/^[1-9]\d*$/.test(propiedadId)) {
+      return NextResponse.json(
+        { error: "Propiedad invalida" },
+        { status: 400 }
+      );
+    }
+
+    const [propiedad] = await sql`
+      SELECT id FROM public.propiedades
+      WHERE id = ${propiedadId}
+      LIMIT 1
+    `;
+
+    if (!propiedad) {
+      return NextResponse.json(
+        { error: "Propiedad no encontrada" },
+        { status: 404 }
+      );
+    }
+
     const resultado = await subirImagen(imagen);
 
-    return NextResponse.json({
-      ok: true,
-      ...resultado
-    });
+    try {
+      const [, fotosGuardadas] = await sql.transaction([
+        sql`
+          SELECT id
+          FROM public.propiedades
+          WHERE id = ${propiedadId}
+          FOR UPDATE
+        `,
+        sql`
+          INSERT INTO public.propiedad_imagenes (
+            propiedad_id, secure_url, public_id, es_portada
+          )
+          VALUES (
+            ${propiedadId},
+            ${resultado.secure_url},
+            ${resultado.public_id},
+            NOT EXISTS (
+              SELECT 1
+              FROM public.propiedad_imagenes
+              WHERE propiedad_id = ${propiedadId}
+            )
+          )
+          RETURNING id
+        `
+      ]);
+
+      const [foto] = fotosGuardadas;
+
+      if (!foto) {
+        throw new Error("Fotografia no registrada");
+      }
+
+      return NextResponse.json({
+        ok: true,
+        imagen_id: String(foto.id),
+        ...resultado
+      });
+    } catch {
+      try {
+        await cloudinary.uploader.destroy(resultado.public_id);
+      } catch {
+        console.error("No se pudo limpiar la imagen en Cloudinary");
+      }
+
+      return NextResponse.json(
+        { error: "No se pudo guardar la fotografia" },
+        { status: 503 }
+      );
+    }
   } catch (error) {
     const imagenInvalida = error instanceof Error &&
       [

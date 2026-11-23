@@ -1,7 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { subirFotosPropiedad } from "@/lib/subir-fotos-cliente";
 
 const campos = [
   { nombre: "departamento", etiqueta: "Departamento", maximo: 80 },
@@ -12,34 +14,110 @@ const campos = [
 
 export default function FormularioPropiedad() {
   const router = useRouter();
+  const fotosRef = useRef(null);
   const [guardando, setGuardando] = useState(false);
   const [error, setError] = useState("");
+  const [propiedadId, setPropiedadId] = useState(null);
+  const pendientesRef = useRef([]);
+  const [archivos, setArchivos] = useState([]);
+  const [miniaturas, setMiniaturas] = useState([]);
+  const [portadaIndex, setPortadaIndex] = useState(0);
+
+  useEffect(() => {
+    const urls = archivos.map(archivo =>
+      URL.createObjectURL(archivo)
+    );
+
+    setMiniaturas(urls);
+
+    return () => {
+      urls.forEach(url => URL.revokeObjectURL(url));
+    };
+  }, [archivos]);
 
   async function enviar(evento) {
     evento.preventDefault();
     if (guardando) return;
 
     setError("");
-    setGuardando(true);
 
-    const datos = Object.fromEntries(
-      new FormData(evento.currentTarget).entries()
+    const formatos = new Set([
+      "image/jpeg",
+      "image/png",
+      "image/webp"
+    ]);
+
+    const imagenesInvalidas = archivos.some(archivo =>
+      !formatos.has(archivo.type) ||
+      archivo.size < 1 ||
+      archivo.size > 3 * 1024 * 1024
     );
 
+    if (archivos.length > 15 || imagenesInvalidas) {
+      setError(
+        "Selecciona hasta 15 fotografias JPG, PNG o WebP, de maximo 3 MB cada una."
+      );
+      return;
+    }
+
+    setGuardando(true);
+
     try {
-      const respuesta = await fetch("/api/admin/propiedades", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(datos)
-      });
+      let id = propiedadId;
 
-      const resultado = await respuesta.json();
+      if (!id) {
+        const datos = Object.fromEntries(
+          new FormData(evento.currentTarget).entries()
+        );
 
-      if (!respuesta.ok) {
-        throw new Error(resultado.error || "No se pudo guardar");
+        const respuesta = await fetch("/api/admin/propiedades", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(datos)
+        });
+
+        const resultado = await respuesta.json();
+
+        if (!respuesta.ok || !resultado.id) {
+          throw new Error(resultado.error || "No se pudo guardar");
+        }
+
+        id = String(resultado.id);
+        setPropiedadId(id);
+
+        const elegidas = Array.from(
+          fotosRef.current?.files || []
+        );
+
+        const portada = elegidas[portadaIndex];
+
+        pendientesRef.current = portada
+          ? [
+              portada,
+              ...elegidas.filter(
+                (_, indice) => indice !== portadaIndex
+              )
+            ]
+          : [];
       }
 
-      router.push("/admin/propiedades");
+      if (pendientesRef.current.length > 0) {
+        const { pendientes } = await subirFotosPropiedad(
+          id,
+          pendientesRef.current
+        );
+
+        pendientesRef.current = pendientes;
+
+        if (pendientes.length > 0) {
+          setError(
+            `Propiedad ${id} guardada. Faltan ${pendientes.length} fotografias. Pulsa Reintentar fotos.`
+          );
+          return;
+        }
+      }
+
+      router.push(`/admin/propiedades/${id}`);
       router.refresh();
     } catch (fallo) {
       setError(
@@ -123,8 +201,65 @@ export default function FormularioPropiedad() {
         ))}
       </div>
 
+      <div>
+        <label
+          htmlFor="fotos"
+          className="mb-2 block text-sm font-medium"
+        >
+          Fotografias de la propiedad
+        </label>
+        <input
+          ref={fotosRef}
+          id="fotos"
+          type="file"
+          accept="image/jpeg,image/png,image/webp"
+          multiple
+          onChange={(evento) => {
+            setArchivos(Array.from(evento.target.files || []));
+            setPortadaIndex(0);
+          }}
+          disabled={guardando || Boolean(propiedadId)}
+          className="w-full rounded-xl border border-slate-300 p-3"
+        />
+        <p className="mt-2 text-xs text-slate-500">
+          Puedes seleccionar varias imagenes JPG, PNG o WebP.
+          Maximo 3 MB por fotografia.
+        </p>
+
+        {miniaturas.length > 0 && (
+          <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-3">
+            {miniaturas.map((src, indice) => (
+              <label
+                key={src}
+                className="cursor-pointer rounded-xl border border-slate-200 p-2"
+              >
+                <Image
+                  src={src}
+                  alt={`Fotografia ${indice + 1}`}
+                  width={200}
+                  height={140}
+                  unoptimized
+                  className="h-28 w-full rounded-lg object-cover"
+                />
+                <span className="mt-2 flex items-center gap-2 text-xs">
+                  <input
+                    type="radio"
+                    checked={portadaIndex === indice}
+                    onChange={() => setPortadaIndex(indice)}
+                    disabled={guardando || Boolean(propiedadId)}
+                  />
+                  Elegir portada
+                </span>
+              </label>
+            ))}
+          </div>
+        )}
+      </div>
+
       <p className="text-sm text-slate-500">
-        La propiedad se guardara como borrador.
+        {propiedadId
+          ? "Propiedad guardada. Solo faltan las fotografias pendientes."
+          : "La propiedad se guardara como borrador."}
       </p>
 
       {error && (
@@ -138,7 +273,11 @@ export default function FormularioPropiedad() {
         disabled={guardando}
         className="w-full rounded-xl bg-blue-600 px-5 py-3 font-semibold text-white disabled:opacity-50"
       >
-        {guardando ? "Guardando..." : "Guardar propiedad"}
+        {guardando
+          ? "Procesando..."
+          : propiedadId
+            ? "Reintentar fotos"
+            : "Guardar propiedad"}
       </button>
     </form>
   );

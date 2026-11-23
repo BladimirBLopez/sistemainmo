@@ -110,6 +110,13 @@ export default async function PropiedadesPage() {
                         .filter(Boolean)
                         .join(", ") || "Ubicación no registrada"}
                     </p>
+
+                    <Link
+                      href={`/admin/propiedades/${String(propiedad.id)}`}
+                      className="mt-5 inline-flex rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-700"
+                    >
+                      Ver ficha
+                    </Link>
                   </article>
                 ))}
               </div>
