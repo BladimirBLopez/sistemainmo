@@ -1,7 +1,7 @@
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { COOKIE_NAME, verificarSesion } from "@/lib/auth";
-import BotonSalir from "@/components/admin/BotonSalir";
+import PanelShell from "@/components/admin/PanelShell";
 
 export const dynamic = "force-dynamic";
 
@@ -14,29 +14,26 @@ export default async function AdminPage() {
   }
 
   return (
-    <main className="min-h-screen bg-slate-100 p-5">
+    <PanelShell>
       <div className="mx-auto max-w-6xl space-y-6">
-        <header className="flex flex-wrap items-center justify-between gap-4 rounded-2xl bg-white p-6 shadow-sm">
-          <div>
-            <h1 className="text-2xl font-bold text-slate-900">
-              Panel Administrativo
-            </h1>
-            <p className="text-sm text-slate-500">
-              Sistema Inmobiliario
-            </p>
-          </div>
-          <BotonSalir />
-        </header>
-
         <section className="rounded-2xl bg-white p-6 shadow-sm">
-          <h2 className="text-xl font-semibold">
-            Bienvenido al sistema
+          <h2 className="text-2xl font-bold text-slate-900">
+            Resumen general
           </h2>
-          <p className="mt-2 text-slate-600">
-            Gestiona propiedades, clientes, visitas y contratos.
+          <p className="mt-2 text-slate-500">
+            Bienvenido al sistema de gestion inmobiliaria.
           </p>
         </section>
+        <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+          {["Propiedades", "Clientes", "Visitas", "Contratos"].map(nombre => (
+            <article key={nombre} className="rounded-2xl bg-white p-5 shadow-sm">
+              <p className="text-sm text-slate-500">{nombre}</p>
+              <p className="mt-3 text-3xl font-bold text-slate-900">—</p>
+              <p className="mt-2 text-xs text-slate-400">Pendiente de datos</p>
+            </article>
+          ))}
+        </div>
       </div>
-    </main>
+    </PanelShell>
   );
 }
