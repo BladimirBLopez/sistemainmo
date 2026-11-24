@@ -48,12 +48,20 @@ export default async function DetallePropiedad({ params }) {
   return (
     <PanelShell>
       <div className="mx-auto max-w-5xl space-y-6">
-        <Link
-          href="/admin/propiedades"
-          className="text-sm font-medium text-blue-600"
-        >
-          ← Volver a propiedades
-        </Link>
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <Link
+            href="/admin/propiedades"
+            className="text-sm font-medium text-blue-600"
+          >
+            ← Volver a propiedades
+          </Link>
+          <Link
+            href={`/admin/propiedades/${id}/editar`}
+            className="rounded-xl bg-blue-600 px-5 py-3 text-sm font-semibold text-white hover:bg-blue-700"
+          >
+            Editar propiedad
+          </Link>
+        </div>
 
         <section className="rounded-2xl bg-white p-6 shadow-sm">
           <h2 className="text-2xl font-bold text-slate-900">

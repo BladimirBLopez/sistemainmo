@@ -218,12 +218,20 @@ export default function FichaLateral({ id, alCerrar }) {
               alActualizar={actualizar}
             />
 
-            <Link
-              href={`/admin/propiedades/${id}`}
-              className="inline-block text-sm font-semibold text-blue-600"
-            >
-              Abrir página completa
-            </Link>
+            <div className="flex flex-wrap items-center gap-4">
+              <Link
+                href={`/admin/propiedades/${id}/editar`}
+                className="text-sm font-semibold text-blue-600"
+              >
+                Editar ficha
+              </Link>
+              <Link
+                href={`/admin/propiedades/${id}`}
+                className="text-sm font-semibold text-blue-600"
+              >
+                Abrir página completa
+              </Link>
+            </div>
           </div>
         )}
       </aside>
