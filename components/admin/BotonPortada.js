@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
-export default function BotonPortada({ propiedadId, fotoId }) {
+export default function BotonPortada({ propiedadId, fotoId, alActualizar }) {
   const router = useRouter();
   const [guardando, setGuardando] = useState(false);
   const [error, setError] = useState("");
@@ -29,6 +29,7 @@ export default function BotonPortada({ propiedadId, fotoId }) {
       }
 
       router.refresh();
+      alActualizar?.();
     } catch (fallo) {
       setError(
         fallo instanceof Error

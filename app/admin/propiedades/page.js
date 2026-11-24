@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 import { FiHome, FiImage, FiSearch } from "react-icons/fi";
 import { COOKIE_NAME, verificarSesion } from "@/lib/auth";
 import PanelShell from "@/components/admin/PanelShell";
+import TarjetaInteractiva from "@/components/admin/TarjetaInteractiva";
 import { sql } from "@/lib/db";
 
 export const dynamic = "force-dynamic";
@@ -98,10 +99,12 @@ export default async function PropiedadesPage() {
 
               <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
                 {propiedades.map((propiedad) => (
-                  <article
+                  <TarjetaInteractiva
                     key={String(propiedad.id)}
-                    className="rounded-xl border border-slate-200 p-5"
+                    id={String(propiedad.id)}
+                    titulo={propiedad.titulo}
                   >
+                    <article className="h-full rounded-xl border border-slate-200 p-5">
                     <div className="relative mb-4 aspect-video overflow-hidden rounded-xl bg-slate-100">
                       {propiedad.portada_url ? (
                         <Image
@@ -159,13 +162,8 @@ export default async function PropiedadesPage() {
                         : "Precio no registrado"}
                     </p>
 
-                    <Link
-                      href={`/admin/propiedades/${String(propiedad.id)}`}
-                      className="mt-5 inline-flex rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-700"
-                    >
-                      Ver ficha
-                    </Link>
-                  </article>
+                    </article>
+                  </TarjetaInteractiva>
                 ))}
               </div>
             </div>
