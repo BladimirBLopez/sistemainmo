@@ -5,8 +5,8 @@ import "./globals.css";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata = {
-  title: "Sistema Inmobiliario",
-  description: "Plataforma de gestión inmobiliaria"
+  title: "Sistemainmo | Propiedades",
+  description: "Encuentra propiedades para venta, alquiler y anticrético."
 };
 
 export default function RootLayout({ children }) {

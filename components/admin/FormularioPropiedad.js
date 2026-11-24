@@ -172,6 +172,7 @@ export default function FormularioPropiedad() {
             <option value="" disabled>Seleccionar</option>
             <option value="venta">Venta</option>
             <option value="alquiler">Alquiler</option>
+            <option value="anticretico">Anticrético</option>
           </select>
         </div>
 

@@ -36,7 +36,7 @@ export default async function PropiedadesPage({ searchParams }) {
   const tipo = tipos.includes(tipoSolicitado) ? tipoSolicitado : "";
 
   const operacionSolicitada = leer("operacion");
-  const operacion = ["venta", "alquiler"].includes(operacionSolicitada)
+  const operacion = ["venta", "alquiler", "anticretico"].includes(operacionSolicitada)
     ? operacionSolicitada
     : "";
 
@@ -224,6 +224,7 @@ export default async function PropiedadesPage({ searchParams }) {
                   <option value="">Todas</option>
                   <option value="venta">Venta</option>
                   <option value="alquiler">Alquiler</option>
+            <option value="anticretico">Anticrético</option>
                 </select>
               </div>
 

@@ -167,6 +167,7 @@ export async function POST(request) {
         ciudad, zona, direccion_privada,
         geo_place_id, latitud, longitud,
         tipo_operacion, precio, moneda,
+        estado_publicacion, estado_comercial,
         dormitorios, banos, parqueos,
         superficie_terreno_m2, superficie_construida_m2
       )
@@ -178,6 +179,7 @@ export async function POST(request) {
         ${caracteristicas.latitud},
         ${caracteristicas.longitud},
         ${operacion}, ${precio}, ${moneda},
+        'publicada', 'disponible',
         ${caracteristicas.dormitorios},
         ${caracteristicas.banos},
         ${caracteristicas.parqueos},
