@@ -26,7 +26,8 @@ export default async function DetallePropiedad({ params }) {
 
   const [propiedad] = await sql`
     SELECT id, titulo, tipo, descripcion,
-           ciudad, zona, estado_publicacion
+           ciudad, zona, estado_publicacion,
+           tipo_operacion, precio, moneda, estado_comercial
     FROM public.propiedades
     WHERE id = ${id}
     LIMIT 1
@@ -64,6 +65,25 @@ export default async function DetallePropiedad({ params }) {
           <p className="mt-3 text-sm text-slate-600">
             {[propiedad.zona, propiedad.ciudad]
               .filter(Boolean).join(", ") || "Ubicación no registrada"}
+          </p>
+
+          <div className="mt-4 flex flex-wrap gap-2">
+            <span className="rounded-full bg-blue-50 px-3 py-1 text-sm font-semibold text-blue-700">
+              {propiedad.tipo_operacion === "venta"
+                ? "Venta"
+                : propiedad.tipo_operacion === "alquiler"
+                  ? "Alquiler"
+                  : "Operacion no registrada"}
+            </span>
+            <span className="rounded-full bg-emerald-50 px-3 py-1 text-sm font-semibold capitalize text-emerald-700">
+              {propiedad.estado_comercial || "Sin estado"}
+            </span>
+          </div>
+
+          <p className="mt-4 text-2xl font-bold text-slate-900">
+            {propiedad.precio != null && propiedad.moneda
+              ? `${propiedad.moneda === "BOB" ? "Bs" : "USD"} ${Number(propiedad.precio).toLocaleString("es-BO", { maximumFractionDigits: 2 })}`
+              : "Precio no registrado"}
           </p>
 
           {propiedad.descripcion && (
