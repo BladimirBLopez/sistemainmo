@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { sql } from "@/lib/db";
 import { COOKIE_NAME, verificarSesion } from "@/lib/auth";
+import { validarPropiedad } from "@/lib/validacion-propiedad";
 
 export const runtime = "nodejs";
 
@@ -127,53 +128,22 @@ export async function POST(request) {
     );
   }
 
-  const operacion = datos.tipo_operacion;
-  const moneda = datos.moneda;
-  const precio = datos.precio;
+  const validacion = validarPropiedad.safeParse(datos);
 
-  if (
-    !["venta", "alquiler"].includes(operacion) ||
-    !["BOB", "USD"].includes(moneda) ||
-    typeof precio !== "string" ||
-    !/^\d{1,12}(\.\d{1,2})?$/.test(precio) ||
-    Number(precio) <= 0
-  ) {
+  if (!validacion.success) {
+    const campo = validacion.error.issues[0]?.path?.[0] || "datos";
     return NextResponse.json(
-      { error: "Operacion, precio o moneda invalidos" },
+      { error: "Dato invalido: " + campo },
       { status: 400 }
     );
   }
 
-  const caracteristicas = {};
-  const camposNumericos = [
-    "dormitorios", "banos", "parqueos",
-    "superficie_terreno_m2", "superficie_construida_m2"
-  ];
-
-  for (const campo of camposNumericos) {
-    const valor = datos[campo];
-    const esSuperficie = campo.startsWith("superficie_");
-
-    if (valor == null || valor === "") {
-      caracteristicas[campo] = null;
-      continue;
-    }
-
-    const patron = esSuperficie
-      ? /^(0|[1-9]\d{0,9})(\.\d{1,2})?$/
-      : /^(0|[1-9]\d{0,3})$/;
-
-    if (typeof valor !== "string" || !patron.test(valor)) {
-      return NextResponse.json(
-        { error: "Caracteristica invalida: " + campo },
-        { status: 400 }
-      );
-    }
-
-    caracteristicas[campo] = esSuperficie
-      ? valor
-      : Number(valor);
-  }
+  const {
+    tipo_operacion: operacion,
+    moneda,
+    precio,
+    ...caracteristicas
+  } = validacion.data;
 
   try {
     const [propiedad] = await sql`
