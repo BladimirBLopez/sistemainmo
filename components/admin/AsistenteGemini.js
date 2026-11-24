@@ -12,17 +12,17 @@ import {
 const acciones = [
   {
     id: "redaccion",
-    nombre: "Título y descripción",
+    nombre: "Optimizar título y descripción",
     icono: FiFileText
   },
   {
     id: "redes",
-    nombre: "Facebook e Instagram",
+    nombre: "Crear publicaciones para redes",
     icono: FiShare2
   },
   {
     id: "fotografias",
-    nombre: "Analizar fotografías",
+    nombre: "Análisis de fotografías",
     icono: FiCamera
   }
 ];
@@ -131,17 +131,17 @@ export default function AsistenteGemini({
         <div className="min-w-0">
           <div className="flex flex-wrap items-center gap-2">
             <h3 className="font-bold text-slate-900">
-              Asistente inmobiliario Gemini
+              Asistente de Optimización Inmobiliaria
             </h3>
 
             <span className="rounded-full bg-violet-100 px-2 py-1 text-[10px] font-bold text-violet-700">
-              INTELIGENCIA ARTIFICIAL
+              IA DE OPTIMIZACIÓN
             </span>
           </div>
 
           <p className="mt-1 text-xs leading-relaxed text-slate-600">
             {modo === "agente" ? "Asistente para agentes" : "Asistente para administradores"}.
-            Genera contenido profesional para tus inmuebles.
+            Mejora la presentación comercial de tus inmuebles con herramientas inteligentes.
           </p>
         </div>
       </div>
@@ -162,15 +162,13 @@ export default function AsistenteGemini({
       </div>
 
       <p className="mt-3 text-[11px] leading-relaxed text-slate-500">
-        Los datos del inmueble y, cuando corresponda, sus fotografías
-        se envían a Google Gemini para generar el resultado.
-        La IA nunca guarda automáticamente los cambios.
+        Los datos del inmueble y, cuando corresponda, sus fotografías se procesan mediante un servicio externo de inteligencia artificial. Los resultados no se guardan automáticamente.
       </p>
 
       {cargando && (
         <div className="mt-4 rounded-xl bg-white p-4 text-center text-sm font-semibold text-violet-700">
           <span className="animate-pulse">
-            Gemini está analizando la información...
+            Estamos optimizando la información de tu inmueble...
           </span>
         </div>
       )}

@@ -299,7 +299,7 @@ export async function POST(request, { params }) {
 
     if (!process.env.GEMINI_API_KEY) {
       return NextResponse.json(
-        { error: "Gemini no está configurado en el servidor" },
+        { error: "El servicio de optimización no está configurado actualmente." },
         { status: 503 }
       );
     }
@@ -550,11 +550,20 @@ Utiliza español.
       "[SISTEMAINMO][GEMINI] " + JSON.stringify(registro)
     );
 
+    const cuotaAgotada =
+      error?.status === 429 ||
+      detalle.includes("RESOURCE_EXHAUSTED");
+
     return NextResponse.json(
       {
-        error: "No se pudo procesar la solicitud con Gemini."
+        error: cuotaAgotada
+          ? "El servicio de optimización alcanzó temporalmente su límite de uso. Inténtalo más tarde."
+          : "No pudimos completar la optimización. Inténtalo nuevamente más tarde."
       },
-      { status: 502 }
+      {
+        status: cuotaAgotada ? 429 : 502,
+        headers: { "Cache-Control": "no-store" }
+      }
     );
   }
 }
