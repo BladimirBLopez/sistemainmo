@@ -50,12 +50,7 @@ export default function SelectorUbicacion({ inicial = {}, modo = "admin" }) {
   const [obteniendoGps, setObteniendoGps] = useState(false);
   const [error, setError] = useState("");
 
-  const [mapaAbierto, setMapaAbierto] = useState(
-    inicial.latitud != null &&
-    inicial.latitud !== "" &&
-    inicial.longitud != null &&
-    inicial.longitud !== ""
-  );
+  const [mapaAbierto, setMapaAbierto] = useState(false);
 
   // Buscar municipios y localidades
   useEffect(() => {
