@@ -37,9 +37,7 @@ export default function SelectorUbicacion({ inicial = {} }) {
   );
 
   const [busqueda, setBusqueda] = useState(
-    [inicial.ciudad, inicial.departamento]
-      .filter(Boolean)
-      .join(", ")
+    inicial.ciudad || ""
   );
 
   const [seleccionada, setSeleccionada] = useState(
@@ -118,12 +116,13 @@ export default function SelectorUbicacion({ inicial = {} }) {
   function seleccionar(lugar) {
     setCiudad(lugar.ciudad);
     setDepartamento(lugar.departamento || "");
+    setZona(lugar.zona || "");
     setPlaceId(lugar.placeId);
 
     setLatitud(String(lugar.latitud));
     setLongitud(String(lugar.longitud));
 
-    setBusqueda(lugar.etiqueta || lugar.ciudad);
+    setBusqueda(lugar.ciudad);
     setSeleccionada(true);
     setResultados([]);
     setMapaAbierto(true);
@@ -181,13 +180,14 @@ export default function SelectorUbicacion({ inicial = {} }) {
 
           setCiudad(lugar.ciudad);
           setDepartamento(lugar.departamento || "");
+          setZona(lugar.zona || "");
           setPlaceId(lugar.placeId);
 
           // Se conservan las coordenadas GPS originales
           setLatitud(coords.latitude.toFixed(7));
           setLongitud(coords.longitude.toFixed(7));
 
-          setBusqueda(lugar.etiqueta || lugar.ciudad);
+          setBusqueda(lugar.ciudad);
           setSeleccionada(true);
           setResultados([]);
           setMapaAbierto(true);
@@ -312,7 +312,9 @@ export default function SelectorUbicacion({ inicial = {} }) {
                     </span>
 
                     <span className="text-xs text-slate-500">
-                      {lugar.etiqueta}
+                      {lugar.departamento
+                        ? "Departamento de " + lugar.departamento
+                        : "Municipio de Bolivia"}
                     </span>
                   </button>
                 </li>
@@ -324,8 +326,8 @@ export default function SelectorUbicacion({ inicial = {} }) {
         {seleccionada && (
           <p className="mt-2 text-xs font-medium text-emerald-700">
             {departamento
-              ? `Departamento de ${departamento} › ${ciudad}`
-              : ciudad}
+              ? "Departamento: " + departamento
+              : "Municipio seleccionado"}
           </p>
         )}
 

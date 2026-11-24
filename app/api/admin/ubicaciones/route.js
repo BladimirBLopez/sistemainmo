@@ -4,6 +4,61 @@ import { COOKIE_NAME, verificarSesion } from "@/lib/auth";
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
+function texto(...valores) {
+  return valores.find(
+    valor => typeof valor === "string" && valor.trim()
+  )?.trim() || "";
+}
+
+// Priorizar el municipio administrativo.
+function obtenerMunicipio(lugar) {
+  return texto(
+    lugar.municipality,
+    lugar.city,
+    lugar.town,
+    lugar.village
+  );
+}
+
+// Obtener barrio sin confundirlo con municipio o departamento.
+function obtenerZona(lugar, ciudad, departamento) {
+  const normalizar = valor =>
+    String(valor || "")
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .trim()
+      .toLowerCase();
+
+  const ciudadNormalizada = normalizar(ciudad);
+  const departamentoNormalizado = normalizar(departamento);
+
+  return [
+    lugar.suburb,
+    lugar.district,
+    lugar.neighbourhood,
+    lugar.neighborhood,
+    lugar.quarter
+  ].map(valor => texto(valor)).find(valor => {
+    const candidato = normalizar(valor);
+    return candidato &&
+      candidato !== ciudadNormalizada &&
+      candidato !== departamentoNormalizado;
+  }) || "";
+}
+
+async function consultarGeoapify(url) {
+  const respuesta = await fetch(url, {
+    cache: "no-store",
+    signal: AbortSignal.timeout(10000)
+  });
+
+  if (!respuesta.ok) {
+    throw new Error("Error consultando Geoapify");
+  }
+
+  return respuesta.json();
+}
+
 export async function GET(request) {
   const token = request.cookies.get(COOKIE_NAME)?.value;
 
@@ -15,20 +70,15 @@ export async function GET(request) {
   }
 
   const parametros = new URL(request.url).searchParams;
-
   const latRaw = parametros.get("lat");
   const lonRaw = parametros.get("lon");
-
   const esReverse = latRaw !== null || lonRaw !== null;
-
   const consulta = parametros.get("q")?.trim();
 
   if (esReverse) {
     if (
-      latRaw === null ||
-      lonRaw === null ||
-      latRaw.trim() === "" ||
-      lonRaw.trim() === ""
+      latRaw === null || lonRaw === null ||
+      !latRaw.trim() || !lonRaw.trim()
     ) {
       return NextResponse.json(
         { error: "Coordenadas incompletas" },
@@ -42,17 +92,17 @@ export async function GET(request) {
     if (
       !Number.isFinite(lat) ||
       !Number.isFinite(lon) ||
-      lat < -90 ||
-      lat > 90 ||
-      lon < -180 ||
-      lon > 180
+      lat < -90 || lat > 90 ||
+      lon < -180 || lon > 180
     ) {
       return NextResponse.json(
-        { error: "Coordenadas no válidas" },
+        { error: "Coordenadas no validas" },
         { status: 400 }
       );
     }
-  } else if (!consulta || consulta.length < 3 || consulta.length > 100) {
+  } else if (
+    !consulta || consulta.length < 3 || consulta.length > 100
+  ) {
     return NextResponse.json({ results: [] });
   }
 
@@ -60,94 +110,85 @@ export async function GET(request) {
 
   if (!clave) {
     return NextResponse.json(
-      { error: "Servicio geográfico no configurado" },
+      { error: "Servicio geografico no configurado" },
       { status: 503 }
     );
   }
 
   try {
-    let url;
-
     if (esReverse) {
-      const lat = Number(latRaw);
-      const lon = Number(lonRaw);
-
-      url = new URL(
+      // Primera consulta: municipio o ciudad.
+      const municipioUrl = new URL(
         "https://api.geoapify.com/v1/geocode/reverse"
       );
 
-      url.searchParams.set("lat", String(lat));
-      url.searchParams.set("lon", String(lon));
-      url.searchParams.set("format", "json");
-      url.searchParams.set("lang", "es");
-      url.searchParams.set("limit", "1");
-      url.searchParams.set("apiKey", clave);
+      municipioUrl.searchParams.set("lat", String(lat));
+      municipioUrl.searchParams.set("lon", String(lon));
+      municipioUrl.searchParams.set("type", "city");
+      municipioUrl.searchParams.set("countrycodes", "bo");
+      municipioUrl.searchParams.set("lang", "es");
+      municipioUrl.searchParams.set("limit", "5");
+      municipioUrl.searchParams.set("format", "json");
+      municipioUrl.searchParams.set("apiKey", clave);
 
-      const respuesta = await fetch(url, {
-        cache: "no-store",
-        signal: AbortSignal.timeout(10000)
-      });
+      // Segunda consulta: calle y datos del barrio.
+      const zonaUrl = new URL(
+        "https://api.geoapify.com/v1/geocode/reverse"
+      );
 
-      if (!respuesta.ok) {
-        return NextResponse.json(
-          { error: "No se pudo reconocer el municipio mediante GPS" },
-          { status: 502 }
-        );
-      }
+      zonaUrl.searchParams.set("lat", String(lat));
+      zonaUrl.searchParams.set("lon", String(lon));
+      zonaUrl.searchParams.set("type", "street");
+      zonaUrl.searchParams.set("countrycodes", "bo");
+      zonaUrl.searchParams.set("lang", "es");
+      zonaUrl.searchParams.set("limit", "3");
+      zonaUrl.searchParams.set("format", "json");
+      zonaUrl.searchParams.set("apiKey", clave);
 
-      const datos = await respuesta.json();
-      const lugar = datos.results?.[0];
+      const [municipios, calles] = await Promise.all([
+        consultarGeoapify(municipioUrl),
+        consultarGeoapify(zonaUrl).catch(() => ({ results: [] }))
+      ]);
+
+      const lugar = (municipios.results || []).find(
+        item => obtenerMunicipio(item)
+      );
 
       if (!lugar) {
-        return NextResponse.json(
-          { error: "No se encontró una localidad para estas coordenadas" },
-          { status: 404 }
-        );
-      }
-
-      const ciudad =
-        lugar.city ||
-        lugar.town ||
-        lugar.village ||
-        lugar.municipality ||
-        lugar.name ||
-        "";
-
-      const departamento =
-        lugar.state ||
-        lugar.state_district ||
-        "";
-
-      if (!ciudad || !lugar.place_id) {
         return NextResponse.json(
           { error: "No se pudo identificar el municipio. Busca la localidad manualmente." },
           { status: 422 }
         );
       }
 
+      const ciudad = obtenerMunicipio(lugar);
+      const departamento = texto(lugar.state);
+
+      const zona =
+        (calles.results || [])
+          .map(item => obtenerZona(item, ciudad, departamento))
+          .find(Boolean) ||
+        obtenerZona(lugar, ciudad, departamento);
+
       return NextResponse.json(
         {
           result: {
-            placeId: lugar.place_id,
+            placeId: lugar.place_id || "",
             ciudad,
             departamento,
-            latitud: String(lat),
-            longitud: String(lon),
-            etiqueta:
-              lugar.formatted ||
-              [ciudad, departamento, "Bolivia"]
-                .filter(Boolean)
-                .join(", ")
+            zona,
+            latitud: lat.toFixed(7),
+            longitud: lon.toFixed(7),
+            etiqueta: [ciudad, departamento]
+              .filter(Boolean).join(", ")
           }
         },
-        {
-          headers: { "Cache-Control": "no-store" }
-        }
+        { headers: { "Cache-Control": "no-store" } }
       );
     }
 
-    // Búsqueda manual de localidades de Bolivia
-    url = new URL(
+    // Busqueda manual: solamente ciudades y municipios.
+    const url = new URL(
       "https://api.geoapify.com/v1/geocode/autocomplete"
     );
 
@@ -159,30 +200,12 @@ export async function GET(request) {
     url.searchParams.set("format", "json");
     url.searchParams.set("apiKey", clave);
 
-    const respuesta = await fetch(url, {
-      cache: "no-store",
-      signal: AbortSignal.timeout(10000)
-    });
-
-    if (!respuesta.ok) {
-      return NextResponse.json(
-        { error: "No se pudo consultar la localidad" },
-        { status: 502 }
-      );
-    }
-
-    const datos = await respuesta.json();
+    const datos = await consultarGeoapify(url);
 
     const results = (datos.results || [])
       .map(lugar => {
-        const ciudad =
-          lugar.city ||
-          lugar.town ||
-          lugar.village ||
-          lugar.municipality ||
-          lugar.name ||
-          "";
-
+        const ciudad = obtenerMunicipio(lugar);
+        const departamento = texto(lugar.state);
         const latitud = Number(lugar.lat);
         const longitud = Number(lugar.lon);
 
@@ -198,10 +221,12 @@ export async function GET(request) {
         return {
           placeId: lugar.place_id,
           ciudad,
-          departamento: lugar.state || "",
-          latitud: String(lugar.lat),
-          longitud: String(lugar.lon),
-          etiqueta: lugar.formatted || ciudad
+          departamento,
+          zona: obtenerZona(lugar, ciudad, departamento),
+          latitud: String(latitud),
+          longitud: String(longitud),
+          etiqueta: [ciudad, departamento]
+            .filter(Boolean).join(", ")
         };
       })
       .filter(Boolean);
@@ -213,7 +238,7 @@ export async function GET(request) {
 
   } catch {
     return NextResponse.json(
-      { error: "Error consultando el servicio geográfico" },
+      { error: "Error consultando el servicio geografico" },
       { status: 503 }
     );
   }
