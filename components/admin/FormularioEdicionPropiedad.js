@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
+import AsistenteGemini from "@/components/admin/AsistenteGemini";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import SelectorUbicacion from "@/components/admin/SelectorUbicacion";
@@ -65,6 +66,7 @@ const seccionPorCampo = {
 
 export default function FormularioEdicionPropiedad({ propiedad, modo = "admin" }) {
   const router = useRouter();
+  const formRef = useRef(null);
 
   const [seccion, setSeccion] = useState("datos");
   const [guardando, setGuardando] = useState(false);
@@ -155,6 +157,7 @@ export default function FormularioEdicionPropiedad({ propiedad, modo = "admin" }
 
   return (
     <form
+      ref={formRef}
       onSubmit={guardar}
       noValidate
       className="overflow-visible rounded-2xl border border-slate-200 bg-white shadow-sm"
@@ -333,6 +336,12 @@ export default function FormularioEdicionPropiedad({ propiedad, modo = "admin" }
               placeholder="Describe las características y ventajas del inmueble..."
             />
           </div>
+
+          <AsistenteGemini
+            propiedadId={propiedad.id}
+            modo={modo}
+            formRef={formRef}
+          />
         </section>
 
         {/* 2. UBICACIÓN */}

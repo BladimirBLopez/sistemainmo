@@ -8,6 +8,7 @@
     "start": "node node_modules/next/dist/bin/next start"
   },
   "dependencies": {
+    "@google/genai": "^3.6.1",
     "@neondatabase/serverless": "1.2.1",
     "bcryptjs": "3.0.3",
     "cloudinary": "2.11.0",
@@ -28,5 +29,8 @@
     "eslint-config-next": "15.5.29",
     "postcss": "8.5.6",
     "tailwindcss": "3.4.19"
+  },
+  "engines": {
+    "node": "22.x"
   }
 }
