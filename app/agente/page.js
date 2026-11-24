@@ -9,10 +9,10 @@ import BotonSalir from "@/components/agente/BotonSalir";
 export const dynamic = "force-dynamic";
 
 export default async function PanelAgentePage() {
-  const cookieStore = await cookies();
+  const store = await cookies();
 
   const sesion = await obtenerAgenteActivo(
-    cookieStore.get(AGENTE_COOKIE_NAME)?.value
+    store.get(AGENTE_COOKIE_NAME)?.value
   );
 
   if (!sesion) redirect("/agente/login");
@@ -20,8 +20,7 @@ export default async function PanelAgentePage() {
   const [agente] = await sql`
     SELECT nombre_completo, email
     FROM public.agentes
-    WHERE id = ${sesion.id}
-      AND estado = 'activo'
+    WHERE id = ${sesion.id} AND estado = 'activo'
     LIMIT 1
   `;
 
@@ -29,16 +28,14 @@ export default async function PanelAgentePage() {
 
   const [resumen] = await sql`
     SELECT
-      (
-        SELECT COUNT(*)::int
-        FROM public.agente_propiedades
-        WHERE agente_id = ${sesion.id}
-      ) AS propiedades,
-      (
-        SELECT COUNT(*)::int
-        FROM public.agente_clientes
-        WHERE agente_id = ${sesion.id}
-      ) AS clientes
+      (SELECT COUNT(*)::int FROM public.agente_propiedades
+       WHERE agente_id = ${sesion.id}) AS propiedades,
+      (SELECT COUNT(*)::int FROM public.agente_clientes
+       WHERE agente_id = ${sesion.id}) AS clientes,
+      (SELECT COUNT(*)::int FROM public.leads
+       WHERE agente_id = ${sesion.id}) AS leads,
+      (SELECT COUNT(*)::int FROM public.leads
+       WHERE agente_id = ${sesion.id} AND estado = 'nuevo') AS leads_nuevos
   `;
 
   return (
@@ -58,29 +55,31 @@ export default async function PanelAgentePage() {
           </h2>
           <p className="mt-2 text-sm text-slate-500">{agente.email}</p>
           <p className="mt-3 text-sm text-slate-600">
-            Gestiona exclusivamente las propiedades y clientes asignados a tu usuario.
+            Gestiona exclusivamente las propiedades, clientes y prospectos asignados a tu usuario.
           </p>
         </section>
 
-        <div className="grid gap-4 sm:grid-cols-2">
-          <Link href="/agente/propiedades" className="rounded-2xl bg-white p-6 shadow-sm transition hover:shadow-md">
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          <Link href="/agente/propiedades"
+            className="rounded-2xl bg-white p-6 shadow-sm transition hover:shadow-md">
             <p className="text-sm text-slate-500">Propiedades asignadas</p>
-            <p className="mt-3 text-3xl font-bold text-slate-900">
-              {resumen.propiedades}
-            </p>
-            <p className="mt-3 text-sm font-semibold text-blue-600">
-              Gestionar propiedades →
-            </p>
+            <p className="mt-3 text-3xl font-bold text-slate-900">{resumen.propiedades}</p>
+            <p className="mt-3 text-sm font-semibold text-blue-600">Gestionar propiedades →</p>
           </Link>
 
-          <Link href="/agente/clientes" className="rounded-2xl bg-white p-6 shadow-sm transition hover:shadow-md">
+          <Link href="/agente/clientes"
+            className="rounded-2xl bg-white p-6 shadow-sm transition hover:shadow-md">
             <p className="text-sm text-slate-500">Clientes asignados</p>
-            <p className="mt-3 text-3xl font-bold text-slate-900">
-              {resumen.clientes}
-            </p>
-            <p className="mt-3 text-sm font-semibold text-blue-600">
-              Gestionar clientes →
-            </p>
+            <p className="mt-3 text-3xl font-bold text-slate-900">{resumen.clientes}</p>
+            <p className="mt-3 text-sm font-semibold text-blue-600">Gestionar clientes →</p>
+          </Link>
+
+          <Link href="/agente/leads"
+            className="rounded-2xl bg-white p-6 shadow-sm transition hover:shadow-md">
+            <p className="text-sm text-slate-500">Mis oportunidades comerciales</p>
+            <p className="mt-3 text-3xl font-bold text-slate-900">{resumen.leads}</p>
+            <p className="mt-1 text-xs text-slate-500">{resumen.leads_nuevos} prospectos nuevos</p>
+            <p className="mt-3 text-sm font-semibold text-blue-600">Gestionar Leads →</p>
           </Link>
         </div>
       </div>
