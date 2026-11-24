@@ -476,6 +476,9 @@ Utiliza español.
     const respuesta = await gemini.interactions.create({
       model: MODELO,
       store: false,
+      ...(accion === "redaccion"
+        ? { generation_config: { thinking_level: "low" } }
+        : {}),
       input: contenido,
       response_format: {
         type: "text",
