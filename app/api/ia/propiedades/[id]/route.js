@@ -468,26 +468,51 @@ Utiliza español.
       ...imagenes
     ];
 
-    const gemini = new GoogleGenAI({
-      apiKey: process.env.GEMINI_API_KEY,
-      apiVersion: "v1beta"
-    });
 
-    const respuesta = await gemini.interactions.create({
-      model: MODELO,
-      store: false,
-      ...(accion === "redaccion"
-        ? { generation_config: { thinking_level: "low" } }
-        : {}),
-      input: contenido,
-      response_format: {
-        type: "text",
-        mime_type: "application/json",
-        schema: ESQUEMAS[accion]
-      }
-    });
+    let texto;
 
-    const texto = respuesta.output_text?.trim();
+    if (accion === "redaccion") {
+      const geminiRedaccion = new GoogleGenAI({
+        apiKey: process.env.GEMINI_API_KEY,
+        apiVersion: "v1beta",
+        httpOptions: {
+          timeout: 45000,
+          retryOptions: { attempts: 1 }
+        }
+      });
+
+      const respuesta = await geminiRedaccion.models.generateContent({
+        model: MODELO,
+        contents: prompt,
+        config: {
+          responseMimeType: "application/json",
+          responseJsonSchema: ESQUEMAS.redaccion,
+          thinkingConfig: { thinkingLevel: "low" },
+          maxOutputTokens: 3072
+        }
+      });
+
+      texto = respuesta.text?.trim();
+
+    } else {
+      const gemini = new GoogleGenAI({
+        apiKey: process.env.GEMINI_API_KEY,
+        apiVersion: "v1beta"
+      });
+
+      const respuesta = await gemini.interactions.create({
+        model: MODELO,
+        store: false,
+        input: contenido,
+        response_format: {
+          type: "text",
+          mime_type: "application/json",
+          schema: ESQUEMAS[accion]
+        }
+      });
+
+      texto = respuesta.output_text?.trim();
+    }
 
     if (!texto) {
       throw new Error("Respuesta vacía de Gemini");
