@@ -510,16 +510,16 @@ Utiliza español.
       ? error.message
       : String(error);
 
-    console.error("[SISTEMAINMO][GEMINI]", {
+    const registro = {
       name: error instanceof Error ? error.name : "Error",
-      message: detalle.slice(0, 500),
-      status: Number.isInteger(error?.status)
-        ? error.status
-        : undefined,
-      code: typeof error?.code === "string"
-        ? error.code
-        : undefined
-    });
+      message: detalle.slice(0, 1000),
+      status: Number.isInteger(error?.status) ? error.status : null,
+      code: typeof error?.code === "string" ? error.code : null
+    };
+
+    console.error(
+      "[SISTEMAINMO][GEMINI] " + JSON.stringify(registro)
+    );
 
     return NextResponse.json(
       {
