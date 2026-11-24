@@ -506,10 +506,20 @@ Utiliza español.
     );
 
   } catch (error) {
-    console.error(
-      "[SISTEMAINMO][GEMINI]",
-      error instanceof Error ? error.name : "Error"
-    );
+    const detalle = error instanceof Error
+      ? error.message
+      : String(error);
+
+    console.error("[SISTEMAINMO][GEMINI]", {
+      name: error instanceof Error ? error.name : "Error",
+      message: detalle.slice(0, 500),
+      status: Number.isInteger(error?.status)
+        ? error.status
+        : undefined,
+      code: typeof error?.code === "string"
+        ? error.code
+        : undefined
+    });
 
     return NextResponse.json(
       {
