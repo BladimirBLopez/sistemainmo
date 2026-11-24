@@ -236,6 +236,33 @@ export default function FormularioPropiedad() {
         ))}
       </div>
 
+      <section className="rounded-xl border border-slate-200 p-4">
+        <h3 className="font-bold text-slate-900">
+          Caracteristicas del inmueble
+        </h3>
+        <div className="mt-4 grid gap-4 sm:grid-cols-2">
+          {[
+            ["dormitorios", "Dormitorios", "1"],
+            ["banos", "Baños", "1"],
+            ["parqueos", "Parqueos", "1"],
+            ["superficie_terreno_m2", "Terreno (m²)", "0.01"],
+            ["superficie_construida_m2", "Construccion (m²)", "0.01"]
+          ].map(([nombre, etiqueta, paso]) => (
+            <div key={nombre}>
+              <label htmlFor={nombre}
+                className="mb-2 block text-sm font-medium">
+                {etiqueta}
+              </label>
+              <input id={nombre} name={nombre}
+                type="number" min="0" step={paso}
+                inputMode={paso === "1" ? "numeric" : "decimal"}
+                className="w-full rounded-xl border border-slate-300 p-3"
+              />
+            </div>
+          ))}
+        </div>
+      </section>
+
       <div>
         <label
           htmlFor="fotos"

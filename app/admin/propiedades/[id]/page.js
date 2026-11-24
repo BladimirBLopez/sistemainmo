@@ -27,7 +27,9 @@ export default async function DetallePropiedad({ params }) {
   const [propiedad] = await sql`
     SELECT id, titulo, tipo, descripcion,
            ciudad, zona, estado_publicacion,
-           tipo_operacion, precio, moneda, estado_comercial
+           tipo_operacion, precio, moneda, estado_comercial,
+           dormitorios, banos, parqueos,
+           superficie_terreno_m2, superficie_construida_m2
     FROM public.propiedades
     WHERE id = ${id}
     LIMIT 1
@@ -85,6 +87,31 @@ export default async function DetallePropiedad({ params }) {
               ? `${propiedad.moneda === "BOB" ? "Bs" : "USD"} ${Number(propiedad.precio).toLocaleString("es-BO", { maximumFractionDigits: 2 })}`
               : "Precio no registrado"}
           </p>
+
+          <div className="mt-5">
+            <h3 className="font-bold text-slate-900">
+              Caracteristicas del inmueble
+            </h3>
+            <div className="mt-3 grid grid-cols-2 gap-3 sm:grid-cols-3">
+              {[
+                ["Dormitorios", propiedad.dormitorios, ""],
+                ["Baños", propiedad.banos, ""],
+                ["Parqueos", propiedad.parqueos, ""],
+                ["Terreno", propiedad.superficie_terreno_m2, "m²"],
+                ["Construccion", propiedad.superficie_construida_m2, "m²"]
+              ].filter(([, valor]) => valor != null)
+               .map(([etiqueta, valor, unidad]) => (
+                <div key={etiqueta}
+                  className="rounded-xl bg-slate-50 p-3">
+                  <p className="text-xs text-slate-500">{etiqueta}</p>
+                  <p className="mt-1 font-bold text-slate-900">
+                    {Number(valor).toLocaleString("es-BO",
+                      { maximumFractionDigits: 2 })} {unidad}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </div>
 
           {propiedad.descripcion && (
             <p className="mt-4 whitespace-pre-wrap text-slate-700">

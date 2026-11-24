@@ -144,18 +144,56 @@ export async function POST(request) {
     );
   }
 
+  const caracteristicas = {};
+  const camposNumericos = [
+    "dormitorios", "banos", "parqueos",
+    "superficie_terreno_m2", "superficie_construida_m2"
+  ];
+
+  for (const campo of camposNumericos) {
+    const valor = datos[campo];
+    const esSuperficie = campo.startsWith("superficie_");
+
+    if (valor == null || valor === "") {
+      caracteristicas[campo] = null;
+      continue;
+    }
+
+    const patron = esSuperficie
+      ? /^(0|[1-9]\d{0,9})(\.\d{1,2})?$/
+      : /^(0|[1-9]\d{0,3})$/;
+
+    if (typeof valor !== "string" || !patron.test(valor)) {
+      return NextResponse.json(
+        { error: "Caracteristica invalida: " + campo },
+        { status: 400 }
+      );
+    }
+
+    caracteristicas[campo] = esSuperficie
+      ? valor
+      : Number(valor);
+  }
+
   try {
     const [propiedad] = await sql`
       INSERT INTO public.propiedades (
         titulo, tipo, descripcion, departamento,
         ciudad, zona, direccion_privada,
-        tipo_operacion, precio, moneda
+        tipo_operacion, precio, moneda,
+        dormitorios, banos, parqueos,
+        superficie_terreno_m2, superficie_construida_m2
       )
       VALUES (
         ${titulo}, ${tipo}, ${limpiar("descripcion")},
         ${limpiar("departamento")}, ${limpiar("ciudad")},
         ${limpiar("zona")}, ${limpiar("direccion_privada")},
-        ${operacion}, ${precio}, ${moneda}
+        ${operacion}, ${precio}, ${moneda},
+        ${caracteristicas.dormitorios},
+        ${caracteristicas.banos},
+        ${caracteristicas.parqueos},
+        ${caracteristicas.superficie_terreno_m2},
+        ${caracteristicas.superficie_construida_m2}
       )
       RETURNING id
     `;
