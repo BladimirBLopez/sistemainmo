@@ -9,7 +9,7 @@ import {
 
 const modulos = [
   { nombre: "Propiedades", Icono: FiHome, href: "/admin/propiedades" },
-  { nombre: "Clientes", Icono: FiUsers },
+  { nombre: "Clientes", Icono: FiUsers, href: "/admin/clientes" },
   { nombre: "Leads", Icono: FiTarget },
   { nombre: "Visitas", Icono: FiCalendar },
   { nombre: "Contratos", Icono: FiFileText },
