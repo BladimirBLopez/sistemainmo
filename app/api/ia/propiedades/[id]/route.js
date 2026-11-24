@@ -469,7 +469,8 @@ Utiliza español.
     ];
 
     const gemini = new GoogleGenAI({
-      apiKey: process.env.GEMINI_API_KEY
+      apiKey: process.env.GEMINI_API_KEY,
+      apiVersion: "v1beta"
     });
 
     const respuesta = await gemini.interactions.create({
