@@ -3,7 +3,7 @@
 import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 
-export default function FormularioFoto({ propiedadId, alActualizar }) {
+export default function FormularioFoto({ propiedadId, alActualizar, modo = "admin" }) {
   const router = useRouter();
   const archivoRef = useRef(null);
   const [subiendo, setSubiendo] = useState(false);
@@ -47,7 +47,7 @@ export default function FormularioFoto({ propiedadId, alActualizar }) {
     setSubiendo(true);
 
     try {
-      const respuesta = await fetch("/api/admin/upload", {
+      const respuesta = await fetch(modo === "agente" ? "/api/agente/upload" : "/api/admin/upload", {
         method: "POST",
         body: datos
       });

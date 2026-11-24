@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
 import { sql } from "@/lib/db";
+import { leerJsonLimitado } from "@/lib/autorizacion-agente";
 import { obtenerIpHash } from "@/lib/login-ip";
 import {
   reservarIntentoAgente,
@@ -34,18 +35,25 @@ export async function POST(request) {
       );
     }
 
-    if (
-      !request.headers.get("content-type")
-        ?.startsWith("application/json") ||
-      Number(request.headers.get("content-length") || 0) > 8192
-    ) {
+    const tipoContenido = request.headers.get("content-type") || "";
+
+    if (!/^application\/json(?:\s*;|$)/i.test(tipoContenido)) {
       return NextResponse.json(
         { error: "Solicitud incorrecta" },
-        { status: 400 }
+        { status: 415 }
       );
     }
 
-    const datos = await request.json().catch(() => null);
+    const lectura = await leerJsonLimitado(request, 8192);
+
+    if (!lectura.ok) {
+      return NextResponse.json(
+        { error: "Solicitud incorrecta" },
+        { status: lectura.status }
+      );
+    }
+
+    const datos = lectura.datos;
 
     const email = typeof datos?.email === "string"
       ? datos.email.trim().toLowerCase()

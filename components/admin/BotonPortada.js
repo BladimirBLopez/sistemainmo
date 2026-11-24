@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
-export default function BotonPortada({ propiedadId, fotoId, alActualizar }) {
+export default function BotonPortada({ propiedadId, fotoId, alActualizar, modo = "admin" }) {
   const router = useRouter();
   const [guardando, setGuardando] = useState(false);
   const [error, setError] = useState("");
@@ -15,8 +15,9 @@ export default function BotonPortada({ propiedadId, fotoId, alActualizar }) {
     setError("");
 
     try {
+      const baseApi = modo === "agente" ? "/api/agente/propiedades" : "/api/admin/propiedades";
       const respuesta = await fetch(
-        `/api/admin/propiedades/${propiedadId}/portada/${fotoId}`,
+        `${baseApi}/${propiedadId}/portada/${fotoId}`,
         { method: "POST" }
       );
 

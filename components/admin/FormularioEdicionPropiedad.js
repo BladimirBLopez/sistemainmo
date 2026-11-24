@@ -63,7 +63,7 @@ const seccionPorCampo = {
   estado_comercial: "estado"
 };
 
-export default function FormularioEdicionPropiedad({ propiedad }) {
+export default function FormularioEdicionPropiedad({ propiedad, modo = "admin" }) {
   const router = useRouter();
 
   const [seccion, setSeccion] = useState("datos");
@@ -110,8 +110,10 @@ export default function FormularioEdicionPropiedad({ propiedad }) {
     setGuardando(true);
 
     try {
+      const baseApi = modo === "agente" ? "/api/agente/propiedades" : "/api/admin/propiedades";
+
       const respuesta = await fetch(
-        `/api/admin/propiedades/${propiedad.id}`,
+        `${baseApi}/${propiedad.id}`,
         {
           method: "PUT",
           headers: {
@@ -137,7 +139,7 @@ export default function FormularioEdicionPropiedad({ propiedad }) {
         );
       }
 
-      router.replace(`/admin/propiedades/${propiedad.id}`);
+      router.replace(`${modo === "agente" ? "/agente/propiedades" : "/admin/propiedades"}/${propiedad.id}`);
       router.refresh();
 
     } catch (fallo) {
@@ -486,7 +488,7 @@ export default function FormularioEdicionPropiedad({ propiedad }) {
 
         <div className="flex gap-3">
           <Link
-            href={`/admin/propiedades/${propiedad.id}`}
+            href={`${modo === "agente" ? "/agente/propiedades" : "/admin/propiedades"}/${propiedad.id}`}
             className="inline-flex items-center justify-center gap-2 rounded-xl border border-slate-300 px-4 py-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-50"
           >
             <FiArrowLeft size={17} />

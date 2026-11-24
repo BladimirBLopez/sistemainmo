@@ -15,7 +15,7 @@ const rolesDisponibles = [
 const clases =
   "w-full rounded-xl border border-slate-300 bg-white p-3 text-sm text-slate-900 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100";
 
-export default function FormularioCliente({ cliente = null }) {
+export default function FormularioCliente({ cliente = null, modo = "admin" }) {
   const router = useRouter();
   const [guardando, setGuardando] = useState(false);
   const [error, setError] = useState("");
@@ -35,10 +35,10 @@ export default function FormularioCliente({ cliente = null }) {
       datos.roles = formulario.getAll("roles");
       datos.estado = formulario.get("estado") || "activo";
 
+      const baseApi = modo === "agente" ? "/api/agente/clientes" : "/api/admin/clientes";
+
       const respuesta = await fetch(
-        cliente
-          ? `/api/admin/clientes/${cliente.id}`
-          : "/api/admin/clientes",
+        cliente ? `${baseApi}/${cliente.id}` : baseApi,
         {
           method: cliente ? "PUT" : "POST",
           headers: { "Content-Type": "application/json" },
@@ -52,7 +52,7 @@ export default function FormularioCliente({ cliente = null }) {
         throw new Error(resultado.error || "No se pudo guardar");
       }
 
-      router.push(`/admin/clientes/${resultado.id}`);
+      router.push(`${modo === "agente" ? "/agente/clientes" : "/admin/clientes"}/${resultado.id}`);
       router.refresh();
     } catch (fallo) {
       setError(
