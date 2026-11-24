@@ -26,6 +26,7 @@ export default async function EditarPropiedadPage({ params }) {
     SELECT
       id, titulo, tipo, descripcion,
       departamento, ciudad, zona, direccion_privada,
+      geo_place_id, latitud, longitud,
       estado_publicacion, estado_comercial,
       tipo_operacion, precio, moneda,
       dormitorios, banos, parqueos,
@@ -48,6 +49,9 @@ export default async function EditarPropiedadPage({ params }) {
     ciudad: valor(propiedad.ciudad),
     zona: valor(propiedad.zona),
     direccion_privada: valor(propiedad.direccion_privada),
+    geo_place_id: valor(propiedad.geo_place_id),
+    latitud: valor(propiedad.latitud),
+    longitud: valor(propiedad.longitud),
     estado_publicacion: propiedad.estado_publicacion,
     estado_comercial: propiedad.estado_comercial,
     tipo_operacion: valor(propiedad.tipo_operacion),
@@ -62,31 +66,15 @@ export default async function EditarPropiedadPage({ params }) {
 
   return (
     <PanelShell>
-      <div className="mx-auto max-w-4xl space-y-6">
-
+      <div className="mx-auto max-w-5xl space-y-4">
         <Link
           href={`/admin/propiedades/${id}`}
-          className="text-sm font-medium text-blue-600"
+          className="inline-flex items-center gap-2 text-sm font-semibold text-blue-600 hover:text-blue-800"
         >
-          ← Volver a la ficha
+          ← Volver a la ficha del inmueble
         </Link>
 
-        <section className="rounded-2xl bg-white p-6 shadow-sm">
-          <h2 className="text-2xl font-bold text-slate-900">
-            Editar propiedad
-          </h2>
-          <p className="mt-2 text-sm text-slate-500">
-            Modifica los datos, características y estados del inmueble.
-          </p>
-          <p className="mt-2 text-xs text-slate-400">
-            Código de propiedad: {id}
-          </p>
-        </section>
-
-        <section className="rounded-2xl bg-white p-6 shadow-sm">
-          <FormularioEdicionPropiedad propiedad={inicial} />
-        </section>
-
+        <FormularioEdicionPropiedad propiedad={inicial} />
       </div>
     </PanelShell>
   );

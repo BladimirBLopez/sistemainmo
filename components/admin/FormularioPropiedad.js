@@ -4,13 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { subirFotosPropiedad } from "@/lib/subir-fotos-cliente";
-
-const campos = [
-  { nombre: "departamento", etiqueta: "Departamento", maximo: 80 },
-  { nombre: "ciudad", etiqueta: "Ciudad", maximo: 100 },
-  { nombre: "zona", etiqueta: "Zona", maximo: 120 },
-  { nombre: "direccion_privada", etiqueta: "Direccion privada", maximo: 300 }
-];
+import SelectorUbicacion from "@/components/admin/SelectorUbicacion";
 
 export default function FormularioPropiedad() {
   const router = useRouter();
@@ -217,24 +211,7 @@ export default function FormularioPropiedad() {
         />
       </div>
 
-      <div className="grid gap-5 sm:grid-cols-2">
-        {campos.map(campo => (
-          <div key={campo.nombre}>
-            <label
-              htmlFor={campo.nombre}
-              className="mb-2 block text-sm font-medium"
-            >
-              {campo.etiqueta}
-            </label>
-            <input
-              id={campo.nombre}
-              name={campo.nombre}
-              maxLength={campo.maximo}
-              className="w-full rounded-xl border border-slate-300 p-3"
-            />
-          </div>
-        ))}
-      </div>
+      <SelectorUbicacion />
 
       <section className="rounded-xl border border-slate-200 p-4">
         <h3 className="font-bold text-slate-900">

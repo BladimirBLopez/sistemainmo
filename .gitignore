@@ -7,3 +7,5 @@ node_modules/
 backups/
 respaldos/
 x-test.mjs
+
+.env.local

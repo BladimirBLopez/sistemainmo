@@ -26,7 +26,8 @@ export async function GET(request, { params }) {
   try {
     const [propiedad] = await sql`
       SELECT id, titulo, tipo, descripcion,
-        departamento, ciudad, zona,
+        departamento, ciudad, zona, direccion_privada,
+        geo_place_id, latitud, longitud,
         estado_publicacion, estado_comercial,
         tipo_operacion, precio, moneda,
         dormitorios, banos, parqueos,
@@ -167,6 +168,9 @@ export async function PUT(request, { params }) {
         ciudad = ${p.ciudad},
         zona = ${p.zona},
         direccion_privada = ${p.direccion_privada},
+        geo_place_id = ${p.geo_place_id},
+        latitud = ${p.latitud},
+        longitud = ${p.longitud},
         estado_publicacion = ${p.estado_publicacion},
         estado_comercial = ${p.estado_comercial},
         tipo_operacion = ${p.tipo_operacion},

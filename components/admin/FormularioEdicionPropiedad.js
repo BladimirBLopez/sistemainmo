@@ -3,6 +3,31 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import SelectorUbicacion from "@/components/admin/SelectorUbicacion";
+import {
+  FiHome,
+  FiMapPin,
+  FiGrid,
+  FiSettings,
+  FiSave,
+  FiArrowLeft,
+  FiInfo
+} from "react-icons/fi";
+
+const secciones = [
+  { id: "datos", nombre: "Datos", icono: FiHome },
+  { id: "ubicacion", nombre: "Ubicación", icono: FiMapPin },
+  { id: "detalles", nombre: "Detalles", icono: FiGrid },
+  { id: "estado", nombre: "Estado", icono: FiSettings }
+];
+
+const camposCaracteristicas = [
+  ["dormitorios", "Dormitorios", "1"],
+  ["banos", "Baños", "1"],
+  ["parqueos", "Parqueos", "1"],
+  ["superficie_terreno_m2", "Terreno (m²)", "0.01"],
+  ["superficie_construida_m2", "Construcción (m²)", "0.01"]
+];
 
 const tipos = [
   "Casa", "Departamento", "Terreno",
@@ -10,42 +35,79 @@ const tipos = [
   "Quinta", "Otro"
 ];
 
-const ubicacion = [
-  ["departamento", "Departamento", 80],
-  ["ciudad", "Ciudad", 100],
-  ["zona", "Zona", 120],
-  ["direccion_privada", "Direccion privada", 300]
-];
+const clases = {
+  input: "w-full min-w-0 rounded-xl border border-slate-300 bg-white px-3.5 py-3 text-sm text-slate-900 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100",
+  label: "mb-2 block text-sm font-semibold text-slate-700"
+};
 
-const caracteristicas = [
-  ["dormitorios", "Dormitorios", "1"],
-  ["banos", "Baños", "1"],
-  ["parqueos", "Parqueos", "1"],
-  ["superficie_terreno_m2", "Terreno (m²)", "0.01"],
-  ["superficie_construida_m2", "Construccion (m²)", "0.01"]
-];
-
-const claseInput =
-  "w-full rounded-xl border border-slate-300 bg-white p-3 text-sm";
+const seccionPorCampo = {
+  titulo: "datos",
+  tipo: "datos",
+  tipo_operacion: "datos",
+  precio: "datos",
+  moneda: "datos",
+  descripcion: "datos",
+  departamento: "ubicacion",
+  ciudad: "ubicacion",
+  zona: "ubicacion",
+  direccion_privada: "ubicacion",
+  geo_place_id: "ubicacion",
+  latitud: "ubicacion",
+  longitud: "ubicacion",
+  dormitorios: "detalles",
+  banos: "detalles",
+  parqueos: "detalles",
+  superficie_terreno_m2: "detalles",
+  superficie_construida_m2: "detalles",
+  estado_publicacion: "estado",
+  estado_comercial: "estado"
+};
 
 export default function FormularioEdicionPropiedad({ propiedad }) {
   const router = useRouter();
+
+  const [seccion, setSeccion] = useState("datos");
   const [guardando, setGuardando] = useState(false);
   const [error, setError] = useState("");
-  const [exito, setExito] = useState("");
 
   async function guardar(evento) {
     evento.preventDefault();
 
     if (guardando) return;
 
-    setGuardando(true);
     setError("");
-    setExito("");
 
+    const formulario = evento.currentTarget;
     const datos = Object.fromEntries(
-      new FormData(evento.currentTarget).entries()
+      new FormData(formulario).entries()
     );
+
+    const obligatorios = [
+      ["titulo", "el título", "datos"],
+      ["tipo", "el tipo de inmueble", "datos"],
+      ["tipo_operacion", "la operación", "datos"],
+      ["precio", "el precio", "datos"],
+      ["moneda", "la moneda", "datos"],
+      ["estado_publicacion", "el estado de publicación", "estado"],
+      ["estado_comercial", "el estado comercial", "estado"]
+    ];
+
+    for (const [campo, etiqueta, destino] of obligatorios) {
+      if (!String(datos[campo] ?? "").trim()) {
+        setSeccion(destino);
+        setError(`Debes completar ${etiqueta}.`);
+        return;
+      }
+    }
+
+    if (!Number.isFinite(Number(datos.precio)) ||
+        Number(datos.precio) <= 0) {
+      setSeccion("datos");
+      setError("Introduce un precio válido mayor que cero.");
+      return;
+    }
+
+    setGuardando(true);
 
     try {
       const respuesta = await fetch(
@@ -59,15 +121,21 @@ export default function FormularioEdicionPropiedad({ propiedad }) {
         }
       );
 
-      const resultado = await respuesta.json();
+      const resultado = await respuesta.json().catch(() => ({}));
 
       if (!respuesta.ok) {
+        const coincidencia = resultado.error?.match(
+          /^Dato invalido:\s*(.+)$/
+        );
+
+        if (coincidencia && seccionPorCampo[coincidencia[1]]) {
+          setSeccion(seccionPorCampo[coincidencia[1]]);
+        }
+
         throw new Error(
-          resultado.error || "No se pudieron guardar los cambios"
+          resultado.error || "No se pudieron guardar los cambios."
         );
       }
-
-      setExito("Propiedad actualizada correctamente.");
 
       router.replace(`/admin/propiedades/${propiedad.id}`);
       router.refresh();
@@ -76,7 +144,7 @@ export default function FormularioEdicionPropiedad({ propiedad }) {
       setError(
         fallo instanceof Error
           ? fallo.message
-          : "Error al actualizar"
+          : "No se pudieron guardar los cambios."
       );
     } finally {
       setGuardando(false);
@@ -84,183 +152,282 @@ export default function FormularioEdicionPropiedad({ propiedad }) {
   }
 
   return (
-    <form onSubmit={guardar} className="space-y-6">
+    <form
+      onSubmit={guardar}
+      noValidate
+      className="overflow-visible rounded-2xl border border-slate-200 bg-white shadow-sm"
+    >
+      {/* ENCABEZADO */}
+      <header className="border-b border-slate-100 p-4 sm:p-6">
+        <div className="flex items-center justify-between gap-3">
+          <div>
+            <h2 className="text-lg font-bold text-slate-900 sm:text-xl">
+              Editar inmueble
+            </h2>
+            <p className="mt-1 text-xs text-slate-500 sm:text-sm">
+              Actualiza la información de tu propiedad.
+            </p>
+          </div>
 
-      <section className="space-y-4">
-        <h3 className="font-bold text-slate-900">
-          Información principal
-        </h3>
-
-        <div>
-          <label htmlFor="titulo" className="mb-2 block text-sm font-medium">
-            Título de la propiedad *
-          </label>
-          <input
-            id="titulo"
-            name="titulo"
-            required
-            maxLength={150}
-            defaultValue={propiedad.titulo}
-            className={claseInput}
-          />
+          <span className="shrink-0 rounded-lg bg-slate-100 px-3 py-2 text-xs font-semibold text-slate-600">
+            ID #{propiedad.id}
+          </span>
         </div>
 
-        <div className="grid gap-4 sm:grid-cols-2">
+        {/* NAVEGACIÓN */}
+        <nav
+          role="tablist"
+          aria-label="Secciones de edición"
+          className="mt-5 grid grid-cols-4 gap-1 rounded-xl bg-slate-100 p-1"
+        >
+          {secciones.map(({ id, nombre, icono: Icono }) => {
+            const activo = seccion === id;
+
+            return (
+              <button
+                key={id}
+                id={`tab-${id}`}
+                type="button"
+                role="tab"
+                aria-selected={activo}
+                aria-controls={`panel-${id}`}
+                onClick={() => {
+                  setSeccion(id);
+                  setError("");
+                }}
+                className={`flex min-w-0 flex-col items-center justify-center gap-1 rounded-lg px-1 py-2.5 text-[11px] font-semibold transition sm:flex-row sm:gap-2 sm:px-3 sm:text-sm ${
+                  activo
+                    ? "bg-white text-blue-700 shadow-sm"
+                    : "text-slate-500 hover:text-slate-800"
+                }`}
+              >
+                <Icono size={17} />
+                <span>{nombre}</span>
+              </button>
+            );
+          })}
+        </nav>
+      </header>
+
+      {/* CONTENIDO: TODOS LOS PANELES PERMANECEN MONTADOS */}
+      <div className="p-4 sm:p-6">
+
+        {/* 1. DATOS */}
+        <section
+          id="panel-datos"
+          role="tabpanel"
+          aria-labelledby="tab-datos"
+          hidden={seccion !== "datos"}
+          className="space-y-5"
+        >
           <div>
-            <label htmlFor="tipo" className="mb-2 block text-sm font-medium">
-              Tipo de inmueble *
-            </label>
-            <select
-              id="tipo"
-              name="tipo"
-              required
-              defaultValue={propiedad.tipo}
-              className={claseInput}
-            >
-              {tipos.map(tipo => (
-                <option key={tipo} value={tipo}>{tipo}</option>
-              ))}
-            </select>
+            <h3 className="font-bold text-slate-900">
+              Información principal
+            </h3>
+            <p className="mt-1 text-xs text-slate-500">
+              Identificación, operación y precio.
+            </p>
           </div>
 
           <div>
-            <label htmlFor="tipo_operacion" className="mb-2 block text-sm font-medium">
-              Operación *
-            </label>
-            <select
-              id="tipo_operacion"
-              name="tipo_operacion"
-              required
-              defaultValue={propiedad.tipo_operacion || ""}
-              className={claseInput}
-            >
-              <option value="" disabled>Seleccionar</option>
-              <option value="venta">Venta</option>
-              <option value="alquiler">Alquiler</option>
-            </select>
-          </div>
-        </div>
-
-        <div className="grid gap-4 sm:grid-cols-2">
-          <div>
-            <label htmlFor="precio" className="mb-2 block text-sm font-medium">
-              Precio *
+            <label htmlFor="titulo" className={clases.label}>
+              Nombre del inmueble *
             </label>
             <input
-              id="precio"
-              name="precio"
-              type="number"
-              min="0.01"
-              step="0.01"
+              id="titulo"
+              name="titulo"
               required
-              defaultValue={propiedad.precio}
-              className={claseInput}
+              maxLength={150}
+              defaultValue={propiedad.titulo}
+              className={clases.input}
+              placeholder="Ej. Casa moderna en venta"
             />
           </div>
 
-          <div>
-            <label htmlFor="moneda" className="mb-2 block text-sm font-medium">
-              Moneda *
-            </label>
-            <select
-              id="moneda"
-              name="moneda"
-              required
-              defaultValue={propiedad.moneda || ""}
-              className={claseInput}
-            >
-              <option value="" disabled>Seleccionar</option>
-              <option value="BOB">Bolivianos (Bs)</option>
-              <option value="USD">Dólares (USD)</option>
-            </select>
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            <div>
+              <label htmlFor="tipo" className={clases.label}>
+                Tipo de inmueble *
+              </label>
+              <select
+                id="tipo"
+                name="tipo"
+                required
+                defaultValue={propiedad.tipo}
+                className={clases.input}
+              >
+                {tipos.map(tipo => (
+                  <option key={tipo} value={tipo}>{tipo}</option>
+                ))}
+              </select>
+            </div>
+
+            <div>
+              <label htmlFor="tipo_operacion" className={clases.label}>
+                Operación *
+              </label>
+              <select
+                id="tipo_operacion"
+                name="tipo_operacion"
+                required
+                defaultValue={propiedad.tipo_operacion || ""}
+                className={clases.input}
+              >
+                <option value="" disabled>Seleccionar</option>
+                <option value="venta">Venta</option>
+                <option value="alquiler">Alquiler</option>
+              </select>
+            </div>
           </div>
-        </div>
 
-        <div>
-          <label htmlFor="descripcion" className="mb-2 block text-sm font-medium">
-            Descripción
-          </label>
-          <textarea
-            id="descripcion"
-            name="descripcion"
-            rows={5}
-            maxLength={4000}
-            defaultValue={propiedad.descripcion}
-            className={claseInput}
-          />
-        </div>
-      </section>
-
-      <section className="space-y-4">
-        <h3 className="font-bold text-slate-900">
-          Ubicación del inmueble
-        </h3>
-
-        <div className="grid gap-4 sm:grid-cols-2">
-          {ubicacion.map(([nombre, etiqueta, maximo]) => (
-            <div key={nombre}>
-              <label
-                htmlFor={nombre}
-                className="mb-2 block text-sm font-medium"
-              >
-                {etiqueta}
-                {nombre === "direccion_privada" && (
-                  <span className="ml-1 text-xs text-slate-400">
-                    (solo administración)
-                  </span>
-                )}
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label htmlFor="precio" className={clases.label}>
+                Precio *
               </label>
               <input
-                id={nombre}
-                name={nombre}
-                maxLength={maximo}
-                defaultValue={propiedad[nombre]}
-                className={claseInput}
-              />
-            </div>
-          ))}
-        </div>
-      </section>
-
-      <section className="space-y-4">
-        <h3 className="font-bold text-slate-900">
-          Características del inmueble
-        </h3>
-
-        <div className="grid gap-4 sm:grid-cols-2">
-          {caracteristicas.map(([nombre, etiqueta, paso]) => (
-            <div key={nombre}>
-              <label
-                htmlFor={nombre}
-                className="mb-2 block text-sm font-medium"
-              >
-                {etiqueta}
-              </label>
-              <input
-                id={nombre}
-                name={nombre}
+                id="precio"
+                name="precio"
                 type="number"
-                min="0"
-                step={paso}
-                defaultValue={propiedad[nombre]}
-                className={claseInput}
+                min="0.01"
+                step="0.01"
+                required
+                defaultValue={propiedad.precio}
+                className={clases.input}
+                placeholder="0.00"
               />
             </div>
-          ))}
-        </div>
-      </section>
 
-      <section className="space-y-4">
-        <h3 className="font-bold text-slate-900">
-          Gestión y estados
-        </h3>
+            <div>
+              <label htmlFor="moneda" className={clases.label}>
+                Moneda *
+              </label>
+              <select
+                id="moneda"
+                name="moneda"
+                required
+                defaultValue={propiedad.moneda || ""}
+                className={clases.input}
+              >
+                <option value="" disabled>Seleccionar</option>
+                <option value="BOB">Bolivianos (Bs)</option>
+                <option value="USD">Dólares (USD)</option>
+              </select>
+            </div>
+          </div>
 
-        <div className="grid gap-4 sm:grid-cols-2">
           <div>
-            <label
-              htmlFor="estado_publicacion"
-              className="mb-2 block text-sm font-medium"
-            >
+            <label htmlFor="descripcion" className={clases.label}>
+              Descripción
+            </label>
+            <textarea
+              id="descripcion"
+              name="descripcion"
+              rows={5}
+              maxLength={4000}
+              defaultValue={propiedad.descripcion ?? ""}
+              className={clases.input}
+              placeholder="Describe las características y ventajas del inmueble..."
+            />
+          </div>
+        </section>
+
+        {/* 2. UBICACIÓN */}
+        <section
+          id="panel-ubicacion"
+          role="tabpanel"
+          aria-labelledby="tab-ubicacion"
+          hidden={seccion !== "ubicacion"}
+          className="space-y-5"
+        >
+          <div>
+            <h3 className="font-bold text-slate-900">
+              Ubicación del inmueble
+            </h3>
+            <p className="mt-1 text-xs text-slate-500">
+              Información geográfica y dirección.
+            </p>
+          </div>
+
+          <SelectorUbicacion
+            inicial={{
+              departamento: propiedad.departamento,
+              ciudad: propiedad.ciudad,
+              zona: propiedad.zona,
+              direccion_privada: propiedad.direccion_privada,
+              geo_place_id: propiedad.geo_place_id,
+              latitud: propiedad.latitud,
+              longitud: propiedad.longitud
+            }}
+          />
+        </section>
+
+        {/* 3. CARACTERÍSTICAS */}
+        <section
+          id="panel-detalles"
+          role="tabpanel"
+          aria-labelledby="tab-detalles"
+          hidden={seccion !== "detalles"}
+          className="space-y-5"
+        >
+          <div>
+            <h3 className="font-bold text-slate-900">
+              Características del inmueble
+            </h3>
+            <p className="mt-1 text-xs text-slate-500">
+              Superficies y distribución.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-2 gap-4 sm:grid-cols-3">
+            {camposCaracteristicas.map(([nombre, etiqueta, paso]) => (
+              <div key={nombre}>
+                <label htmlFor={nombre} className={clases.label}>
+                  {etiqueta}
+                </label>
+
+                <input
+                  id={nombre}
+                  name={nombre}
+                  type="number"
+                  min="0"
+                  step={paso}
+                  defaultValue={propiedad[nombre] ?? ""}
+                  className={clases.input}
+                  placeholder="0"
+                />
+              </div>
+            ))}
+          </div>
+
+          <div className="flex items-start gap-2 rounded-xl bg-slate-50 p-3 text-xs text-slate-600">
+            <FiInfo className="mt-0.5 shrink-0" size={16} />
+            <p>
+              Las superficies se expresan en metros cuadrados.
+              Puedes dejar vacíos los campos que no correspondan.
+            </p>
+          </div>
+        </section>
+
+        {/* 4. PUBLICACIÓN */}
+        <section
+          id="panel-estado"
+          role="tabpanel"
+          aria-labelledby="tab-estado"
+          hidden={seccion !== "estado"}
+          className="space-y-5"
+        >
+          <div>
+            <h3 className="font-bold text-slate-900">
+              Publicación y situación comercial
+            </h3>
+            <p className="mt-1 text-xs text-slate-500">
+              Controla la visibilidad y disponibilidad del inmueble.
+            </p>
+          </div>
+
+          <div>
+            <label htmlFor="estado_publicacion" className={clases.label}>
               Estado de publicación *
             </label>
             <select
@@ -268,20 +435,20 @@ export default function FormularioEdicionPropiedad({ propiedad }) {
               name="estado_publicacion"
               required
               defaultValue={propiedad.estado_publicacion}
-              className={claseInput}
+              className={clases.input}
             >
               <option value="borrador">Borrador</option>
               <option value="pendiente">Pendiente</option>
               <option value="publicada">Publicada</option>
               <option value="oculta">Oculta</option>
             </select>
+            <p className="mt-1.5 text-xs text-slate-500">
+              Determina la situación del anuncio dentro del sistema.
+            </p>
           </div>
 
           <div>
-            <label
-              htmlFor="estado_comercial"
-              className="mb-2 block text-sm font-medium"
-            >
+            <label htmlFor="estado_comercial" className={clases.label}>
               Estado comercial *
             </label>
             <select
@@ -289,7 +456,7 @@ export default function FormularioEdicionPropiedad({ propiedad }) {
               name="estado_comercial"
               required
               defaultValue={propiedad.estado_comercial}
-              className={claseInput}
+              className={clases.input}
             >
               <option value="disponible">Disponible</option>
               <option value="reservada">Reservada</option>
@@ -297,43 +464,44 @@ export default function FormularioEdicionPropiedad({ propiedad }) {
               <option value="alquilada">Alquilada</option>
               <option value="retirada">Retirada</option>
             </select>
+            <p className="mt-1.5 text-xs text-slate-500">
+              Indica la situación comercial real del inmueble.
+            </p>
           </div>
+        </section>
+
+      </div>
+
+      {/* GUARDADO SIEMPRE ACCESIBLE */}
+      <footer className="sticky bottom-0 z-20 border-t border-slate-200 bg-white/95 px-4 py-3 backdrop-blur sm:px-6">
+        {error && (
+          <p
+            role="alert"
+            className="mb-3 rounded-lg bg-red-50 p-3 text-sm text-red-700"
+          >
+            {error}
+          </p>
+        )}
+
+        <div className="flex gap-3">
+          <Link
+            href={`/admin/propiedades/${propiedad.id}`}
+            className="inline-flex items-center justify-center gap-2 rounded-xl border border-slate-300 px-4 py-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-50"
+          >
+            <FiArrowLeft size={17} />
+            <span>Volver</span>
+          </Link>
+
+          <button
+            type="submit"
+            disabled={guardando}
+            className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-blue-600 px-4 py-3 text-sm font-semibold text-white transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            <FiSave size={17} />
+            {guardando ? "Guardando..." : "Guardar cambios"}
+          </button>
         </div>
-      </section>
-
-      <div className="rounded-xl bg-blue-50 p-4 text-sm text-blue-800">
-        Las fotografías existentes se conservarán.
-        Puedes administrarlas desde la ficha de la propiedad.
-      </div>
-
-      {error && (
-        <p role="alert" className="rounded-xl bg-red-50 p-3 text-sm text-red-700">
-          {error}
-        </p>
-      )}
-
-      {exito && (
-        <p role="status" className="text-sm text-emerald-700">
-          {exito}
-        </p>
-      )}
-
-      <div className="flex flex-wrap gap-3">
-        <button
-          type="submit"
-          disabled={guardando}
-          className="flex-1 rounded-xl bg-blue-600 px-5 py-3 font-semibold text-white hover:bg-blue-700 disabled:opacity-50"
-        >
-          {guardando ? "Guardando cambios..." : "Guardar cambios"}
-        </button>
-
-        <Link
-          href={`/admin/propiedades/${propiedad.id}`}
-          className="rounded-xl border border-slate-300 px-5 py-3 text-center text-sm font-semibold text-slate-700"
-        >
-          Cancelar
-        </Link>
-      </div>
+      </footer>
     </form>
   );
 }

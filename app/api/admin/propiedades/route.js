@@ -83,7 +83,8 @@ export async function POST(request) {
     departamento: 80,
     ciudad: 100,
     zona: 120,
-    direccion_privada: 300
+    direccion_privada: 300,
+    geo_place_id: 200
   };
 
   for (const [campo, maximo] of Object.entries(limites)) {
@@ -102,6 +103,20 @@ export async function POST(request) {
 
   const titulo = limpiar("titulo");
   const tipo = limpiar("tipo");
+  const ciudad = limpiar("ciudad");
+  const geoPlaceId = limpiar("geo_place_id");
+
+  if (
+    !ciudad ||
+    !geoPlaceId ||
+    datos.latitud == null || datos.latitud === "" ||
+    datos.longitud == null || datos.longitud === ""
+  ) {
+    return NextResponse.json(
+      { error: "Selecciona una localidad y ubica el inmueble en el mapa" },
+      { status: 400 }
+    );
+  }
 
   if (!titulo || !tipo) {
     return NextResponse.json(
@@ -150,14 +165,18 @@ export async function POST(request) {
       INSERT INTO public.propiedades (
         titulo, tipo, descripcion, departamento,
         ciudad, zona, direccion_privada,
+        geo_place_id, latitud, longitud,
         tipo_operacion, precio, moneda,
         dormitorios, banos, parqueos,
         superficie_terreno_m2, superficie_construida_m2
       )
       VALUES (
         ${titulo}, ${tipo}, ${limpiar("descripcion")},
-        ${limpiar("departamento")}, ${limpiar("ciudad")},
+        ${limpiar("departamento")}, ${ciudad},
         ${limpiar("zona")}, ${limpiar("direccion_privada")},
+        ${caracteristicas.geo_place_id},
+        ${caracteristicas.latitud},
+        ${caracteristicas.longitud},
         ${operacion}, ${precio}, ${moneda},
         ${caracteristicas.dormitorios},
         ${caracteristicas.banos},
