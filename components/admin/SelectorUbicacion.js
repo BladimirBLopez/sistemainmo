@@ -24,21 +24,9 @@ export default function SelectorUbicacion({ inicial = {} }) {
     inicial.departamento || ""
   );
 
-  const [ciudad, setCiudad] = useState(
-    inicial.ciudad || ""
-  );
-
-  const [zona, setZona] = useState(
-    inicial.zona || ""
-  );
-
-  const [direccion, setDireccion] = useState(
-    inicial.direccion_privada || ""
-  );
-
-  const [placeId, setPlaceId] = useState(
-    inicial.geo_place_id || ""
-  );
+  const [ciudad, setCiudad] = useState(inicial.ciudad || "");
+  const [zona, setZona] = useState(inicial.zona || "");
+  const [placeId, setPlaceId] = useState(inicial.geo_place_id || "");
 
   const [latitud, setLatitud] = useState(
     inicial.latitud == null ? "" : String(inicial.latitud)
@@ -49,10 +37,9 @@ export default function SelectorUbicacion({ inicial = {} }) {
   );
 
   const [busqueda, setBusqueda] = useState(
-    inicial.ciudad
-      ? [inicial.ciudad, inicial.departamento]
-          .filter(Boolean).join(", ")
-      : ""
+    [inicial.ciudad, inicial.departamento]
+      .filter(Boolean)
+      .join(", ")
   );
 
   const [seleccionada, setSeleccionada] = useState(
@@ -61,12 +48,17 @@ export default function SelectorUbicacion({ inicial = {} }) {
 
   const [resultados, setResultados] = useState([]);
   const [cargando, setCargando] = useState(false);
+  const [obteniendoGps, setObteniendoGps] = useState(false);
   const [error, setError] = useState("");
 
   const [mapaAbierto, setMapaAbierto] = useState(
-    Boolean(inicial.latitud && inicial.longitud)
+    inicial.latitud != null &&
+    inicial.latitud !== "" &&
+    inicial.longitud != null &&
+    inicial.longitud !== ""
   );
 
+  // Buscar municipios y localidades
   useEffect(() => {
     const consulta = busqueda.trim();
 
@@ -94,7 +86,9 @@ export default function SelectorUbicacion({ inicial = {} }) {
         const datos = await respuesta.json();
 
         if (!respuesta.ok) {
-          throw new Error(datos.error || "Error buscando localidades");
+          throw new Error(
+            datos.error || "No se pudo buscar la localidad."
+          );
         }
 
         if (vigente) {
@@ -104,7 +98,9 @@ export default function SelectorUbicacion({ inicial = {} }) {
       } catch (fallo) {
         if (vigente && fallo.name !== "AbortError") {
           setResultados([]);
-          setError(fallo.message || "No se pudo buscar la localidad");
+          setError(
+            fallo.message || "Error buscando la localidad."
+          );
         }
       } finally {
         if (vigente) setCargando(false);
@@ -118,31 +114,115 @@ export default function SelectorUbicacion({ inicial = {} }) {
     };
   }, [busqueda, seleccionada]);
 
+  // Seleccionar localidad manualmente
   function seleccionar(lugar) {
     setCiudad(lugar.ciudad);
-    setDepartamento(lugar.departamento);
+    setDepartamento(lugar.departamento || "");
     setPlaceId(lugar.placeId);
-    setLatitud(lugar.latitud);
-    setLongitud(lugar.longitud);
-    setBusqueda(lugar.etiqueta);
+
+    setLatitud(String(lugar.latitud));
+    setLongitud(String(lugar.longitud));
+
+    setBusqueda(lugar.etiqueta || lugar.ciudad);
     setSeleccionada(true);
     setResultados([]);
-    setMapaAbierto(false);
+    setMapaAbierto(true);
     setError("");
   }
 
+  // Cambiar localidad
   function cambiarBusqueda(valor) {
     setBusqueda(valor);
     setSeleccionada(false);
     setCiudad("");
     setDepartamento("");
-    setZona("");
     setPlaceId("");
     setLatitud("");
     setLongitud("");
+    setZona("");
     setMapaAbierto(false);
+    setError("");
   }
 
+  // Obtener GPS y reconocer automáticamente el municipio
+  function usarUbicacionActual() {
+    setError("");
+    setResultados([]);
+
+    if (!navigator.geolocation) {
+      setError("Tu navegador no permite obtener la ubicación GPS.");
+      return;
+    }
+
+    setObteniendoGps(true);
+
+    navigator.geolocation.getCurrentPosition(
+      async ({ coords }) => {
+        try {
+          const parametros = new URLSearchParams({
+            lat: String(coords.latitude),
+            lon: String(coords.longitude)
+          });
+
+          const respuesta = await fetch(
+            `/api/admin/ubicaciones?${parametros}`,
+            { cache: "no-store" }
+          );
+
+          const datos = await respuesta.json();
+
+          if (!respuesta.ok || !datos.result) {
+            throw new Error(
+              datos.error || "No se pudo identificar el municipio."
+            );
+          }
+
+          const lugar = datos.result;
+
+          setCiudad(lugar.ciudad);
+          setDepartamento(lugar.departamento || "");
+          setPlaceId(lugar.placeId);
+
+          // Se conservan las coordenadas GPS originales
+          setLatitud(coords.latitude.toFixed(7));
+          setLongitud(coords.longitude.toFixed(7));
+
+          setBusqueda(lugar.etiqueta || lugar.ciudad);
+          setSeleccionada(true);
+          setResultados([]);
+          setMapaAbierto(true);
+          setError("");
+
+        } catch (fallo) {
+          setError(
+            fallo.message || "No se pudo obtener la localidad."
+          );
+        } finally {
+          setObteniendoGps(false);
+        }
+      },
+      fallo => {
+        const mensajes = {
+          1: "Debes permitir el acceso a tu ubicación.",
+          2: "No se pudo determinar tu ubicación GPS.",
+          3: "La solicitud GPS tardó demasiado. Inténtalo nuevamente."
+        };
+
+        setError(
+          mensajes[fallo.code] || "No se pudo obtener tu ubicación."
+        );
+
+        setObteniendoGps(false);
+      },
+      {
+        enableHighAccuracy: true,
+        timeout: 20000,
+        maximumAge: 0
+      }
+    );
+  }
+
+  // Ajustar marcador manualmente
   function cambiarCoordenadas(punto) {
     setLatitud(punto.lat.toFixed(7));
     setLongitud(punto.lng.toFixed(7));
@@ -157,20 +237,36 @@ export default function SelectorUbicacion({ inicial = {} }) {
       : null;
 
   const mapaDisponible =
-    seleccionada &&
+    Boolean(ciudad) &&
     posicion &&
     Number.isFinite(posicion.lat) &&
     Number.isFinite(posicion.lng);
 
   return (
     <section className="space-y-5">
+
+      {/* CAMPO 1: LOCALIDAD / MUNICIPIO */}
       <div>
-        <label
-          htmlFor="localidad-busqueda"
-          className="mb-2 block text-sm font-semibold text-slate-700"
-        >
-          Localidad *
-        </label>
+        <div className="mb-2 flex flex-wrap items-center justify-between gap-2">
+          <label
+            htmlFor="localidad-busqueda"
+            className="text-sm font-semibold text-slate-700"
+          >
+            Localidad / municipio *
+          </label>
+
+          <button
+            type="button"
+            onClick={usarUbicacionActual}
+            disabled={obteniendoGps}
+            className="inline-flex items-center gap-2 rounded-lg bg-blue-600 px-3 py-2 text-xs font-semibold text-white hover:bg-blue-700 disabled:opacity-50"
+          >
+            <FiMapPin size={15} />
+            {obteniendoGps
+              ? "Obteniendo ubicación..."
+              : "Usar mi ubicación actual"}
+          </button>
+        </div>
 
         <div className="relative">
           <div className="relative">
@@ -179,14 +275,15 @@ export default function SelectorUbicacion({ inicial = {} }) {
             <input
               id="localidad-busqueda"
               type="text"
+              name="localidad_busqueda"
               value={busqueda}
               onChange={e => cambiarBusqueda(e.target.value)}
               autoComplete="off"
               role="combobox"
               aria-autocomplete="list"
               aria-expanded={resultados.length > 0}
-              placeholder="Escribe una ciudad o localidad..."
-              className={`${claseInput} pl-10 pr-10`}
+              placeholder="Ej. Santa Cruz de la Sierra, Tarija..."
+              className={`${claseInput} pl-10 pr-4`}
             />
 
             {cargando && (
@@ -213,6 +310,7 @@ export default function SelectorUbicacion({ inicial = {} }) {
                     <span className="text-sm font-semibold text-slate-800">
                       {lugar.ciudad}
                     </span>
+
                     <span className="text-xs text-slate-500">
                       {lugar.etiqueta}
                     </span>
@@ -225,8 +323,9 @@ export default function SelectorUbicacion({ inicial = {} }) {
 
         {seleccionada && (
           <p className="mt-2 text-xs font-medium text-emerald-700">
-            Localidad seleccionada correctamente
-            {departamento ? ` · ${departamento}` : ""}
+            {departamento
+              ? `Departamento de ${departamento} › ${ciudad}`
+              : ciudad}
           </p>
         )}
 
@@ -236,7 +335,8 @@ export default function SelectorUbicacion({ inicial = {} }) {
           </p>
         )}
 
-        {!seleccionada && busqueda.trim().length > 0 &&
+        {!seleccionada &&
+          busqueda.trim().length > 0 &&
           busqueda.trim().length < 3 && (
             <p className="mt-2 text-xs text-slate-500">
               Escribe al menos 3 caracteres.
@@ -244,64 +344,54 @@ export default function SelectorUbicacion({ inicial = {} }) {
           )}
       </div>
 
-      {seleccionada && (
-        <div>
-          <label
-            htmlFor="zona"
-            className="mb-2 block text-sm font-semibold text-slate-700"
-          >
-            Zona / Barrio
-          </label>
-
-          <input
-            id="zona"
-            name="zona"
-            value={zona}
-            onChange={e => setZona(e.target.value)}
-            maxLength={120}
-            placeholder="Ej. Equipetrol, Las Palmas..."
-            className={claseInput}
-          />
-        </div>
-      )}
-
+      {/* CAMPO 2: ZONA / BARRIO */}
       <div>
         <label
-          htmlFor="direccion_privada"
+          htmlFor="zona"
           className="mb-2 block text-sm font-semibold text-slate-700"
         >
-          Dirección o referencia
+          Zona, barrio o referencia (opcional)
         </label>
 
         <input
-          id="direccion_privada"
-          name="direccion_privada"
-          value={direccion}
-          onChange={e => setDireccion(e.target.value)}
-          maxLength={300}
-          placeholder="Calle, avenida o referencia del inmueble"
+          id="zona"
+          name="zona"
+          value={zona}
+          onChange={e => setZona(e.target.value)}
+          maxLength={120}
+          placeholder="Ej. Plan 3000, Equipetrol, frente al mercado"
           className={claseInput}
         />
 
         <p className="mt-1 text-xs text-slate-500">
-          Este dato se conserva como información privada de administración.
+          Especifica el barrio o una referencia para encontrar el inmueble.
         </p>
       </div>
 
+      {/* DATOS INTERNOS PARA LA BASE DE DATOS */}
       <input type="hidden" name="departamento" value={departamento} />
       <input type="hidden" name="ciudad" value={ciudad} />
       <input type="hidden" name="geo_place_id" value={placeId} />
       <input type="hidden" name="latitud" value={latitud} />
       <input type="hidden" name="longitud" value={longitud} />
 
+      {/* CONSERVAR DIRECCIONES DE REGISTROS ANTIGUOS */}
+      <input
+        type="hidden"
+        name="direccion_privada"
+        value={inicial.direccion_privada || ""}
+      />
+
+      {/* MAPA */}
       <div className="space-y-3 rounded-xl border border-slate-200 p-3 sm:p-4">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
             <h3 className="text-sm font-bold text-slate-800">
               Ubicación en el mapa
             </h3>
+
             <p className="mt-1 text-xs text-slate-500">
-              Marca la ubicación exacta del inmueble.
+              Marca la zona aproximada del inmueble.
             </p>
           </div>
 
@@ -324,19 +414,25 @@ export default function SelectorUbicacion({ inicial = {} }) {
             />
 
             <p className="text-xs text-slate-500">
-              Toca el mapa o arrastra el marcador azul para ajustar la ubicación.
+              Toca el mapa o arrastra el marcador azul para ajustar
+              la ubicación.
             </p>
 
             <div className="grid grid-cols-2 gap-2 text-xs text-slate-600">
-              <p>Latitud: <strong>{latitud}</strong></p>
-              <p>Longitud: <strong>{longitud}</strong></p>
+              <p>
+                Latitud: <strong>{latitud}</strong>
+              </p>
+              <p>
+                Longitud: <strong>{longitud}</strong>
+              </p>
             </div>
           </>
         )}
 
         {!mapaDisponible && (
           <p className="text-xs text-slate-500">
-            Selecciona una localidad de las sugerencias para habilitar el mapa.
+            Busca una localidad o utiliza tu ubicación GPS para
+            habilitar el mapa.
           </p>
         )}
       </div>
