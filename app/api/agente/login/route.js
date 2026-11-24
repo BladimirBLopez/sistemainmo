@@ -66,7 +66,7 @@ export async function POST(request) {
       email.length > 180 ||
       typeof password !== "string" ||
       !password ||
-      password.length > 256
+      password.length > 256 || Buffer.byteLength(password, "utf8") > 72
     ) {
       return NextResponse.json(
         { error: "Credenciales incorrectas" },
@@ -75,7 +75,7 @@ export async function POST(request) {
     }
 
     const [agente] = await sql`
-      SELECT id, password_hash, estado
+      SELECT id, password_hash, estado, session_version
       FROM public.agentes
       WHERE LOWER(email) = ${email}
       LIMIT 1
@@ -92,7 +92,7 @@ export async function POST(request) {
       );
     }
 
-    const token = await crearSesionAgente(agente.id);
+    const token = await crearSesionAgente(agente.id, agente.session_version);
 
     await limpiarFallosAgente(ipHash);
 

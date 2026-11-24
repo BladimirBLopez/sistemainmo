@@ -19,7 +19,8 @@ const MapaUbicacion = dynamic(
 const claseInput =
   "w-full rounded-xl border border-slate-300 bg-white px-3.5 py-3 text-sm text-slate-900 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100";
 
-export default function SelectorUbicacion({ inicial = {} }) {
+export default function SelectorUbicacion({ inicial = {}, modo = "admin" }) {
+  const rutaApi = modo === "agente" ? "/api/agente/ubicaciones" : "/api/admin/ubicaciones";
   const [departamento, setDepartamento] = useState(
     inicial.departamento || ""
   );
@@ -74,7 +75,7 @@ export default function SelectorUbicacion({ inicial = {} }) {
 
       try {
         const respuesta = await fetch(
-          `/api/admin/ubicaciones?q=${encodeURIComponent(consulta)}`,
+          `${rutaApi}?q=${encodeURIComponent(consulta)}`,
           {
             signal: controlador.signal,
             cache: "no-store"
@@ -110,7 +111,7 @@ export default function SelectorUbicacion({ inicial = {} }) {
       clearTimeout(temporizador);
       controlador.abort();
     };
-  }, [busqueda, seleccionada]);
+  }, [busqueda, seleccionada, rutaApi]);
 
   // Seleccionar localidad manualmente
   function seleccionar(lugar) {
@@ -164,7 +165,7 @@ export default function SelectorUbicacion({ inicial = {} }) {
           });
 
           const respuesta = await fetch(
-            `/api/admin/ubicaciones?${parametros}`,
+            `${rutaApi}?${parametros}`,
             { cache: "no-store" }
           );
 

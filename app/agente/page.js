@@ -2,10 +2,8 @@ import Link from "next/link";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { sql } from "@/lib/db";
-import {
-  AGENTE_COOKIE_NAME,
-  verificarSesionAgente
-} from "@/lib/auth-agente";
+import { AGENTE_COOKIE_NAME } from "@/lib/auth-agente";
+import { obtenerAgenteActivo } from "@/lib/autorizacion-agente";
 import BotonSalir from "@/components/agente/BotonSalir";
 
 export const dynamic = "force-dynamic";
@@ -13,7 +11,7 @@ export const dynamic = "force-dynamic";
 export default async function PanelAgentePage() {
   const cookieStore = await cookies();
 
-  const sesion = await verificarSesionAgente(
+  const sesion = await obtenerAgenteActivo(
     cookieStore.get(AGENTE_COOKIE_NAME)?.value
   );
 

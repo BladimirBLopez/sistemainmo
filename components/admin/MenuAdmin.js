@@ -3,13 +3,14 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
-  FiGrid, FiHome, FiUsers, FiTarget,
-  FiCalendar, FiFileText, FiCreditCard
+  FiGrid, FiHome, FiUsers, FiUserCheck,
+  FiTarget, FiCalendar, FiFileText, FiCreditCard
 } from "react-icons/fi";
 
 const modulos = [
   { nombre: "Propiedades", Icono: FiHome, href: "/admin/propiedades" },
   { nombre: "Clientes", Icono: FiUsers, href: "/admin/clientes" },
+  { nombre: "Agentes", Icono: FiUserCheck, href: "/admin/agentes" },
   { nombre: "Leads", Icono: FiTarget },
   { nombre: "Visitas", Icono: FiCalendar },
   { nombre: "Contratos", Icono: FiFileText },
@@ -23,7 +24,11 @@ export default function MenuAdmin() {
     <nav className="space-y-2" aria-label="Menu administrativo">
       <Link
         href="/admin"
-        className={`flex items-center gap-3 rounded-xl px-4 py-3 font-medium ${ruta === "/admin" ? "bg-blue-600 text-white" : "text-slate-300 hover:bg-slate-800"}`}
+        className={`flex items-center gap-3 rounded-xl px-4 py-3 font-medium ${
+          ruta === "/admin"
+            ? "bg-blue-600 text-white"
+            : "text-slate-300 hover:bg-slate-800"
+        }`}
       >
         <FiGrid /> Dashboard
       </Link>

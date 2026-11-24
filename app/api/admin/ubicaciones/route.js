@@ -75,6 +75,9 @@ export async function GET(request) {
   const esReverse = latRaw !== null || lonRaw !== null;
   const consulta = parametros.get("q")?.trim();
 
+  let lat = null;
+  let lon = null;
+
   if (esReverse) {
     if (
       latRaw === null || lonRaw === null ||
@@ -86,8 +89,8 @@ export async function GET(request) {
       );
     }
 
-    const lat = Number(latRaw);
-    const lon = Number(lonRaw);
+    lat = Number(latRaw);
+    lon = Number(lonRaw);
 
     if (
       !Number.isFinite(lat) ||

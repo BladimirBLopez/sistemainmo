@@ -362,6 +362,7 @@ export default function FormularioEdicionPropiedad({ propiedad, modo = "admin" }
               latitud: propiedad.latitud,
               longitud: propiedad.longitud
             }}
+            modo={modo}
           />
         </section>
 
