@@ -6,7 +6,6 @@ import { leerJsonLimitado } from "@/lib/autorizacion-agente";
 
 export const runtime = "nodejs";
 
-export const runtime = "nodejs";
 
 export async function PUT(request, { params }) {
   const token = request.cookies.get(COOKIE_NAME)?.value;
