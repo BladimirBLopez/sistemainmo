@@ -7,12 +7,13 @@ import { FiX } from "react-icons/fi";
 import FormularioFoto from "./FormularioFoto";
 import BotonPortada from "./BotonPortada";
 
-export default function FichaLateral({ id, alCerrar }) {
+export default function FichaLateral({ id, alCerrar, modo = "admin" }) {
   const [datos, setDatos] = useState(null);
   const [cargando, setCargando] = useState(true);
   const [error, setError] = useState("");
   const [version, setVersion] = useState(0);
   const cerrarRef = useRef(null);
+  const panelRef = useRef(null);
 
   useEffect(() => {
     const controlador = new AbortController();
@@ -23,7 +24,7 @@ export default function FichaLateral({ id, alCerrar }) {
 
       try {
         const respuesta = await fetch(
-          `/api/admin/propiedades/${id}`,
+          `${modo === "agente" ? "/api/agente/propiedades" : "/api/admin/propiedades"}/${id}`,
           { signal: controlador.signal, cache: "no-store" }
         );
         const resultado = await respuesta.json();
@@ -48,16 +49,57 @@ export default function FichaLateral({ id, alCerrar }) {
 
     cargar();
     return () => controlador.abort();
-  }, [id, version]);
+  }, [id, modo, version]);
 
   useEffect(() => {
     const anterior = document.activeElement;
     const overflow = document.body.style.overflow;
+
     document.body.style.overflow = "hidden";
     cerrarRef.current?.focus();
 
     function teclado(evento) {
-      if (evento.key === "Escape") alCerrar();
+      if (evento.key === "Escape") {
+        evento.preventDefault();
+        alCerrar();
+        return;
+      }
+
+      if (evento.key !== "Tab") return;
+
+      const panel = panelRef.current;
+      if (!panel) return;
+
+      const elementos = Array.from(
+        panel.querySelectorAll(
+          'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
+        )
+      ).filter(elemento => elemento.getClientRects().length > 0);
+
+      if (!elementos.length) {
+        evento.preventDefault();
+        panel.focus();
+        return;
+      }
+
+      const primero = elementos[0];
+      const ultimo = elementos[elementos.length - 1];
+
+      if (
+        evento.shiftKey &&
+        (document.activeElement === primero ||
+         !panel.contains(document.activeElement))
+      ) {
+        evento.preventDefault();
+        ultimo.focus();
+      } else if (
+        !evento.shiftKey &&
+        (document.activeElement === ultimo ||
+         !panel.contains(document.activeElement))
+      ) {
+        evento.preventDefault();
+        primero.focus();
+      }
     }
 
     window.addEventListener("keydown", teclado);
@@ -94,6 +136,8 @@ export default function FichaLateral({ id, alCerrar }) {
         role="dialog"
         aria-modal="true"
         aria-labelledby="titulo-ficha-lateral"
+        ref={panelRef}
+        tabIndex={-1}
         className="relative ml-auto h-full w-full max-w-xl overflow-y-auto bg-white p-5 shadow-2xl sm:p-6"
       >
         <div className="mb-5 flex items-center justify-between gap-3">
@@ -207,6 +251,7 @@ export default function FichaLateral({ id, alCerrar }) {
                       propiedadId={String(id)}
                       fotoId={String(foto.id)}
                       alActualizar={actualizar}
+                      modo={modo}
                     />
                   )}
                 </div>
@@ -216,17 +261,18 @@ export default function FichaLateral({ id, alCerrar }) {
             <FormularioFoto
               propiedadId={String(id)}
               alActualizar={actualizar}
+              modo={modo}
             />
 
             <div className="flex flex-wrap items-center gap-4">
               <Link
-                href={`/admin/propiedades/${id}/editar`}
+                href={`/${modo}/propiedades/${id}/editar`}
                 className="text-sm font-semibold text-blue-600"
               >
                 Editar ficha
               </Link>
               <Link
-                href={`/admin/propiedades/${id}`}
+                href={`/${modo}/propiedades/${id}`}
                 className="text-sm font-semibold text-blue-600"
               >
                 Abrir página completa

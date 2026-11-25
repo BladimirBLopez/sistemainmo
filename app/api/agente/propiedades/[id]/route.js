@@ -10,6 +10,75 @@ import { validarEdicionPropiedad } from "@/lib/validacion-propiedad";
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
+export async function GET(request, { params }) {
+  try {
+    const agente = await obtenerAgenteDeRequest(request);
+
+    if (!agente) {
+      return NextResponse.json(
+        { error: "No autorizado" },
+        { status: 401 }
+      );
+    }
+
+    const { id } = await params;
+
+    if (typeof id !== "string" || !/^[1-9]\d{0,18}$/.test(id)) {
+      return NextResponse.json(
+        { error: "ID invalido" },
+        { status: 400 }
+      );
+    }
+
+    const [propiedad] = await sql`
+      SELECT
+        p.id, p.titulo, p.tipo, p.descripcion,
+        p.departamento, p.ciudad, p.zona, p.direccion_privada,
+        p.geo_place_id, p.latitud, p.longitud,
+        p.estado_publicacion, p.estado_comercial,
+        p.tipo_operacion, p.precio, p.moneda,
+        p.dormitorios, p.banos, p.parqueos,
+        p.superficie_terreno_m2, p.superficie_construida_m2
+      FROM public.propiedades p
+      WHERE p.id = ${id}
+        AND EXISTS (
+          SELECT 1
+          FROM public.agente_propiedades ap
+          JOIN public.agentes a ON a.id = ap.agente_id
+          WHERE ap.agente_id = ${agente.id}
+            AND ap.propiedad_id = p.id
+            AND a.estado = 'activo'
+        )
+      LIMIT 1
+    `;
+
+    if (!propiedad) {
+      return NextResponse.json(
+        { error: "Propiedad no encontrada o no asignada" },
+        { status: 404 }
+      );
+    }
+
+    const fotos = await sql`
+      SELECT id, secure_url, es_portada
+      FROM public.propiedad_imagenes
+      WHERE propiedad_id = ${id}
+      ORDER BY es_portada DESC, orden, id
+      LIMIT 30
+    `;
+
+    return NextResponse.json(
+      { propiedad, fotos },
+      { headers: { "Cache-Control": "no-store" } }
+    );
+  } catch {
+    return NextResponse.json(
+      { error: "No se pudo cargar la ficha" },
+      { status: 503 }
+    );
+  }
+}
+
 export async function PUT(request, { params }) {
   try {
     const agente = await obtenerAgenteDeRequest(request);

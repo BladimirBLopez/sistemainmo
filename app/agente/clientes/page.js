@@ -55,13 +55,10 @@ export default async function MisClientes({ searchParams }) {
   `;
 
   return (
-    <main className="min-h-screen bg-slate-100 p-4 md:p-8">
+    <main className="min-h-[calc(100vh-4rem)] bg-slate-100 p-4 md:p-8">
       <div className="mx-auto max-w-6xl space-y-6">
         <header>
-          <Link href="/agente" className="text-sm font-semibold text-blue-600">
-            ← Panel principal
-          </Link>
-          <h1 className="mt-2 text-2xl font-bold text-slate-900">
+<h1 className="mt-2 text-2xl font-bold text-slate-900">
             Mis clientes
           </h1>
           <p className="text-sm text-slate-500">

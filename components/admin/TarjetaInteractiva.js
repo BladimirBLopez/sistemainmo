@@ -3,7 +3,7 @@
 import { useCallback, useState } from "react";
 import FichaLateral from "./FichaLateral";
 
-export default function TarjetaInteractiva({ id, titulo, children }) {
+export default function TarjetaInteractiva({ id, titulo, children, modo = "admin", className = "" }) {
   const [abierta, setAbierta] = useState(false);
   const cerrar = useCallback(() => setAbierta(false), []);
 
@@ -25,13 +25,13 @@ export default function TarjetaInteractiva({ id, titulo, children }) {
         aria-label={`Abrir ficha de ${titulo}`}
         onClick={() => setAbierta(true)}
         onKeyDown={teclado}
-        className="cursor-pointer rounded-xl outline-none transition-shadow hover:shadow-md focus-visible:ring-2 focus-visible:ring-blue-600"
+        className={`cursor-pointer outline-none focus-visible:ring-2 focus-visible:ring-blue-600 ${className || "rounded-xl transition-shadow hover:shadow-md"}`}
       >
         {children}
       </div>
 
       {abierta && (
-        <FichaLateral id={id} alCerrar={cerrar} />
+        <FichaLateral id={id} alCerrar={cerrar} modo={modo} />
       )}
     </div>
   );

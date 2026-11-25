@@ -1,11 +1,9 @@
-import Link from "next/link";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { sql } from "@/lib/db";
 import { AGENTE_COOKIE_NAME } from "@/lib/auth-agente";
 import { obtenerAgenteActivo } from "@/lib/autorizacion-agente";
 import AgendaVisitas from "@/components/leads/AgendaVisitas";
-import BotonSalir from "@/components/agente/BotonSalir";
 
 export const dynamic = "force-dynamic";
 
@@ -73,19 +71,8 @@ export default async function AgendaAgente({ searchParams }) {
   }));
 
   return (
-    <main className="min-h-screen bg-slate-100">
-      <header className="flex flex-wrap items-center justify-between gap-4 bg-slate-900 p-5 text-white">
-        <div>
-          <h1 className="text-xl font-bold">Sistema Inmobiliario</h1>
-          <p className="text-sm text-slate-300">Agenda de visitas</p>
-        </div>
-        <BotonSalir />
-      </header>
-
-      <div className="mx-auto max-w-7xl space-y-5 p-5 md:p-8">
-        <Link href="/agente" className="text-sm font-semibold text-blue-600">
-          ← Panel de agente
-        </Link>
+    <main className="min-h-[calc(100vh-4rem)] bg-slate-100 p-4 md:p-8">
+      <div className="mx-auto max-w-7xl space-y-5">
 
         <div>
           <h2 className="text-2xl font-bold text-slate-900">

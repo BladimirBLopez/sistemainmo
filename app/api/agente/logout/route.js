@@ -1,7 +1,8 @@
 import { NextResponse } from "next/server";
 import {
   AGENTE_COOKIE_NAME,
-  AGENTE_COOKIE_OPTIONS
+  AGENTE_COOKIE_OPTIONS,
+  revocarSesionAgente
 } from "@/lib/auth-agente";
 
 export async function POST(request) {
@@ -14,12 +15,34 @@ export async function POST(request) {
     );
   }
 
-  const respuesta = NextResponse.json({ ok: true });
+  const token = request.cookies.get(
+    AGENTE_COOKIE_NAME
+  )?.value;
 
-  respuesta.cookies.set(AGENTE_COOKIE_NAME, "", {
-    ...AGENTE_COOKIE_OPTIONS,
-    maxAge: 0
-  });
+  try {
+    if (token) {
+      await revocarSesionAgente(token);
+    }
 
-  return respuesta;
+    const respuesta = NextResponse.json(
+      { ok: true },
+      { headers: { "Cache-Control": "no-store" } }
+    );
+
+    respuesta.cookies.set(AGENTE_COOKIE_NAME, "", {
+      ...AGENTE_COOKIE_OPTIONS,
+      maxAge: 0
+    });
+
+    return respuesta;
+
+  } catch {
+    return NextResponse.json(
+      { error: "No se pudo revocar la sesión. Intenta nuevamente." },
+      {
+        status: 503,
+        headers: { "Cache-Control": "no-store" }
+      }
+    );
+  }
 }

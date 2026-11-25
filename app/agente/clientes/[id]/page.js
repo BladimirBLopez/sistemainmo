@@ -52,7 +52,7 @@ export default async function FichaClienteAgente({ params }) {
   );
 
   return (
-    <main className="min-h-screen bg-slate-100 p-4 md:p-8">
+    <main className="min-h-[calc(100vh-4rem)] bg-slate-100 p-4 md:p-8">
       <div className="mx-auto max-w-5xl space-y-5">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <Link href="/agente/clientes" className="text-sm font-semibold text-blue-600">

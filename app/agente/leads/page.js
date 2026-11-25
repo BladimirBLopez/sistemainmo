@@ -65,14 +65,11 @@ export default async function MisLeads({ searchParams }) {
   ]);
 
   return (
-    <main className="min-h-screen bg-slate-100 p-4 md:p-8">
+    <main className="min-h-[calc(100vh-4rem)] bg-slate-100 p-4 md:p-8">
       <div className="mx-auto max-w-6xl space-y-6">
         <header className="flex flex-wrap items-center justify-between gap-3">
           <div>
-            <Link href="/agente" className="text-sm font-semibold text-blue-600">
-              ← Panel principal
-            </Link>
-            <h1 className="mt-2 text-2xl font-bold text-slate-900">Mis Leads</h1>
+<h1 className="mt-2 text-2xl font-bold text-slate-900">Mis Leads</h1>
             <p className="mt-1 text-sm text-slate-500">
               Gestiona tus oportunidades comerciales asignadas.
             </p>

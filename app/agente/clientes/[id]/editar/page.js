@@ -35,7 +35,7 @@ export default async function EditarClienteAgente({ params }) {
   if (!cliente) notFound();
 
   return (
-    <main className="min-h-screen bg-slate-100 p-4 md:p-8">
+    <main className="min-h-[calc(100vh-4rem)] bg-slate-100 p-4 md:p-8">
       <div className="mx-auto max-w-4xl space-y-4">
         <Link
           href={`/agente/clientes/${id}`}
