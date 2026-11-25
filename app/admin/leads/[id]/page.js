@@ -5,6 +5,7 @@ import { COOKIE_NAME, verificarSesion } from "@/lib/auth";
 import { sql } from "@/lib/db";
 import PanelShell from "@/components/admin/PanelShell";
 import PanelActividadesLead from "@/components/leads/PanelActividadesLead";
+import MatchingPropiedadesLead from "@/components/leads/MatchingPropiedadesLead";
 
 export const dynamic = "force-dynamic";
 
@@ -201,6 +202,8 @@ export default async function FichaLeadAdmin({ params }) {
             </p>
           </section>
         )}
+
+        <MatchingPropiedadesLead leadId={String(lead.id)} modo="admin" />
 
         <PanelActividadesLead
           leadId={String(lead.id)}

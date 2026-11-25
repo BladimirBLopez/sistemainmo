@@ -9,3 +9,4 @@ respaldos/
 x-test.mjs
 
 .env.local
+.vercel

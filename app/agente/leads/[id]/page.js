@@ -5,6 +5,7 @@ import { sql } from "@/lib/db";
 import { AGENTE_COOKIE_NAME } from "@/lib/auth-agente";
 import { obtenerAgenteActivo } from "@/lib/autorizacion-agente";
 import PanelActividadesLead from "@/components/leads/PanelActividadesLead";
+import MatchingPropiedadesLead from "@/components/leads/MatchingPropiedadesLead";
 
 export const dynamic = "force-dynamic";
 
@@ -196,6 +197,8 @@ export default async function FichaLeadAgente({ params }) {
             </p>
           </section>
         )}
+
+        <MatchingPropiedadesLead leadId={String(lead.id)} modo="agente" />
 
         <PanelActividadesLead
           leadId={String(lead.id)}
