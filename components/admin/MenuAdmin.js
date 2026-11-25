@@ -4,7 +4,8 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
   FiGrid, FiHome, FiUsers, FiUserCheck,
-  FiTarget, FiCalendar, FiFileText, FiCreditCard
+  FiTarget, FiCalendar, FiFileText, FiCreditCard,
+  FiBarChart2
 } from "react-icons/fi";
 
 const modulos = [
@@ -20,11 +21,18 @@ const modulos = [
 export default function MenuAdmin() {
   const ruta = usePathname();
 
+  const claseActivo = (href) =>
+    ruta === href || ruta.startsWith(`${href}/`)
+      ? "bg-blue-600 font-medium text-white"
+      : "text-slate-300 hover:bg-slate-800";
+
   return (
     <nav className="space-y-2" aria-label="Menu administrativo">
       <Link href="/admin"
         className={`flex items-center gap-3 rounded-xl px-4 py-3 font-medium ${
-          ruta === "/admin" ? "bg-blue-600 text-white" : "text-slate-300 hover:bg-slate-800"
+          ruta === "/admin"
+            ? "bg-blue-600 text-white"
+            : "text-slate-300 hover:bg-slate-800"
         }`}>
         <FiGrid /> Dashboard
       </Link>
@@ -36,11 +44,7 @@ export default function MenuAdmin() {
       {modulos.map(({ nombre, Icono, href }) =>
         href ? (
           <Link key={nombre} href={href}
-            className={`flex items-center gap-3 rounded-xl px-4 py-3 ${
-              ruta === href || ruta.startsWith(`${href}/`)
-                ? "bg-blue-600 font-medium text-white"
-                : "text-slate-300 hover:bg-slate-800"
-            }`}>
+            className={`flex items-center gap-3 rounded-xl px-4 py-3 ${claseActivo(href)}`}>
             <Icono />
             <span>{nombre}</span>
           </Link>
@@ -53,6 +57,16 @@ export default function MenuAdmin() {
           </div>
         )
       )}
+
+      <p className="px-4 pt-5 text-xs font-semibold uppercase text-slate-400">
+        Marketing y crecimiento
+      </p>
+
+      <Link href="/admin/marketing"
+        className={`flex items-center gap-3 rounded-xl px-4 py-3 ${claseActivo("/admin/marketing")}`}>
+        <FiBarChart2 />
+        <span>Marketing</span>
+      </Link>
     </nav>
   );
 }
