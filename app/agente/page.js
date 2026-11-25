@@ -35,7 +35,14 @@ export default async function PanelAgentePage() {
       (SELECT COUNT(*)::int FROM public.leads
        WHERE agente_id = ${sesion.id}) AS leads,
       (SELECT COUNT(*)::int FROM public.leads
-       WHERE agente_id = ${sesion.id} AND estado = 'nuevo') AS leads_nuevos
+       WHERE agente_id = ${sesion.id} AND estado = 'nuevo') AS leads_nuevos,
+      (SELECT COUNT(*)::int
+       FROM public.lead_actividades la
+       JOIN public.leads l ON l.id = la.lead_id
+       WHERE l.agente_id = ${sesion.id}
+         AND la.tipo = 'visita'
+         AND la.estado = 'pendiente'
+         AND la.programado_en >= NOW()) AS visitas_pendientes
   `;
 
   return (
@@ -59,7 +66,7 @@ export default async function PanelAgentePage() {
           </p>
         </section>
 
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           <Link href="/agente/propiedades"
             className="rounded-2xl bg-white p-6 shadow-sm transition hover:shadow-md">
             <p className="text-sm text-slate-500">Propiedades asignadas</p>
@@ -80,6 +87,17 @@ export default async function PanelAgentePage() {
             <p className="mt-3 text-3xl font-bold text-slate-900">{resumen.leads}</p>
             <p className="mt-1 text-xs text-slate-500">{resumen.leads_nuevos} prospectos nuevos</p>
             <p className="mt-3 text-sm font-semibold text-blue-600">Gestionar Leads →</p>
+          </Link>
+
+          <Link href="/agente/visitas"
+            className="rounded-2xl bg-white p-6 shadow-sm transition hover:shadow-md">
+            <p className="text-sm text-slate-500">Próximas visitas</p>
+            <p className="mt-3 text-3xl font-bold text-slate-900">
+              {resumen.visitas_pendientes}
+            </p>
+            <p className="mt-3 text-sm font-semibold text-blue-600">
+              Abrir mi agenda →
+            </p>
           </Link>
         </div>
       </div>

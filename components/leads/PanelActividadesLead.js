@@ -44,6 +44,7 @@ export default function PanelActividadesLead({
   const [guardando, setGuardando] = useState(false);
   const [actualizandoId, setActualizandoId] = useState(null);
   const [estadoActividad, setEstadoActividad] = useState("completada");
+  const [tipoActividad, setTipoActividad] = useState("nota");
   const [error, setError] = useState("");
   const [errorActualizacion, setErrorActualizacion] = useState("");
 
@@ -80,6 +81,7 @@ export default function PanelActividadesLead({
 
       formulario.reset();
       setEstadoActividad("completada");
+      setTipoActividad("nota");
       router.refresh();
 
     } catch (fallo) {
@@ -138,7 +140,7 @@ export default function PanelActividadesLead({
               <label className="mb-2 block text-sm font-semibold">
                 Tipo de actividad
               </label>
-              <select name="tipo" required className="w-full rounded-xl border p-3 text-sm">
+              <select name="tipo" required value={tipoActividad} onChange={e => setTipoActividad(e.target.value)} className="w-full rounded-xl border p-3 text-sm">
                 {Object.entries(tipos)
                   .filter(([v]) => v !== "cambio_estado")
                   .map(([v, t]) => (
@@ -200,6 +202,7 @@ export default function PanelActividadesLead({
             <input
               name="programado_en"
               type="datetime-local"
+              required={tipoActividad === "visita"}
               onChange={e => {
                 if (e.target.value) setEstadoActividad("pendiente");
               }}

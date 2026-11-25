@@ -12,7 +12,7 @@ const modulos = [
   { nombre: "Clientes", Icono: FiUsers, href: "/admin/clientes" },
   { nombre: "Agentes", Icono: FiUserCheck, href: "/admin/agentes" },
   { nombre: "Leads", Icono: FiTarget, href: "/admin/leads" },
-  { nombre: "Visitas", Icono: FiCalendar },
+  { nombre: "Visitas", Icono: FiCalendar, href: "/admin/visitas" },
   { nombre: "Contratos", Icono: FiFileText },
   { nombre: "Pagos", Icono: FiCreditCard }
 ];

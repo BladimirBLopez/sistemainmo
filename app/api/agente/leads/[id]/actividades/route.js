@@ -110,6 +110,13 @@ export async function POST(request, { params }) {
     );
   }
 
+  if (tipo === "visita" && !programado) {
+    return NextResponse.json(
+      { error: "Las visitas requieren fecha y hora programada" },
+      { status: 400 }
+    );
+  }
+
   try {
     const [actividad] = await sql`
       WITH nueva AS (
