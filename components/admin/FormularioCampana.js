@@ -5,7 +5,8 @@ import { useRouter } from "next/navigation";
 
 const campo = "w-full rounded-xl border border-slate-300 bg-white p-3 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100";
 
-export default function FormularioCampana() {
+export default function FormularioCampana({ campana = null }) {
+  const editando = Boolean(campana);
   const router = useRouter();
   const [guardando, setGuardando] = useState(false);
   const [error, setError] = useState("");
@@ -22,11 +23,14 @@ export default function FormularioCampana() {
         new FormData(evento.currentTarget).entries()
       );
 
-      const respuesta = await fetch("/api/admin/marketing", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(datos)
-      });
+      const respuesta = await fetch(
+        editando ? `/api/admin/marketing/${campana.id}` : "/api/admin/marketing",
+        {
+          method: editando ? "PUT" : "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(datos)
+        }
+      );
 
       const resultado = await respuesta.json();
 
@@ -34,7 +38,7 @@ export default function FormularioCampana() {
         throw new Error(resultado.error || "No se pudo registrar");
       }
 
-      router.push("/admin/marketing");
+      router.push(editando ? `/admin/marketing/${campana.id}` : "/admin/marketing");
       router.refresh();
 
     } catch (fallo) {
@@ -62,6 +66,7 @@ export default function FormularioCampana() {
               required
               minLength={3}
               maxLength={160}
+              defaultValue={campana?.nombre || ""}
               className={campo}
               placeholder="Ej. Captación de propiedades Santa Cruz"
             />
@@ -74,6 +79,7 @@ export default function FormularioCampana() {
             <textarea
               name="descripcion"
               maxLength={4000}
+              defaultValue={campana?.descripcion || ""}
               rows={4}
               className={campo}
               placeholder="Describe el propósito y estrategia de la campaña..."
@@ -85,7 +91,7 @@ export default function FormularioCampana() {
               <label className="mb-2 block text-sm font-semibold">
                 Objetivo
               </label>
-              <select name="objetivo" className={campo}>
+              <select name="objetivo" defaultValue={campana?.objetivo || "captacion"} className={campo}>
                 <option value="captacion">Captación de leads</option>
                 <option value="trafico">Tráfico</option>
                 <option value="reconocimiento">Reconocimiento</option>
@@ -99,7 +105,7 @@ export default function FormularioCampana() {
               <label className="mb-2 block text-sm font-semibold">
                 Tipo de campaña
               </label>
-              <select name="tipo" className={campo}>
+              <select name="tipo" defaultValue={campana?.tipo || "paga"} className={campo}>
                 <option value="paga">Publicidad pagada</option>
                 <option value="organica">Orgánica</option>
                 <option value="mixta">Mixta</option>
@@ -111,7 +117,7 @@ export default function FormularioCampana() {
             <label className="mb-2 block text-sm font-semibold">
               Estado
             </label>
-            <select name="estado" className={campo}>
+            <select name="estado" defaultValue={campana?.estado || "borrador"} className={campo}>
               <option value="borrador">Borrador</option>
               <option value="programada">Programada</option>
               <option value="activa">Activa</option>
@@ -140,7 +146,7 @@ export default function FormularioCampana() {
               min="0"
               max="999999999999"
               step="0.01"
-              defaultValue="0"
+              defaultValue={campana?.presupuesto ?? "0"}
               className={campo}
             />
           </div>
@@ -149,7 +155,7 @@ export default function FormularioCampana() {
             <label className="mb-2 block text-sm font-semibold">
               Moneda
             </label>
-            <select name="moneda" className={campo}>
+            <select name="moneda" defaultValue={campana?.moneda || "BOB"} className={campo}>
               <option value="BOB">Bolivianos (Bs)</option>
               <option value="USD">Dólares (USD)</option>
             </select>
@@ -170,6 +176,7 @@ export default function FormularioCampana() {
             <input
               name="fecha_inicio"
               type="date"
+              defaultValue={campana?.fecha_inicio || ""}
               className={campo}
             />
           </div>
@@ -181,6 +188,7 @@ export default function FormularioCampana() {
             <input
               name="fecha_fin"
               type="date"
+              defaultValue={campana?.fecha_fin || ""}
               className={campo}
             />
           </div>
@@ -197,7 +205,7 @@ export default function FormularioCampana() {
         <button
           type="button"
           disabled={guardando}
-          onClick={() => router.push("/admin/marketing")}
+          onClick={() => router.push(editando ? `/admin/marketing/${campana.id}` : "/admin/marketing")}
           className="rounded-xl border border-slate-300 px-5 py-3 text-sm font-semibold text-slate-700"
         >
           Cancelar
@@ -208,7 +216,7 @@ export default function FormularioCampana() {
           disabled={guardando}
           className="rounded-xl bg-blue-600 px-6 py-3 text-sm font-bold text-white hover:bg-blue-700 disabled:opacity-50"
         >
-          {guardando ? "Guardando..." : "Registrar campaña"}
+          {guardando ? "Guardando..." : editando ? "Guardar cambios" : "Registrar campaña"}
         </button>
       </div>
     </form>

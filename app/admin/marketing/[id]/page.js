@@ -173,6 +173,13 @@ export default async function CampanaPage({ params }) {
           <p className="mt-2 text-sm text-slate-500">
             Administración de campaña y canales publicitarios.
           </p>
+
+          <Link
+            href={`/admin/marketing/${campana.id}/editar`}
+            className="mt-4 inline-flex rounded-xl bg-blue-600 px-5 py-3 text-sm font-semibold text-white"
+          >
+            Editar campaña
+          </Link>
         </div>
 
         <section className="rounded-2xl bg-white p-6 shadow-sm">
