@@ -89,10 +89,16 @@ export default async function FichaLeadAdmin({ params }) {
     <PanelShell>
       <div className="mx-auto max-w-7xl space-y-5">
 
-        <Link href="/admin/leads"
-          className="text-sm font-semibold text-blue-600">
-          ← Volver a Leads
-        </Link>
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <Link href="/admin/leads"
+            className="text-sm font-semibold text-blue-600">
+            ← Volver a Leads
+          </Link>
+          <Link href={`/admin/leads/${lead.id}/editar`}
+            className="rounded-xl bg-blue-600 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-700">
+            Editar prospecto
+          </Link>
+        </div>
 
         <section className="rounded-2xl bg-white p-6 shadow-sm">
           <div className="flex flex-wrap items-start justify-between gap-4">
