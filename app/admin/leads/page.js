@@ -178,7 +178,7 @@ export default async function LeadsPage({ searchParams }) {
                 <article key={String(l.id)} className="py-5">
                   <div className="flex flex-wrap items-start justify-between gap-3">
                     <div>
-                      <h4 className="font-bold text-slate-900">{l.nombre_contacto}</h4>
+                      <Link href={`/admin/leads/${l.id}`} className="font-bold text-blue-700 hover:underline">{l.nombre_contacto}</Link>
                       <p className="mt-1 text-sm text-slate-500">
                         {l.telefono}{l.email ? ` · ${l.email}` : ""}
                       </p>

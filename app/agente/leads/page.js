@@ -131,7 +131,7 @@ export default async function MisLeads({ searchParams }) {
             <article key={String(l.id)} className="py-5">
               <div className="flex flex-wrap justify-between gap-3">
                 <div>
-                  <h3 className="font-bold text-slate-900">{l.nombre_contacto}</h3>
+                  <Link href={`/agente/leads/${l.id}`} className="font-bold text-blue-700 hover:underline">{l.nombre_contacto}</Link>
                   <p className="mt-1 text-sm text-slate-500">
                     {l.telefono}{l.email ? ` · ${l.email}` : ""}
                   </p>
