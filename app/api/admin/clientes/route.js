@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { sql } from "@/lib/db";
 import { COOKIE_NAME, verificarSesion } from "@/lib/auth";
 import { validarCliente } from "@/lib/validacion-cliente";
+import { leerJsonLimitado } from "@/lib/autorizacion-agente";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -23,30 +24,25 @@ export async function POST(request) {
     );
   }
 
-  if (!request.headers.get("content-type")?.startsWith("application/json")) {
+  const tipoContenido = request.headers.get("content-type") || "";
+
+  if (!/^application\/json(?:\s*;|$)/i.test(tipoContenido)) {
     return NextResponse.json(
       { error: "Se requiere JSON" },
       { status: 415 }
     );
   }
 
-  if (Number(request.headers.get("content-length") || 0) > 16384) {
+  const lectura = await leerJsonLimitado(request, 16384);
+
+  if (!lectura.ok) {
     return NextResponse.json(
-      { error: "Solicitud demasiado grande" },
-      { status: 413 }
+      { error: lectura.error },
+      { status: lectura.status }
     );
   }
 
-  let datos;
-
-  try {
-    datos = await request.json();
-  } catch {
-    return NextResponse.json(
-      { error: "Datos incorrectos" },
-      { status: 400 }
-    );
-  }
+  const datos = lectura.datos;
 
   if (!datos || typeof datos !== "object" || Array.isArray(datos)) {
     return NextResponse.json(
