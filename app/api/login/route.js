@@ -3,6 +3,7 @@ import { createHash, timingSafeEqual } from "node:crypto";
 import { COOKIE_NAME, COOKIE_OPTIONS, crearSesion } from "@/lib/auth";
 import { obtenerIpHash } from "@/lib/login-ip";
 import { reservarIntento, limpiarFallos } from "@/lib/login-limite";
+import { leerJsonLimitado } from "@/lib/autorizacion-agente";
 
 export const runtime = "nodejs";
 
@@ -24,8 +25,34 @@ export async function POST(request) {
       );
     }
 
-    const datos = await request.json().catch(() => null);
-    const password = datos?.password;
+    const tipoContenido = request.headers.get("content-type") || "";
+
+    if (!/^application\/json(?:\s*;|$)/i.test(tipoContenido)) {
+      return NextResponse.json(
+        { error: "Solicitud incorrecta" },
+        { status: 415 }
+      );
+    }
+
+    const lectura = await leerJsonLimitado(request, 8192);
+
+    if (!lectura.ok) {
+      return NextResponse.json(
+        { error: "Solicitud incorrecta" },
+        { status: lectura.status }
+      );
+    }
+
+    const datos = lectura.datos;
+
+    if (!datos || typeof datos !== "object" || Array.isArray(datos)) {
+      return NextResponse.json(
+        { error: "Solicitud incorrecta" },
+        { status: 400 }
+      );
+    }
+
+    const password = datos.password;
 
     if (typeof password !== "string" || !password || password.length > 256) {
       return NextResponse.json(
