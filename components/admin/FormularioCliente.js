@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 const rolesDisponibles = [
   ["propietario", "Propietario"],
@@ -13,12 +14,11 @@ const rolesDisponibles = [
 ];
 
 const clases =
-  "w-full rounded-xl border border-slate-300 bg-white p-3 text-sm text-slate-900 outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-100";
+  "input";
 
 export default function FormularioCliente({ cliente = null, modo = "admin" }) {
   const router = useRouter();
   const [guardando, setGuardando] = useState(false);
-  const [error, setError] = useState("");
 
   async function guardar(evento) {
     evento.preventDefault();
@@ -26,7 +26,6 @@ export default function FormularioCliente({ cliente = null, modo = "admin" }) {
     if (guardando) return;
 
     setGuardando(true);
-    setError("");
 
     try {
       const formulario = new FormData(evento.currentTarget);
@@ -52,15 +51,15 @@ export default function FormularioCliente({ cliente = null, modo = "admin" }) {
         throw new Error(resultado.error || "No se pudo guardar");
       }
 
+      toast.success(cliente ? "Cambios guardados" : "Cliente registrado");
       router.push(`${modo === "agente" ? "/agente/clientes" : "/admin/clientes"}/${resultado.id}`);
       router.refresh();
     } catch (fallo) {
-      setError(
+      toast.error(
         fallo instanceof Error
           ? fallo.message
           : "No se pudo guardar el cliente"
       );
-    } finally {
       setGuardando(false);
     }
   }
@@ -249,12 +248,6 @@ export default function FormularioCliente({ cliente = null, modo = "admin" }) {
         </div>
       </section>
 
-      {error && (
-        <p role="alert" className="rounded-xl bg-red-50 p-4 text-sm text-red-700">
-          {error}
-        </p>
-      )}
-
       <div className="flex flex-wrap gap-3">
         <button
           type="submit"
@@ -267,7 +260,7 @@ export default function FormularioCliente({ cliente = null, modo = "admin" }) {
         <button
           type="button"
           onClick={() => router.back()}
-          className="rounded-xl border border-slate-300 px-6 py-3 font-semibold text-slate-700"
+          className="btn-ghost px-6 py-3"
         >
           Cancelar
         </button>
