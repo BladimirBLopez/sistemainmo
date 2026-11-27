@@ -84,7 +84,7 @@ export default async function MisClientes({ searchParams }) {
               <option key={r} value={r}>{etiquetas[r]}</option>
             ))}
           </select>
-          <button className="rounded-xl bg-blue-600 px-5 py-3 font-semibold text-white">
+          <button className="rounded-xl bg-brand-600 px-5 py-3 font-semibold text-white">
             Buscar clientes
           </button>
           <Link
@@ -112,7 +112,7 @@ export default async function MisClientes({ searchParams }) {
               </p>
               <div className="mt-3 flex flex-wrap gap-2">
                 {c.roles.map(r => (
-                  <span key={r} className="rounded-full bg-blue-50 px-3 py-1 text-xs font-semibold text-blue-700">
+                  <span key={r} className="rounded-full bg-brand-50 px-3 py-1 text-xs font-semibold text-brand-700">
                     {etiquetas[r] || r}
                   </span>
                 ))}

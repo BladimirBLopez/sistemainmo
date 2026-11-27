@@ -178,7 +178,7 @@ export default async function LeadsPage({ searchParams }) {
                 <article key={String(l.id)} className="py-5">
                   <div className="flex flex-wrap items-start justify-between gap-3">
                     <div>
-                      <Link href={`/admin/leads/${l.id}`} className="font-bold text-blue-700 hover:underline">{l.nombre_contacto}</Link>
+                      <Link href={`/admin/leads/${l.id}`} className="font-bold text-brand-700 hover:underline">{l.nombre_contacto}</Link>
                       <p className="mt-1 text-sm text-slate-500">
                         {l.telefono}{l.email ? ` · ${l.email}` : ""}
                       </p>
@@ -189,7 +189,7 @@ export default async function LeadsPage({ searchParams }) {
                     </div>
 
                     <div className="flex flex-wrap gap-2">
-                      <span className="rounded-full bg-blue-50 px-3 py-1 text-xs font-semibold text-blue-700">
+                      <span className="rounded-full bg-brand-50 px-3 py-1 text-xs font-semibold text-brand-700">
                         {estados[l.estado] || l.estado}
                       </span>
                       <span className={`rounded-full px-3 py-1 text-xs font-semibold ${

@@ -49,7 +49,7 @@ export default async function EditarLeadPage({ params }) {
       <div className="mx-auto max-w-4xl space-y-5">
 
         <Link href={`/admin/leads/${id}`}
-          className="text-sm font-semibold text-blue-600">
+          className="text-sm font-semibold text-brand-600">
           ← Volver a la ficha del prospecto
         </Link>
 

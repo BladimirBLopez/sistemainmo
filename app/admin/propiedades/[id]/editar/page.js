@@ -69,7 +69,7 @@ export default async function EditarPropiedadPage({ params }) {
       <div className="mx-auto max-w-5xl space-y-4">
         <Link
           href={`/admin/propiedades/${id}`}
-          className="inline-flex items-center gap-2 text-sm font-semibold text-blue-600 hover:text-blue-800"
+          className="inline-flex items-center gap-2 text-sm font-semibold text-brand-600 hover:text-brand-800"
         >
           ← Volver a la ficha del inmueble
         </Link>

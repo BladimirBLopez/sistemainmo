@@ -91,7 +91,7 @@ export default async function FichaLeadAdmin({ params }) {
 
         <div className="flex flex-wrap items-center justify-between gap-3">
           <Link href="/admin/leads"
-            className="text-sm font-semibold text-blue-600">
+            className="text-sm font-semibold text-brand-600">
             ← Volver a Leads
           </Link>
           <Link href={`/admin/leads/${lead.id}/editar`}
@@ -103,7 +103,7 @@ export default async function FichaLeadAdmin({ params }) {
         <section className="rounded-2xl bg-white p-6 shadow-sm">
           <div className="flex flex-wrap items-start justify-between gap-4">
             <div>
-              <p className="text-xs font-bold uppercase text-blue-600">
+              <p className="text-xs font-bold uppercase text-brand-600">
                 Ficha comercial · Lead #{String(lead.id)}
               </p>
               <h2 className="mt-2 text-2xl font-bold text-slate-900">
@@ -115,7 +115,7 @@ export default async function FichaLeadAdmin({ params }) {
             </div>
 
             <div className="flex flex-wrap gap-2">
-              <span className="rounded-full bg-blue-50 px-3 py-2 text-sm font-semibold text-blue-700">
+              <span className="rounded-full bg-brand-50 px-3 py-2 text-sm font-semibold text-brand-700">
                 {estados[lead.estado] || lead.estado}
               </span>
               <span className="rounded-full bg-slate-100 px-3 py-2 text-sm font-semibold">
@@ -168,13 +168,13 @@ export default async function FichaLeadAdmin({ params }) {
             </div>
             {lead.cliente_id && (
               <Link href={`/admin/clientes/${lead.cliente_id}`}
-                className="mt-4 inline-block text-sm font-semibold text-blue-600">
+                className="mt-4 inline-block text-sm font-semibold text-brand-600">
                 Consultar cliente →
               </Link>
             )}
             {lead.propiedad_id && (
               <Link href={`/admin/propiedades/${lead.propiedad_id}`}
-                className="mt-4 ml-4 inline-block text-sm font-semibold text-blue-600">
+                className="mt-4 ml-4 inline-block text-sm font-semibold text-brand-600">
                 Consultar propiedad →
               </Link>
             )}

@@ -39,7 +39,7 @@ export default async function EditarClienteAgente({ params }) {
       <div className="mx-auto max-w-4xl space-y-4">
         <Link
           href={`/agente/clientes/${id}`}
-          className="inline-block text-sm font-semibold text-blue-600"
+          className="inline-block text-sm font-semibold text-brand-600"
         >
           ← Volver a la ficha del cliente
         </Link>

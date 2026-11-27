@@ -59,7 +59,7 @@ export default async function DetalleCliente({ params }) {
         <div className="flex flex-wrap items-center justify-between gap-3">
           <Link
             href="/admin/clientes"
-            className="text-sm font-semibold text-blue-600"
+            className="text-sm font-semibold text-brand-600"
           >
             ← Volver a clientes
           </Link>
@@ -81,7 +81,7 @@ export default async function DetalleCliente({ params }) {
             {cliente.roles.map(rol => (
               <span
                 key={rol}
-                className="rounded-full bg-blue-50 px-3 py-1 text-sm font-semibold text-blue-700"
+                className="rounded-full bg-brand-50 px-3 py-1 text-sm font-semibold text-brand-700"
               >
                 {etiquetas[rol] || rol}
               </span>

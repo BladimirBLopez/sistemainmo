@@ -37,7 +37,7 @@ const tipos = [
 ];
 
 const clases = {
-  input: "w-full min-w-0 rounded-xl border border-slate-300 bg-white px-3.5 py-3 text-sm text-slate-900 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100",
+  input: "w-full min-w-0 rounded-xl border border-slate-300 bg-white px-3.5 py-3 text-sm text-slate-900 outline-none transition focus:border-brand-500 focus:ring-2 focus:ring-brand-100",
   label: "mb-2 block text-sm font-semibold text-slate-700"
 };
 
@@ -202,7 +202,7 @@ export default function FormularioEdicionPropiedad({ propiedad, modo = "admin" }
                 }}
                 className={`flex min-w-0 flex-col items-center justify-center gap-1 rounded-lg px-1 py-2.5 text-[11px] font-semibold transition sm:flex-row sm:gap-2 sm:px-3 sm:text-sm ${
                   activo
-                    ? "bg-white text-blue-700 shadow-sm"
+                    ? "bg-white text-brand-700 shadow-sm"
                     : "text-slate-500 hover:text-slate-800"
                 }`}
               >
@@ -508,7 +508,7 @@ export default function FormularioEdicionPropiedad({ propiedad, modo = "admin" }
           <button
             type="submit"
             disabled={guardando}
-            className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-blue-600 px-4 py-3 text-sm font-semibold text-white transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
+            className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-brand-600 px-4 py-3 text-sm font-semibold text-white transition hover:bg-brand-700 disabled:cursor-not-allowed disabled:opacity-50"
           >
             <FiSave size={17} />
             {guardando ? "Guardando..." : "Guardar cambios"}

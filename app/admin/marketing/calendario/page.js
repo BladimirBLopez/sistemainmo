@@ -28,7 +28,7 @@ const estados = {
 const colores = {
   idea: "border-slate-200 bg-slate-100 text-slate-700",
   pendiente: "border-amber-200 bg-amber-50 text-amber-800",
-  programado: "border-blue-200 bg-blue-50 text-blue-800",
+  programado: "border-brand-200 bg-brand-50 text-brand-800",
   publicado: "border-emerald-200 bg-emerald-50 text-emerald-800",
   cancelado: "border-red-200 bg-red-50 text-red-700"
 };
@@ -171,14 +171,14 @@ export default async function CalendarioPage({ searchParams }) {
         <section className="rounded-2xl bg-white p-6 shadow-sm">
           <Link
             href="/admin/marketing"
-            className="text-sm font-semibold text-blue-600"
+            className="text-sm font-semibold text-brand-600"
           >
             ← Centro de Marketing
           </Link>
 
           <div className="mt-4 flex flex-wrap items-center justify-between gap-4">
             <div>
-              <p className="text-sm font-bold uppercase tracking-wide text-blue-600">
+              <p className="text-sm font-bold uppercase tracking-wide text-brand-600">
                 Planificación editorial
               </p>
 
@@ -214,7 +214,7 @@ export default async function CalendarioPage({ searchParams }) {
             <p className="text-sm text-slate-500">
               Programados
             </p>
-            <p className="mt-3 text-3xl font-black text-blue-700">
+            <p className="mt-3 text-3xl font-black text-brand-700">
               {programados}
             </p>
           </article>
@@ -292,7 +292,7 @@ export default async function CalendarioPage({ searchParams }) {
                     <div className="flex items-center justify-between">
                       <span className={`flex h-7 w-7 items-center justify-center rounded-full text-xs font-bold ${
                         celda.esHoy
-                          ? "bg-blue-600 text-white"
+                          ? "bg-brand-600 text-white"
                           : celda.delMes
                             ? "text-slate-800"
                             : "text-slate-400"
@@ -367,7 +367,7 @@ export default async function CalendarioPage({ searchParams }) {
 
             <Link
               href="/admin/marketing/contenidos"
-              className="text-sm font-semibold text-blue-600 hover:underline"
+              className="text-sm font-semibold text-brand-600 hover:underline"
             >
               Ver contenidos →
             </Link>

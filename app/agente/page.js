@@ -56,7 +56,7 @@ export default async function PanelAgentePage() {
       href: "/agente/propiedades",
       accion: "Ver inventario",
       Icono: FiHome,
-      color: "bg-blue-50 text-blue-700"
+      color: "bg-brand-50 text-brand-700"
     },
     {
       titulo: "Clientes",
@@ -92,12 +92,12 @@ export default async function PanelAgentePage() {
       <div className="mx-auto max-w-7xl space-y-7">
 
         <section className="relative overflow-hidden rounded-3xl bg-slate-950 p-6 text-white shadow-xl md:p-9">
-          <div className="pointer-events-none absolute -right-20 -top-32 h-80 w-80 rounded-full bg-blue-600/20 blur-3xl" />
+          <div className="pointer-events-none absolute -right-20 -top-32 h-80 w-80 rounded-full bg-brand-600/20 blur-3xl" />
           <div className="pointer-events-none absolute -bottom-32 right-1/3 h-64 w-64 rounded-full bg-indigo-500/10 blur-3xl" />
 
           <div className="relative flex flex-col justify-between gap-7 md:flex-row md:items-center">
             <div className="max-w-2xl">
-              <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/10 px-3 py-1.5 text-xs font-semibold text-blue-200">
+              <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/10 px-3 py-1.5 text-xs font-semibold text-brand-200">
                 <FiBriefcase size={14} />
                 ESPACIO COMERCIAL
               </div>
@@ -120,7 +120,7 @@ export default async function PanelAgentePage() {
             <div className="flex flex-col gap-3 sm:flex-row md:flex-col">
               <Link
                 href="/agente/leads/nuevo"
-                className="inline-flex items-center justify-center gap-2 rounded-xl bg-blue-600 px-5 py-3 text-sm font-bold text-white transition hover:bg-blue-500"
+                className="inline-flex items-center justify-center gap-2 rounded-xl bg-brand-600 px-5 py-3 text-sm font-bold text-white transition hover:bg-brand-500"
               >
                 <FiPlus size={18} />
                 Nuevo prospecto
@@ -154,7 +154,7 @@ export default async function PanelAgentePage() {
               <Link
                 key={titulo}
                 href={href}
-                className="group rounded-2xl border border-slate-200/80 bg-white p-5 shadow-sm transition duration-200 hover:-translate-y-1 hover:border-blue-200 hover:shadow-lg"
+                className="group rounded-2xl border border-slate-200/80 bg-white p-5 shadow-sm transition duration-200 hover:-translate-y-1 hover:border-brand-200 hover:shadow-lg"
               >
                 <div className="flex items-center justify-between">
                   <span className="text-sm font-semibold text-slate-500">
@@ -174,10 +174,10 @@ export default async function PanelAgentePage() {
                 </p>
 
                 <div className="mt-5 flex items-center justify-between border-t border-slate-100 pt-4">
-                  <span className="text-sm font-semibold text-blue-700">
+                  <span className="text-sm font-semibold text-brand-700">
                     {accion}
                   </span>
-                  <FiArrowUpRight className="text-slate-400 transition group-hover:translate-x-1 group-hover:text-blue-600" />
+                  <FiArrowUpRight className="text-slate-400 transition group-hover:translate-x-1 group-hover:text-brand-600" />
                 </div>
               </Link>
             ))}
@@ -195,9 +195,9 @@ export default async function PanelAgentePage() {
           <div className="mt-5 grid gap-3 sm:grid-cols-3">
             <Link
               href="/agente/propiedades"
-              className="flex items-center gap-3 rounded-xl border border-slate-200 p-4 transition hover:border-blue-300 hover:bg-blue-50/50"
+              className="flex items-center gap-3 rounded-xl border border-slate-200 p-4 transition hover:border-brand-300 hover:bg-brand-50/50"
             >
-              <FiHome className="text-blue-600" size={21} />
+              <FiHome className="text-brand-600" size={21} />
               <span className="text-sm font-semibold text-slate-700">
                 Consultar inventario
               </span>
@@ -205,9 +205,9 @@ export default async function PanelAgentePage() {
 
             <Link
               href="/agente/clientes"
-              className="flex items-center gap-3 rounded-xl border border-slate-200 p-4 transition hover:border-blue-300 hover:bg-blue-50/50"
+              className="flex items-center gap-3 rounded-xl border border-slate-200 p-4 transition hover:border-brand-300 hover:bg-brand-50/50"
             >
-              <FiUsers className="text-blue-600" size={21} />
+              <FiUsers className="text-brand-600" size={21} />
               <span className="text-sm font-semibold text-slate-700">
                 Gestionar clientes
               </span>
@@ -215,9 +215,9 @@ export default async function PanelAgentePage() {
 
             <Link
               href="/agente/leads"
-              className="flex items-center gap-3 rounded-xl border border-slate-200 p-4 transition hover:border-blue-300 hover:bg-blue-50/50"
+              className="flex items-center gap-3 rounded-xl border border-slate-200 p-4 transition hover:border-brand-300 hover:bg-brand-50/50"
             >
-              <FiTarget className="text-blue-600" size={21} />
+              <FiTarget className="text-brand-600" size={21} />
               <span className="text-sm font-semibold text-slate-700">
                 Seguimiento comercial
               </span>

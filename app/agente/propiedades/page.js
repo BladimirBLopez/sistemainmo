@@ -71,7 +71,7 @@ export default async function MisPropiedades({ searchParams }) {
             placeholder="Buscar por título, ciudad o zona"
             className="min-w-0 flex-1 rounded-xl border border-slate-300 p-3"
           />
-          <button className="rounded-xl bg-blue-600 px-5 py-3 font-semibold text-white">
+          <button className="rounded-xl bg-brand-600 px-5 py-3 font-semibold text-white">
             Buscar
           </button>
           <Link
@@ -104,7 +104,7 @@ export default async function MisPropiedades({ searchParams }) {
               </div>
 
               <div className="space-y-2 p-5">
-                <p className="text-xs font-semibold text-blue-600">
+                <p className="text-xs font-semibold text-brand-600">
                   {p.estado_publicacion}
                 </p>
                 <h2 className="font-bold text-slate-900">{p.titulo}</h2>
@@ -116,7 +116,7 @@ export default async function MisPropiedades({ searchParams }) {
                     ? `${p.moneda === "BOB" ? "Bs" : "USD"} ${Number(p.precio).toLocaleString("es-BO")}`
                     : "Precio no registrado"}
                 </p>
-                <span className="inline-block text-sm font-semibold text-blue-600">
+                <span className="inline-block text-sm font-semibold text-brand-600">
                   Ver detalles →
                 </span>
               </div>

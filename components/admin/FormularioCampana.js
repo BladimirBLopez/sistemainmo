@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
-const campo = "w-full rounded-xl border border-slate-300 bg-white p-3 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100";
+const campo = "w-full rounded-xl border border-slate-300 bg-white p-3 text-sm outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-100";
 
 export default function FormularioCampana({ campana = null }) {
   const editando = Boolean(campana);
@@ -214,7 +214,7 @@ export default function FormularioCampana({ campana = null }) {
         <button
           type="submit"
           disabled={guardando}
-          className="rounded-xl bg-blue-600 px-6 py-3 text-sm font-bold text-white hover:bg-blue-700 disabled:opacity-50"
+          className="rounded-xl bg-brand-600 px-6 py-3 text-sm font-bold text-white hover:bg-brand-700 disabled:opacity-50"
         >
           {guardando ? "Guardando..." : editando ? "Guardar cambios" : "Registrar campaña"}
         </button>

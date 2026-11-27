@@ -80,10 +80,10 @@ export default async function PropiedadPublica({ params }) {
       <header className="border-b border-slate-200 bg-white">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-5 py-5">
           <Link href="/" className="text-2xl font-black text-slate-900">
-            SISTEMAINMO<span className="text-blue-600">.</span>
+            SISTEMAINMO<span className="text-brand-600">.</span>
           </Link>
 
-          <Link href="/" className="text-sm font-semibold text-blue-600">
+          <Link href="/" className="text-sm font-semibold text-brand-600">
             ← Volver al catálogo
           </Link>
         </div>
@@ -92,7 +92,7 @@ export default async function PropiedadPublica({ params }) {
       <div className="mx-auto max-w-7xl space-y-7 px-5 py-8">
         <section>
           <div className="flex flex-wrap gap-2">
-            <span className="rounded-full bg-blue-100 px-4 py-2 text-xs font-bold text-blue-700">
+            <span className="rounded-full bg-brand-100 px-4 py-2 text-xs font-bold text-brand-700">
               {etiquetaOperacion(propiedad.tipo_operacion)}
             </span>
 
@@ -113,7 +113,7 @@ export default async function PropiedadPublica({ params }) {
             {ubicacion || "Ubicación no registrada"}
           </p>
 
-          <p className="mt-5 text-3xl font-black text-blue-700">
+          <p className="mt-5 text-3xl font-black text-brand-700">
             {formatoPrecio(propiedad.precio, propiedad.moneda)}
           </p>
         </section>
@@ -205,7 +205,7 @@ export default async function PropiedadPublica({ params }) {
                   href={mapaUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="mt-5 inline-flex rounded-xl bg-blue-600 px-5 py-3 text-sm font-bold text-white hover:bg-blue-700"
+                  className="mt-5 inline-flex rounded-xl bg-brand-600 px-5 py-3 text-sm font-bold text-white hover:bg-brand-700"
                 >
                   Ver ubicación en mapa
                 </a>
@@ -214,7 +214,7 @@ export default async function PropiedadPublica({ params }) {
 
             <Link
               href="/"
-              className="block rounded-xl border border-slate-200 bg-white p-5 text-center text-sm font-bold text-blue-600 hover:bg-blue-50"
+              className="block rounded-xl border border-slate-200 bg-white p-5 text-center text-sm font-bold text-brand-600 hover:bg-brand-50"
             >
               Explorar otras propiedades
             </Link>

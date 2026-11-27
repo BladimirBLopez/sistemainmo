@@ -259,7 +259,7 @@ export default function FormularioLead({
 
       <div className="flex flex-wrap gap-3">
         <button disabled={guardando} type="submit"
-          className="rounded-xl bg-blue-600 px-6 py-3 font-semibold text-white disabled:opacity-50">
+          className="rounded-xl bg-brand-600 px-6 py-3 font-semibold text-white disabled:opacity-50">
           {guardando ? "Guardando..." : edicion ? "Guardar cambios" : "Registrar prospecto"}
         </button>
 

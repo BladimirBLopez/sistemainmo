@@ -48,7 +48,7 @@ export default async function DetalleAgentePage({ params }) {
     <PanelShell>
       <div className="mx-auto max-w-6xl space-y-6">
         <div className="flex flex-wrap items-center justify-between gap-3">
-          <Link href="/admin/agentes" className="text-sm font-semibold text-blue-600">
+          <Link href="/admin/agentes" className="text-sm font-semibold text-brand-600">
             ← Volver a agentes
           </Link>
 

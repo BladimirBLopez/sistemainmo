@@ -103,7 +103,7 @@ export default async function Home({ searchParams }) {
       <header className="border-b border-slate-200 bg-white">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-5 py-5">
           <Link href="/" className="text-2xl font-black tracking-tight text-slate-900">
-            SISTEMAINMO<span className="text-blue-600">.</span>
+            SISTEMAINMO<span className="text-brand-600">.</span>
           </Link>
 
           <span className="text-sm font-medium text-slate-500">
@@ -114,7 +114,7 @@ export default async function Home({ searchParams }) {
 
       <section className="bg-slate-950 px-5 py-16 text-white md:py-24">
         <div className="mx-auto max-w-7xl">
-          <p className="text-sm font-semibold uppercase tracking-[0.2em] text-blue-300">
+          <p className="text-sm font-semibold uppercase tracking-[0.2em] text-brand-300">
             Tu próximo inmueble comienza aquí
           </p>
 
@@ -177,7 +177,7 @@ export default async function Home({ searchParams }) {
       <section className="mx-auto max-w-7xl px-5 py-12">
         <div className="mb-7 flex flex-wrap items-end justify-between gap-3">
           <div>
-            <p className="text-sm font-semibold text-blue-600">
+            <p className="text-sm font-semibold text-brand-600">
               INVENTARIO PUBLICADO
             </p>
             <h2 className="mt-2 text-3xl font-bold text-slate-900">
@@ -199,7 +199,7 @@ export default async function Home({ searchParams }) {
               Las propiedades aparecerán aquí cuando sean publicadas
               desde el administrador.
             </p>
-            <Link href="/" className="mt-5 inline-block font-semibold text-blue-600">
+            <Link href="/" className="mt-5 inline-block font-semibold text-brand-600">
               Ver todas las propiedades
             </Link>
           </div>
@@ -226,7 +226,7 @@ export default async function Home({ searchParams }) {
                     </div>
                   )}
 
-                  <span className="absolute left-3 top-3 rounded-lg bg-blue-600 px-3 py-1.5 text-xs font-bold text-white">
+                  <span className="absolute left-3 top-3 rounded-lg bg-brand-600 px-3 py-1.5 text-xs font-bold text-white">
                     {etiquetaOperacion(propiedad.tipo_operacion)}
                   </span>
                 </div>
@@ -245,7 +245,7 @@ export default async function Home({ searchParams }) {
                       .filter(Boolean).join(", ") || "Ubicación no registrada"}
                   </p>
 
-                  <p className="mt-5 text-2xl font-black text-blue-700">
+                  <p className="mt-5 text-2xl font-black text-brand-700">
                     {formatoPrecio(propiedad.precio, propiedad.moneda)}
                   </p>
 
@@ -261,7 +261,7 @@ export default async function Home({ searchParams }) {
                     )}
                   </div>
 
-                  <p className="mt-4 text-sm font-bold text-blue-600">
+                  <p className="mt-4 text-sm font-bold text-brand-600">
                     Ver propiedad →
                   </p>
                 </div>

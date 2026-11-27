@@ -51,7 +51,7 @@ export default async function DetallePropiedad({ params }) {
         <div className="flex flex-wrap items-center justify-between gap-3">
           <Link
             href="/admin/propiedades"
-            className="text-sm font-medium text-blue-600"
+            className="text-sm font-medium text-brand-600"
           >
             ← Volver a propiedades
           </Link>
@@ -78,7 +78,7 @@ export default async function DetallePropiedad({ params }) {
           </p>
 
           <div className="mt-4 flex flex-wrap gap-2">
-            <span className="rounded-full bg-blue-50 px-3 py-1 text-sm font-semibold text-blue-700">
+            <span className="rounded-full bg-brand-50 px-3 py-1 text-sm font-semibold text-brand-700">
               {propiedad.tipo_operacion === "venta"
                 ? "Venta"
                 : propiedad.tipo_operacion === "alquiler"
@@ -151,7 +151,7 @@ export default async function DetallePropiedad({ params }) {
                     className="rounded-xl object-cover"
                   />
                   {foto.es_portada ? (
-                    <span className="absolute left-3 top-3 rounded-lg bg-blue-600 px-3 py-1 text-xs font-semibold text-white shadow">
+                    <span className="absolute left-3 top-3 rounded-lg bg-brand-600 px-3 py-1 text-xs font-semibold text-white shadow">
                       Portada
                     </span>
                   ) : (

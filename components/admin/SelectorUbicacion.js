@@ -17,7 +17,7 @@ const MapaUbicacion = dynamic(
 );
 
 const claseInput =
-  "w-full rounded-xl border border-slate-300 bg-white px-3.5 py-3 text-sm text-slate-900 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100";
+  "w-full rounded-xl border border-slate-300 bg-white px-3.5 py-3 text-sm text-slate-900 outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-100";
 
 export default function SelectorUbicacion({ inicial = {}, modo = "admin" }) {
   const rutaApi = modo === "agente" ? "/api/agente/ubicaciones" : "/api/admin/ubicaciones";
@@ -255,7 +255,7 @@ export default function SelectorUbicacion({ inicial = {}, modo = "admin" }) {
             type="button"
             onClick={usarUbicacionActual}
             disabled={obteniendoGps}
-            className="inline-flex items-center gap-2 rounded-lg bg-blue-600 px-3 py-2 text-xs font-semibold text-white hover:bg-blue-700 disabled:opacity-50"
+            className="inline-flex items-center gap-2 rounded-lg bg-brand-600 px-3 py-2 text-xs font-semibold text-white hover:bg-brand-700 disabled:opacity-50"
           >
             <FiMapPin size={15} />
             {obteniendoGps
@@ -283,7 +283,7 @@ export default function SelectorUbicacion({ inicial = {}, modo = "admin" }) {
             />
 
             {cargando && (
-              <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-blue-600">
+              <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-brand-600">
                 Buscando...
               </span>
             )}
@@ -301,7 +301,7 @@ export default function SelectorUbicacion({ inicial = {}, modo = "admin" }) {
                     role="option"
                     aria-selected="false"
                     onClick={() => seleccionar(lugar)}
-                    className="flex w-full flex-col gap-1 border-b border-slate-100 px-4 py-3 text-left hover:bg-blue-50"
+                    className="flex w-full flex-col gap-1 border-b border-slate-100 px-4 py-3 text-left hover:bg-brand-50"
                   >
                     <span className="text-sm font-semibold text-slate-800">
                       {lugar.ciudad}
@@ -397,7 +397,7 @@ export default function SelectorUbicacion({ inicial = {}, modo = "admin" }) {
             type="button"
             disabled={!mapaDisponible}
             onClick={() => setMapaAbierto(v => !v)}
-            className="inline-flex items-center gap-2 rounded-lg bg-blue-600 px-3 py-2 text-xs font-semibold text-white hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-40"
+            className="inline-flex items-center gap-2 rounded-lg bg-brand-600 px-3 py-2 text-xs font-semibold text-white hover:bg-brand-700 disabled:cursor-not-allowed disabled:opacity-40"
           >
             <FiMap size={15} />
             {mapaAbierto ? "Ocultar mapa" : "Ubicar en el mapa"}

@@ -65,7 +65,7 @@ export default async function EditarPropiedadAgente({ params }) {
       <div className="mx-auto max-w-5xl">
         <Link
           href={`/agente/propiedades/${id}`}
-          className="mb-4 inline-block text-sm font-semibold text-blue-600"
+          className="mb-4 inline-block text-sm font-semibold text-brand-600"
         >
           ← Volver a la ficha
         </Link>

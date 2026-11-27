@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
-const clase = "w-full rounded-xl border border-slate-300 bg-white p-3 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100";
+const clase = "w-full rounded-xl border border-slate-300 bg-white p-3 text-sm outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-100";
 
 export default function FormularioContenido({ campanas, contenido = null }) {
   const router = useRouter();
@@ -204,7 +204,7 @@ export default function FormularioContenido({ campanas, contenido = null }) {
 
       <button
         disabled={guardando}
-        className="w-full rounded-xl bg-blue-600 px-5 py-3 font-bold text-white hover:bg-blue-700 disabled:opacity-50"
+        className="w-full rounded-xl bg-brand-600 px-5 py-3 font-bold text-white hover:bg-brand-700 disabled:opacity-50"
       >
         {guardando ? "Guardando..." : contenido ? "Guardar cambios" : "Registrar publicación"}
       </button>

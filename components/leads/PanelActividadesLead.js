@@ -219,7 +219,7 @@ export default function PanelActividadesLead({
           <button
             disabled={guardando}
             type="submit"
-            className="rounded-xl bg-blue-600 px-5 py-3 text-sm font-semibold text-white disabled:opacity-50"
+            className="rounded-xl bg-brand-600 px-5 py-3 text-sm font-semibold text-white disabled:opacity-50"
           >
             {guardando ? "Guardando..." : "Registrar actividad"}
           </button>
@@ -256,11 +256,11 @@ export default function PanelActividadesLead({
                     ? "border-orange-400 bg-orange-50"
                     : a.estado === "cancelada"
                       ? "border-slate-400 bg-slate-50"
-                      : "border-blue-500 bg-slate-50"
+                      : "border-brand-500 bg-slate-50"
                 }`}
               >
                 <div className="flex flex-wrap justify-between gap-2">
-                  <span className="text-xs font-bold uppercase text-blue-700">
+                  <span className="text-xs font-bold uppercase text-brand-700">
                     {tipos[a.tipo] || a.tipo}
                   </span>
                   <span className="text-xs text-slate-500">
@@ -332,7 +332,7 @@ export default function PanelActividadesLead({
                       type="button"
                       disabled={actualizandoId !== null}
                       onClick={() => cambiarEstado(a.id, "pendiente")}
-                      className="rounded-lg border border-blue-300 px-4 py-2 text-xs font-semibold text-blue-700 disabled:opacity-50"
+                      className="rounded-lg border border-brand-300 px-4 py-2 text-xs font-semibold text-brand-700 disabled:opacity-50"
                     >
                       Reabrir actividad
                     </button>

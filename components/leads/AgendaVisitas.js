@@ -188,7 +188,7 @@ export default function AgendaVisitas({
 
         <button
           type="submit"
-          className="rounded-xl bg-blue-600 px-5 py-3 text-sm font-semibold text-white"
+          className="rounded-xl bg-brand-600 px-5 py-3 text-sm font-semibold text-white"
         >
           Filtrar
         </button>
@@ -203,7 +203,7 @@ export default function AgendaVisitas({
 
       <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
         {[
-          ["Total de visitas", visitas.length, "bg-blue-50"],
+          ["Total de visitas", visitas.length, "bg-brand-50"],
           ["Pendientes", pendientes, "bg-amber-50"],
           ["Completadas", completadas, "bg-green-50"],
           ["Canceladas", canceladas, "bg-slate-100"]
@@ -227,7 +227,7 @@ export default function AgendaVisitas({
               Calendario de visitas comerciales
             </p>
           </div>
-          <span className="rounded-full bg-blue-50 px-3 py-2 text-xs font-semibold text-blue-700">
+          <span className="rounded-full bg-brand-50 px-3 py-2 text-xs font-semibold text-brand-700">
             {visitas.length} visitas
           </span>
         </div>
@@ -319,7 +319,7 @@ export default function AgendaVisitas({
               >
                 <div className="flex flex-wrap items-start justify-between gap-3">
                   <div>
-                    <p className="text-xs font-semibold uppercase text-blue-600">
+                    <p className="text-xs font-semibold uppercase text-brand-600">
                       {fechaHora(v.programado_en)}
                     </p>
                     <h3 className="mt-1 font-bold text-slate-900">
@@ -356,7 +356,7 @@ export default function AgendaVisitas({
                 <div className="mt-4 flex flex-wrap gap-2">
                   <Link
                     href={`${ruta}/${v.lead_id}`}
-                    className="rounded-lg border border-blue-200 px-3 py-2 text-xs font-semibold text-blue-700"
+                    className="rounded-lg border border-brand-200 px-3 py-2 text-xs font-semibold text-brand-700"
                   >
                     Ver ficha del lead
                   </Link>
@@ -385,7 +385,7 @@ export default function AgendaVisitas({
                       type="button"
                       disabled={actualizando !== ""}
                       onClick={() => cambiarEstado(v, "pendiente")}
-                      className="rounded-lg border border-blue-200 px-3 py-2 text-xs font-semibold text-blue-700 disabled:opacity-50"
+                      className="rounded-lg border border-brand-200 px-3 py-2 text-xs font-semibold text-brand-700 disabled:opacity-50"
                     >
                       Reabrir visita
                     </button>

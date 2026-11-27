@@ -21,14 +21,14 @@ export default async function NuevaPropiedadPage() {
       <div className="mx-auto max-w-3xl space-y-6">
         <Link
           href="/admin/propiedades"
-          className="inline-flex items-center gap-2 text-sm font-medium text-blue-600"
+          className="inline-flex items-center gap-2 text-sm font-medium text-brand-600"
         >
           <FiArrowLeft /> Volver a propiedades
         </Link>
 
         <section className="rounded-2xl bg-white p-6 shadow-sm">
           <div className="flex items-center gap-3">
-            <FiHome size={28} className="text-blue-600" />
+            <FiHome size={28} className="text-brand-600" />
             <div>
               <h2 className="text-2xl font-bold text-slate-900">
                 Nueva propiedad

@@ -29,7 +29,7 @@ const plataformas = {
 const colores = {
   idea: "bg-slate-100 text-slate-700",
   pendiente: "bg-amber-100 text-amber-700",
-  programado: "bg-blue-100 text-blue-700",
+  programado: "bg-brand-100 text-brand-700",
   publicado: "bg-emerald-100 text-emerald-700",
   cancelado: "bg-red-100 text-red-700"
 };
@@ -119,12 +119,12 @@ export default async function ContenidosPage({ searchParams }) {
         <section className="rounded-2xl bg-white p-6 shadow-sm">
           <Link
             href="/admin/marketing"
-            className="text-sm font-semibold text-blue-600"
+            className="text-sm font-semibold text-brand-600"
           >
             ← Volver a Marketing
           </Link>
 
-          <p className="mt-4 text-sm font-bold uppercase text-blue-600">
+          <p className="mt-4 text-sm font-bold uppercase text-brand-600">
             Marketing empresarial
           </p>
 
@@ -231,7 +231,7 @@ export default async function ContenidosPage({ searchParams }) {
                     <div className="flex flex-wrap items-center justify-between gap-2">
                       <h4 className="font-bold text-slate-900">
                         <Link href={"/admin/marketing/contenidos/" + c.id}
-                          className="hover:text-blue-600">
+                          className="hover:text-brand-600">
                           {c.titulo}
                         </Link>
                       </h4>
@@ -252,7 +252,7 @@ export default async function ContenidosPage({ searchParams }) {
                     </p>
 
                     {c.fecha_local && (
-                      <p className="text-sm font-semibold text-blue-700">
+                      <p className="text-sm font-semibold text-brand-700">
                         <span>Fecha programada: </span>
                         {c.fecha_local}
                       </p>
@@ -270,7 +270,7 @@ export default async function ContenidosPage({ searchParams }) {
                           href={c.recurso_url}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="text-xs font-semibold text-blue-600 hover:underline"
+                          className="text-xs font-semibold text-brand-600 hover:underline"
                         >
                           Ver recurso gráfico
                         </a>
@@ -281,7 +281,7 @@ export default async function ContenidosPage({ searchParams }) {
                           href={c.url_publicacion}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="text-xs font-semibold text-blue-600 hover:underline"
+                          className="text-xs font-semibold text-brand-600 hover:underline"
                         >
                           Ver publicación
                         </a>
@@ -301,7 +301,7 @@ export default async function ContenidosPage({ searchParams }) {
                     <Link href={crearUrlPagina(pagina - 1)} className="rounded-lg border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700">← Anterior</Link>
                   ) : <span className="rounded-lg border border-slate-200 px-4 py-2 text-sm text-slate-400">← Anterior</span>}
                   {pagina < totalPaginas ? (
-                    <Link href={crearUrlPagina(pagina + 1)} className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white">Siguiente →</Link>
+                    <Link href={crearUrlPagina(pagina + 1)} className="rounded-lg bg-brand-600 px-4 py-2 text-sm font-semibold text-white">Siguiente →</Link>
                   ) : <span className="rounded-lg bg-slate-100 px-4 py-2 text-sm text-slate-400">Siguiente →</span>}
                 </div>
               </nav>

@@ -311,7 +311,7 @@ export default function FormularioPropiedad() {
       <button
         type="submit"
         disabled={guardando}
-        className="w-full rounded-xl bg-blue-600 px-5 py-3 font-semibold text-white disabled:opacity-50"
+        className="w-full rounded-xl bg-brand-600 px-5 py-3 font-semibold text-white disabled:opacity-50"
       >
         {guardando
           ? "Procesando..."

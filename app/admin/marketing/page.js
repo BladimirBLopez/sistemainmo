@@ -33,7 +33,7 @@ const estados = {
 
 const colores = {
   borrador: "bg-slate-100 text-slate-600",
-  programada: "bg-blue-100 text-blue-700",
+  programada: "bg-brand-100 text-brand-700",
   activa: "bg-emerald-100 text-emerald-700",
   pausada: "bg-amber-100 text-amber-700",
   finalizada: "bg-slate-200 text-slate-700",
@@ -126,7 +126,7 @@ export default async function MarketingPage() {
       nombre: "Campañas registradas",
       valor: datos.total,
       detalle: `${datos.programadas} programadas`,
-      color: "text-blue-700"
+      color: "text-brand-700"
     },
     {
       nombre: "Campañas activas",
@@ -155,7 +155,7 @@ export default async function MarketingPage() {
         <section className="rounded-2xl bg-white p-6 shadow-sm">
           <div className="flex flex-wrap items-center justify-between gap-4">
             <div>
-              <p className="text-sm font-bold uppercase tracking-wide text-blue-600">
+              <p className="text-sm font-bold uppercase tracking-wide text-brand-600">
                 Marketing empresarial
               </p>
               <h2 className="mt-2 text-2xl font-black text-slate-900">
@@ -177,7 +177,7 @@ export default async function MarketingPage() {
             </Link>
 
             <Link href="/admin/marketing/contenidos"
-              className="rounded-xl border border-blue-200 bg-blue-50 px-5 py-3 text-sm font-semibold text-blue-700">
+              className="rounded-xl border border-brand-200 bg-brand-50 px-5 py-3 text-sm font-semibold text-brand-700">
               Gestionar contenidos
             </Link>
 
@@ -316,7 +316,7 @@ export default async function MarketingPage() {
                 <article key={String(campana.id)}
                   className="flex flex-wrap items-center justify-between gap-4 py-4">
                   <div>
-                    <Link href={`/admin/marketing/${campana.id}`} className="font-bold text-slate-900 hover:text-blue-600">
+                    <Link href={`/admin/marketing/${campana.id}`} className="font-bold text-slate-900 hover:text-brand-600">
                       {campana.nombre}
                     </Link>
                     <p className="mt-1 text-xs text-slate-500">

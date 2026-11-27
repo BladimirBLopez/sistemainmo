@@ -191,7 +191,7 @@ export default function FichaLateral({ id, alCerrar, modo = "admin" }) {
             </div>
 
             <div className="flex flex-wrap gap-2 text-sm">
-              <span className="rounded-full bg-blue-50 px-3 py-1 text-blue-700">
+              <span className="rounded-full bg-brand-50 px-3 py-1 text-brand-700">
                 {propiedad.tipo_operacion === "venta"
                   ? "Venta"
                   : propiedad.tipo_operacion === "alquiler"
@@ -243,7 +243,7 @@ export default function FichaLateral({ id, alCerrar, modo = "admin" }) {
                     className="object-cover"
                   />
                   {foto.es_portada ? (
-                    <span className="absolute left-2 top-2 rounded bg-blue-600 px-2 py-1 text-xs text-white">
+                    <span className="absolute left-2 top-2 rounded bg-brand-600 px-2 py-1 text-xs text-white">
                       Portada
                     </span>
                   ) : (
@@ -267,13 +267,13 @@ export default function FichaLateral({ id, alCerrar, modo = "admin" }) {
             <div className="flex flex-wrap items-center gap-4">
               <Link
                 href={`/${modo}/propiedades/${id}/editar`}
-                className="text-sm font-semibold text-blue-600"
+                className="text-sm font-semibold text-brand-600"
               >
                 Editar ficha
               </Link>
               <Link
                 href={`/${modo}/propiedades/${id}`}
-                className="text-sm font-semibold text-blue-600"
+                className="text-sm font-semibold text-brand-600"
               >
                 Abrir página completa
               </Link>

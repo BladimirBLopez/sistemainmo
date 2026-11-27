@@ -48,12 +48,12 @@ export default async function FichaPropiedadAgente({ params }) {
     <main className="min-h-[calc(100vh-4rem)] bg-slate-100 p-4 md:p-8">
       <div className="mx-auto max-w-5xl space-y-5">
         <div className="flex flex-wrap items-center justify-between gap-3">
-          <Link href="/agente/propiedades" className="text-sm font-semibold text-blue-600">
+          <Link href="/agente/propiedades" className="text-sm font-semibold text-brand-600">
             ← Mis propiedades
           </Link>
           <Link
             href={`/agente/propiedades/${id}/editar`}
-            className="rounded-xl bg-blue-600 px-5 py-3 font-semibold text-white"
+            className="rounded-xl bg-brand-600 px-5 py-3 font-semibold text-white"
           >
             Editar propiedad
           </Link>
@@ -113,7 +113,7 @@ export default async function FichaPropiedadAgente({ params }) {
                 />
 
                 {foto.es_portada ? (
-                  <span className="absolute left-3 top-3 rounded-lg bg-blue-600 px-3 py-1 text-xs font-semibold text-white">
+                  <span className="absolute left-3 top-3 rounded-lg bg-brand-600 px-3 py-1 text-xs font-semibold text-white">
                     Portada
                   </span>
                 ) : (

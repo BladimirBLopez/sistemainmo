@@ -177,7 +177,7 @@ export default async function ClientesPage({ searchParams }) {
                       {cliente.roles.map(r => (
                         <span
                           key={r}
-                          className="rounded-full bg-blue-50 px-3 py-1 text-xs font-semibold text-blue-700"
+                          className="rounded-full bg-brand-50 px-3 py-1 text-xs font-semibold text-brand-700"
                         >
                           {etiquetas[r] || r}
                         </span>

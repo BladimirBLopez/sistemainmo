@@ -55,12 +55,12 @@ export default async function FichaClienteAgente({ params }) {
     <main className="min-h-[calc(100vh-4rem)] bg-slate-100 p-4 md:p-8">
       <div className="mx-auto max-w-5xl space-y-5">
         <div className="flex flex-wrap items-center justify-between gap-3">
-          <Link href="/agente/clientes" className="text-sm font-semibold text-blue-600">
+          <Link href="/agente/clientes" className="text-sm font-semibold text-brand-600">
             ← Mis clientes
           </Link>
           <Link
             href={`/agente/clientes/${id}/editar`}
-            className="rounded-xl bg-blue-600 px-5 py-3 font-semibold text-white"
+            className="rounded-xl bg-brand-600 px-5 py-3 font-semibold text-white"
           >
             Editar cliente
           </Link>
@@ -73,7 +73,7 @@ export default async function FichaClienteAgente({ params }) {
 
           <div className="mt-4 flex flex-wrap gap-2">
             {c.roles.map(r => (
-              <span key={r} className="rounded-full bg-blue-50 px-3 py-1 text-sm font-semibold text-blue-700">
+              <span key={r} className="rounded-full bg-brand-50 px-3 py-1 text-sm font-semibold text-brand-700">
                 {etiquetas[r] || r}
               </span>
             ))}

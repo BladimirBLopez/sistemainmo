@@ -20,7 +20,7 @@ export default async function NuevaCampanaPage() {
         <div>
           <Link
             href="/admin/marketing"
-            className="text-sm font-semibold text-blue-600"
+            className="text-sm font-semibold text-brand-600"
           >
             ← Volver a Marketing
           </Link>

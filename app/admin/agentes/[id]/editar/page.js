@@ -33,7 +33,7 @@ export default async function EditarAgentePage({ params }) {
       <div className="mx-auto max-w-4xl space-y-5">
         <Link
           href={`/admin/agentes/${id}`}
-          className="text-sm font-semibold text-blue-600"
+          className="text-sm font-semibold text-brand-600"
         >
           ← Volver al agente
         </Link>

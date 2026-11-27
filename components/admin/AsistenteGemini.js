@@ -121,7 +121,7 @@ export default function AsistenteGemini({
     "inline-flex items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-xs font-semibold text-slate-700 transition hover:border-violet-300 hover:bg-violet-50 disabled:opacity-50";
 
   return (
-    <div className="mt-6 rounded-2xl border border-violet-200 bg-gradient-to-br from-violet-50 via-white to-blue-50 p-4 sm:p-5">
+    <div className="mt-6 rounded-2xl border border-violet-200 bg-gradient-to-br from-violet-50 via-white to-brand-50 p-4 sm:p-5">
 
       <div className="flex items-start gap-3">
         <div className="rounded-xl bg-violet-600 p-3 text-white">
@@ -183,7 +183,7 @@ export default function AsistenteGemini({
       )}
 
       {mensaje && (
-        <p className="mt-3 rounded-lg bg-blue-50 p-3 text-xs font-medium text-blue-800">
+        <p className="mt-3 rounded-lg bg-brand-50 p-3 text-xs font-medium text-brand-800">
           {mensaje}
         </p>
       )}
@@ -309,7 +309,7 @@ export default function AsistenteGemini({
               Hashtags
             </h4>
 
-            <p className="mt-2 text-sm text-blue-700">
+            <p className="mt-2 text-sm text-brand-700">
               {Array.isArray(resultado.hashtags)
                 ? resultado.hashtags.join(" ")
                 : ""}

@@ -75,7 +75,7 @@ export default async function MisLeads({ searchParams }) {
             </p>
           </div>
           <Link href="/agente/leads/nuevo"
-            className="rounded-xl bg-blue-600 px-5 py-3 text-sm font-semibold text-white">
+            className="rounded-xl bg-brand-600 px-5 py-3 text-sm font-semibold text-white">
             + Nuevo prospecto
           </Link>
         </header>
@@ -128,7 +128,7 @@ export default async function MisLeads({ searchParams }) {
             <article key={String(l.id)} className="py-5">
               <div className="flex flex-wrap justify-between gap-3">
                 <div>
-                  <Link href={`/agente/leads/${l.id}`} className="font-bold text-blue-700 hover:underline">{l.nombre_contacto}</Link>
+                  <Link href={`/agente/leads/${l.id}`} className="font-bold text-brand-700 hover:underline">{l.nombre_contacto}</Link>
                   <p className="mt-1 text-sm text-slate-500">
                     {l.telefono}{l.email ? ` · ${l.email}` : ""}
                   </p>
@@ -138,7 +138,7 @@ export default async function MisLeads({ searchParams }) {
                   </p>
                 </div>
                 <div className="flex flex-wrap gap-2">
-                  <span className="h-fit rounded-full bg-blue-50 px-3 py-1 text-xs font-semibold text-blue-700">
+                  <span className="h-fit rounded-full bg-brand-50 px-3 py-1 text-xs font-semibold text-brand-700">
                     {estados[l.estado] || l.estado}
                   </span>
                   <span className="h-fit rounded-full bg-slate-100 px-3 py-1 text-xs">

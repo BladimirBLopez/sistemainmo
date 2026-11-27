@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
-const clase = "w-full rounded-xl border border-slate-300 bg-white p-3 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100";
+const clase = "w-full rounded-xl border border-slate-300 bg-white p-3 text-sm outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-100";
 
 const campos = [
   ["alcance", "Alcance"],
@@ -169,7 +169,7 @@ export default function FormularioMetricas({
         </select>
       </div>
 
-      <p className="rounded-xl bg-blue-50 p-3 text-xs text-blue-800">
+      <p className="rounded-xl bg-brand-50 p-3 text-xs text-brand-800">
         El gasto reportado se utiliza para calcular indicadores
         publicitarios. No sustituye el registro financiero de gastos.
       </p>

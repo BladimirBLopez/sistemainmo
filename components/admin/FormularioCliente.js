@@ -13,7 +13,7 @@ const rolesDisponibles = [
 ];
 
 const clases =
-  "w-full rounded-xl border border-slate-300 bg-white p-3 text-sm text-slate-900 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100";
+  "w-full rounded-xl border border-slate-300 bg-white p-3 text-sm text-slate-900 outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-100";
 
 export default function FormularioCliente({ cliente = null, modo = "admin" }) {
   const router = useRouter();

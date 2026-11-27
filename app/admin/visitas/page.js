@@ -94,7 +94,7 @@ export default async function AgendaAdmin({ searchParams }) {
     <PanelShell>
       <div className="mx-auto max-w-7xl space-y-5">
         <div>
-          <Link href="/admin" className="text-sm font-semibold text-blue-600">
+          <Link href="/admin" className="text-sm font-semibold text-brand-600">
             ← Panel administrativo
           </Link>
           <h1 className="mt-3 text-2xl font-bold text-slate-900">

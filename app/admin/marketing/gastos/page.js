@@ -151,14 +151,14 @@ export default async function GastosMarketingPage({ searchParams }) {
         <section className="rounded-2xl bg-white p-6 shadow-sm">
           <Link
             href="/admin/marketing"
-            className="text-sm font-semibold text-blue-600"
+            className="text-sm font-semibold text-brand-600"
           >
             ← Volver al Centro de Marketing
           </Link>
 
           <div className="mt-4 flex flex-wrap items-center justify-between gap-4">
             <div>
-              <p className="text-sm font-bold uppercase tracking-wide text-blue-600">
+              <p className="text-sm font-bold uppercase tracking-wide text-brand-600">
                 Control financiero
               </p>
               <h2 className="mt-2 text-2xl font-black text-slate-900">
@@ -316,7 +316,7 @@ export default async function GastosMarketingPage({ searchParams }) {
                         href={gasto.comprobante_url}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="mt-2 inline-block text-xs font-semibold text-blue-600 hover:underline"
+                        className="mt-2 inline-block text-xs font-semibold text-brand-600 hover:underline"
                       >
                         Ver comprobante
                       </a>

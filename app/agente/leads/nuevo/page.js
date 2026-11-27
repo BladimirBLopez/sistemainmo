@@ -18,7 +18,7 @@ export default async function NuevoLeadAgente() {
   return (
     <main className="min-h-[calc(100vh-4rem)] bg-slate-100 p-4 md:p-8">
       <div className="mx-auto max-w-4xl space-y-5">
-        <Link href="/agente/leads" className="text-sm font-semibold text-blue-600">
+        <Link href="/agente/leads" className="text-sm font-semibold text-brand-600">
           ← Mis Leads
         </Link>
         <div>

@@ -93,7 +93,7 @@ export default function MatchingPropiedadesLead({
           </p>
         </div>
 
-        <span className="rounded-full bg-blue-50 px-3 py-2 text-sm font-bold text-blue-700">
+        <span className="rounded-full bg-brand-50 px-3 py-2 text-sm font-bold text-brand-700">
           {total} disponibles
         </span>
       </div>
@@ -148,7 +148,7 @@ export default function MatchingPropiedadesLead({
                 const color = p.compatibilidad >= 80
                   ? "bg-green-100 text-green-700"
                   : p.compatibilidad >= 60
-                    ? "bg-blue-100 text-blue-700"
+                    ? "bg-brand-100 text-brand-700"
                     : "bg-amber-100 text-amber-700";
 
                 return (
@@ -178,7 +178,7 @@ export default function MatchingPropiedadesLead({
                         </span>
 
                         {p.vinculada && (
-                          <span className="text-xs font-bold text-blue-700">
+                          <span className="text-xs font-bold text-brand-700">
                             Vinculada
                           </span>
                         )}
@@ -188,7 +188,7 @@ export default function MatchingPropiedadesLead({
                         {p.titulo}
                       </h4>
 
-                      <p className="text-lg font-bold text-blue-700">
+                      <p className="text-lg font-bold text-brand-700">
                         {dinero(p.precio, p.moneda)}
                       </p>
 
@@ -237,7 +237,7 @@ export default function MatchingPropiedadesLead({
 
                       <Link
                         href={`/${modo}/propiedades/${p.id}`}
-                        className="block rounded-xl bg-blue-600 px-4 py-3 text-center text-sm font-semibold text-white transition hover:bg-blue-700"
+                        className="block rounded-xl bg-brand-600 px-4 py-3 text-center text-sm font-semibold text-white transition hover:bg-brand-700"
                       >
                         Ver propiedad →
                       </Link>

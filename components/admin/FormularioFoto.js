@@ -116,7 +116,7 @@ export default function FormularioFoto({ propiedadId, alActualizar, modo = "admi
       <button
         type="submit"
         disabled={subiendo}
-        className="rounded-xl bg-blue-600 px-5 py-3 font-semibold text-white disabled:opacity-50"
+        className="rounded-xl bg-brand-600 px-5 py-3 font-semibold text-white disabled:opacity-50"
       >
         {subiendo ? "Subiendo..." : "Subir fotografia"}
       </button>

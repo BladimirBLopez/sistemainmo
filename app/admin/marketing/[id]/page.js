@@ -161,7 +161,7 @@ export default async function CampanaPage({ params }) {
         <div>
           <Link
             href="/admin/marketing"
-            className="text-sm font-semibold text-blue-600"
+            className="text-sm font-semibold text-brand-600"
           >
             ← Volver a Marketing
           </Link>
@@ -251,7 +251,7 @@ export default async function CampanaPage({ params }) {
 
             <article className="rounded-2xl bg-white p-5 shadow-sm">
               <p className="text-sm text-slate-500">Gastos ejecutados</p>
-              <p className="mt-3 text-2xl font-black text-blue-700">
+              <p className="mt-3 text-2xl font-black text-brand-700">
                 {simboloMoneda(campana.moneda)}
                 {formatoDinero(gastoCampana)}
               </p>
@@ -279,7 +279,7 @@ export default async function CampanaPage({ params }) {
               <div className="mt-4 h-2 overflow-hidden rounded-full bg-slate-100">
                 <div
                   className={`h-full rounded-full ${
-                    saldo < 0 ? "bg-red-500" : "bg-blue-600"
+                    saldo < 0 ? "bg-red-500" : "bg-brand-600"
                   }`}
                   style={{
                     width: `${Math.min(Math.max(porcentaje || 0, 0), 100)}%`
@@ -381,7 +381,7 @@ export default async function CampanaPage({ params }) {
                         href={gasto.comprobante_url}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="mt-2 inline-block text-xs font-semibold text-blue-600 hover:underline"
+                        className="mt-2 inline-block text-xs font-semibold text-brand-600 hover:underline"
                       >
                         Ver comprobante
                       </a>
@@ -473,7 +473,7 @@ export default async function CampanaPage({ params }) {
                           {metrica.fecha}
                         </p>
                       </div>
-                      <strong className="text-sm text-blue-700">
+                      <strong className="text-sm text-brand-700">
                         {simboloMoneda(metrica.moneda)}
                         {formatoDinero(metrica.gasto_reportado)}
                       </strong>
@@ -554,7 +554,7 @@ export default async function CampanaPage({ params }) {
                         href={canal.url_externa}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="block break-all text-sm font-medium text-blue-600 hover:underline"
+                        className="block break-all text-sm font-medium text-brand-600 hover:underline"
                       >
                         Abrir plataforma
                       </a>

@@ -85,7 +85,7 @@ export default async function EditarContenidoPage({ params }) {
         <section className="rounded-2xl bg-white p-6 shadow-sm">
           <Link
             href="/admin/marketing/contenidos"
-            className="text-sm font-semibold text-blue-600"
+            className="text-sm font-semibold text-brand-600"
           >
             ← Volver a contenidos
           </Link>

@@ -46,7 +46,7 @@ export default async function EditarCampanaPage({ params }) {
         <div>
           <Link
             href={`/admin/marketing/${id}`}
-            className="text-sm font-semibold text-blue-600"
+            className="text-sm font-semibold text-brand-600"
           >
             ← Volver a la campaña
           </Link>
