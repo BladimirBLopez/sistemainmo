@@ -167,7 +167,7 @@ export default async function MarketingPage() {
             </div>
 
             <Link href="/admin/marketing/nueva"
-              className="rounded-xl bg-blue-600 px-5 py-3 text-sm font-semibold text-white">
+              className="btn-primary px-5 py-3">
               + Nueva campaña
             </Link>
 

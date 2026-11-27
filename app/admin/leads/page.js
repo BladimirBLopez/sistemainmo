@@ -102,7 +102,7 @@ export default async function LeadsPage({ searchParams }) {
             </p>
           </div>
           <Link href="/admin/leads/nuevo"
-            className="rounded-xl bg-blue-600 px-5 py-3 text-sm font-semibold text-white">
+            className="btn-primary px-5 py-3">
             + Nuevo prospecto
           </Link>
         </section>

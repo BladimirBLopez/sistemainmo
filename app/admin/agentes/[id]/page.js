@@ -54,7 +54,7 @@ export default async function DetalleAgentePage({ params }) {
 
           <Link
             href={`/admin/agentes/${id}/editar`}
-            className="rounded-xl bg-blue-600 px-5 py-3 text-sm font-semibold text-white"
+            className="btn-primary px-5 py-3"
           >
             Editar agente
           </Link>

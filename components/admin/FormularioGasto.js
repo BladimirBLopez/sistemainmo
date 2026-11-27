@@ -182,7 +182,7 @@ export default function FormularioGasto({ campanas, fechaActual }) {
 
       <button
         disabled={guardando}
-        className="w-full rounded-xl bg-blue-600 px-5 py-3 text-sm font-bold text-white hover:bg-blue-700 disabled:opacity-50"
+        className="btn-primary w-full px-5 py-3"
       >
         {guardando ? "Guardando..." : "Registrar gasto"}
       </button>

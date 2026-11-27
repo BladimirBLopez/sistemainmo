@@ -193,7 +193,7 @@ export default function AsignacionesAgente({
                   type="button"
                   disabled={Boolean(accion)}
                   onClick={() => cambiar("propiedad", item, "asignar")}
-                  className="rounded-lg bg-blue-600 px-3 py-2 text-xs font-semibold text-white disabled:opacity-50"
+                  className="btn-primary rounded-lg px-3 py-2 text-xs"
                 >
                   Asignar
                 </button>
@@ -273,7 +273,7 @@ export default function AsignacionesAgente({
                   type="button"
                   disabled={Boolean(accion)}
                   onClick={() => cambiar("cliente", item, "asignar")}
-                  className="rounded-lg bg-blue-600 px-3 py-2 text-xs font-semibold text-white disabled:opacity-50"
+                  className="btn-primary rounded-lg px-3 py-2 text-xs"
                 >
                   Asignar
                 </button>

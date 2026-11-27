@@ -259,7 +259,7 @@ export default function FormularioCliente({ cliente = null, modo = "admin" }) {
         <button
           type="submit"
           disabled={guardando}
-          className="rounded-xl bg-blue-600 px-6 py-3 font-semibold text-white hover:bg-blue-700 disabled:opacity-50"
+          className="btn-primary px-6 py-3"
         >
           {guardando ? "Guardando..." : cliente ? "Guardar cambios" : "Registrar cliente"}
         </button>

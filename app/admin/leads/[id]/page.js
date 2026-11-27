@@ -95,7 +95,7 @@ export default async function FichaLeadAdmin({ params }) {
             ← Volver a Leads
           </Link>
           <Link href={`/admin/leads/${lead.id}/editar`}
-            className="rounded-xl bg-blue-600 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-700">
+            className="btn-primary">
             Editar prospecto
           </Link>
         </div>

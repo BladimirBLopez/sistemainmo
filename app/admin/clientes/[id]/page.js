@@ -66,7 +66,7 @@ export default async function DetalleCliente({ params }) {
 
           <Link
             href={`/admin/clientes/${id}/editar`}
-            className="rounded-xl bg-blue-600 px-5 py-3 text-sm font-semibold text-white"
+            className="btn-primary px-5 py-3"
           >
             Editar cliente
           </Link>

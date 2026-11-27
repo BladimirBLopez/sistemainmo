@@ -50,7 +50,7 @@ export default async function AgentesPage() {
 
           <Link
             href="/admin/agentes/nuevo"
-            className="rounded-xl bg-blue-600 px-5 py-3 text-sm font-semibold text-white hover:bg-blue-700"
+            className="btn-primary px-5 py-3"
           >
             + Registrar agente
           </Link>
