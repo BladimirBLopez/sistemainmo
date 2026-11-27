@@ -2,6 +2,8 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import AvisoCambios from "@/components/AvisoCambios";
+import { toast } from "sonner";
 
 const clase = "input";
 
@@ -23,7 +25,6 @@ export default function FormularioMetricas({
 
   const [guardando, setGuardando] = useState(false);
   const [error, setError] = useState("");
-  const [mensaje, setMensaje] = useState("");
 
   async function guardar(evento) {
     evento.preventDefault();
@@ -34,7 +35,6 @@ export default function FormularioMetricas({
 
     setGuardando(true);
     setError("");
-    setMensaje("");
 
     try {
       const datos = Object.fromEntries(
@@ -64,13 +64,13 @@ export default function FormularioMetricas({
 
       formulario.elements.fecha.value = fechaActual;
 
-      setMensaje(
-        "Rendimiento registrado correctamente."
-      );
+      formulario.dispatchEvent(new Event("guardado"));
+      toast.success("Rendimiento registrado");
 
       router.refresh();
 
     } catch (fallo) {
+      toast.error(fallo.message || "Error al registrar métricas.");
       setError(
         fallo.message || "Error al registrar métricas."
       );
@@ -81,6 +81,7 @@ export default function FormularioMetricas({
 
   return (
     <form onSubmit={guardar} className="space-y-4">
+      <AvisoCambios />
 
       <input
         type="hidden"
@@ -89,7 +90,7 @@ export default function FormularioMetricas({
       />
 
       <div>
-        <label className="mb-2 block text-sm font-semibold">
+        <label className="label">
           Fecha del reporte *
         </label>
         <input
@@ -102,7 +103,7 @@ export default function FormularioMetricas({
       </div>
 
       <div>
-        <label className="mb-2 block text-sm font-semibold">
+        <label className="label">
           Plataforma *
         </label>
         <select
@@ -123,7 +124,7 @@ export default function FormularioMetricas({
       <div className="grid grid-cols-2 gap-3">
         {campos.map(([nombre, etiqueta]) => (
           <div key={nombre}>
-            <label className="mb-2 block text-sm font-semibold">
+            <label className="label">
               {etiqueta}
             </label>
             <input
@@ -141,7 +142,7 @@ export default function FormularioMetricas({
       </div>
 
       <div>
-        <label className="mb-2 block text-sm font-semibold">
+        <label className="label">
           Gasto reportado por la plataforma *
         </label>
         <input
@@ -156,7 +157,7 @@ export default function FormularioMetricas({
       </div>
 
       <div>
-        <label className="mb-2 block text-sm font-semibold">
+        <label className="label">
           Moneda *
         </label>
         <select
@@ -177,12 +178,6 @@ export default function FormularioMetricas({
       {error && (
         <p className="rounded-xl bg-red-50 p-3 text-sm text-red-700">
           {error}
-        </p>
-      )}
-
-      {mensaje && (
-        <p className="rounded-xl bg-emerald-50 p-3 text-sm text-emerald-700">
-          {mensaje}
         </p>
       )}
 
