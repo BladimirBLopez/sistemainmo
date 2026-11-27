@@ -93,13 +93,13 @@ export default async function ClientesPage({ searchParams }) {
               name="q"
               defaultValue={q}
               placeholder="Nombre, teléfono, correo o documento"
-              className="rounded-xl border border-slate-300 p-3 text-sm sm:col-span-2"
+              className="input sm:col-span-2"
             />
 
             <select
               name="rol"
               defaultValue={rol}
-              className="rounded-xl border border-slate-300 bg-white p-3 text-sm"
+              className="input"
             >
               <option value="">Todos los perfiles</option>
               {roles.map(r => (
@@ -110,7 +110,7 @@ export default async function ClientesPage({ searchParams }) {
             <select
               name="estado"
               defaultValue={estado}
-              className="rounded-xl border border-slate-300 bg-white p-3 text-sm"
+              className="input"
             >
               <option value="">Todos los estados</option>
               <option value="activo">Activos</option>

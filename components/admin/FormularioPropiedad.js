@@ -136,7 +136,7 @@ export default function FormularioPropiedad() {
           required
           maxLength={150}
           placeholder="Ej. Casa moderna en Equipetrol"
-          className="w-full rounded-xl border border-slate-300 p-3"
+          className="input"
         />
       </div>
 
@@ -149,7 +149,7 @@ export default function FormularioPropiedad() {
           name="tipo"
           required
           defaultValue=""
-          className="w-full rounded-xl border border-slate-300 p-3"
+          className="input"
         >
           <option value="" disabled>Seleccionar tipo</option>
           {[
@@ -168,7 +168,7 @@ export default function FormularioPropiedad() {
             Operacion *
           </label>
           <select id="tipo_operacion" name="tipo_operacion" required
-            defaultValue="" className="w-full rounded-xl border border-slate-300 p-3">
+            defaultValue="" className="input">
             <option value="" disabled>Seleccionar</option>
             <option value="venta">Venta</option>
             <option value="alquiler">Alquiler</option>
@@ -182,7 +182,7 @@ export default function FormularioPropiedad() {
           </label>
           <input id="precio" name="precio" type="number" required
             min="0.01" step="0.01" placeholder="Ej. 85000"
-            className="w-full rounded-xl border border-slate-300 p-3" />
+            className="input" />
         </div>
 
         <div>
@@ -190,7 +190,7 @@ export default function FormularioPropiedad() {
             Moneda *
           </label>
           <select id="moneda" name="moneda" required
-            defaultValue="" className="w-full rounded-xl border border-slate-300 p-3">
+            defaultValue="" className="input">
             <option value="" disabled>Seleccionar</option>
             <option value="BOB">Bs (BOB)</option>
             <option value="USD">USD</option>
@@ -208,7 +208,7 @@ export default function FormularioPropiedad() {
           rows={4}
           maxLength={4000}
           placeholder="Describe las caracteristicas del inmueble"
-          className="w-full rounded-xl border border-slate-300 p-3"
+          className="input"
         />
       </div>
 
@@ -234,7 +234,7 @@ export default function FormularioPropiedad() {
               <input id={nombre} name={nombre}
                 type="number" min="0" step={paso}
                 inputMode={paso === "1" ? "numeric" : "decimal"}
-                className="w-full rounded-xl border border-slate-300 p-3"
+                className="input"
               />
             </div>
           ))}

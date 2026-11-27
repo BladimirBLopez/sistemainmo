@@ -169,8 +169,8 @@ export default async function ContenidosPage({ searchParams }) {
             </h3>
 
             <form method="GET" className="mb-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-              <input name="q" type="search" defaultValue={busqueda} maxLength={100} placeholder="Buscar publicaciones..." className="rounded-xl border border-slate-300 bg-white p-3 text-sm" />
-              <select name="campana" defaultValue={campana} className="rounded-xl border border-slate-300 bg-white p-3 text-sm">
+              <input name="q" type="search" defaultValue={busqueda} maxLength={100} placeholder="Buscar publicaciones..." className="input" />
+              <select name="campana" defaultValue={campana} className="input">
                 <option value="">Todas las campañas</option>
                 {campanas.map(c => (
                   <option key={String(c.id)} value={c.id}>{c.nombre}</option>
@@ -179,7 +179,7 @@ export default async function ContenidosPage({ searchParams }) {
               <select
                 name="estado"
                 defaultValue={estado}
-                className="rounded-xl border border-slate-300 bg-white p-3 text-sm"
+                className="input"
               >
                 <option value="">Todos los estados</option>
                 {Object.entries(estados).map(([v, n]) => (
@@ -190,7 +190,7 @@ export default async function ContenidosPage({ searchParams }) {
               <select
                 name="plataforma"
                 defaultValue={plataforma}
-                className="rounded-xl border border-slate-300 bg-white p-3 text-sm"
+                className="input"
               >
                 <option value="">Todas las plataformas</option>
                 {Object.entries(plataformas).map(([v, n]) => (

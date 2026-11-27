@@ -127,21 +127,21 @@ export default async function LeadsPage({ searchParams }) {
           <form method="GET" className="grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
             <input name="q" defaultValue={q}
               placeholder="Nombre, teléfono, correo o ciudad"
-              className="rounded-xl border p-3 text-sm lg:col-span-2" />
+              className="input lg:col-span-2" />
 
-            <select name="estado" defaultValue={estado} className="rounded-xl border bg-white p-3 text-sm">
+            <select name="estado" defaultValue={estado} className="input">
               <option value="">Todos los estados</option>
               {Object.entries(estados).map(([v, t]) => (
                 <option key={v} value={v}>{t}</option>
               ))}
             </select>
 
-            <select name="prioridad" defaultValue={prioridad} className="rounded-xl border bg-white p-3 text-sm">
+            <select name="prioridad" defaultValue={prioridad} className="input">
               <option value="">Todas las prioridades</option>
               {prioridades.map(v => <option key={v} value={v}>{v}</option>)}
             </select>
 
-            <select name="agente_id" defaultValue={agenteId} className="rounded-xl border bg-white p-3 text-sm">
+            <select name="agente_id" defaultValue={agenteId} className="input">
               <option value="">Todos los agentes</option>
               {agentes.map(a => (
                 <option key={String(a.id)} value={a.id}>{a.nombre_completo}</option>

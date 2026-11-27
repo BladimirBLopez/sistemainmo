@@ -93,7 +93,7 @@ export default function FormularioFoto({ propiedadId, alActualizar, modo = "admi
           accept="image/jpeg,image/png,image/webp"
           required
           disabled={subiendo}
-          className="block w-full rounded-xl border border-slate-300 p-3 text-sm"
+          className="input"
         />
       </div>
 

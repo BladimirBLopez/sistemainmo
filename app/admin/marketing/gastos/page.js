@@ -230,21 +230,21 @@ export default async function GastosMarketingPage({ searchParams }) {
 
           <form method="GET" className="mb-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
 
-            <select name="categoria" defaultValue={categoria} className="rounded-xl border border-slate-300 bg-white p-3 text-sm">
+            <select name="categoria" defaultValue={categoria} className="input">
               <option value="">Todas las categorías</option>
               {Object.entries(categorias).map(([valor, nombre]) => (
                 <option key={valor} value={valor}>{nombre}</option>
               ))}
             </select>
 
-            <select name="plataforma" defaultValue={plataforma} className="rounded-xl border border-slate-300 bg-white p-3 text-sm">
+            <select name="plataforma" defaultValue={plataforma} className="input">
               <option value="">Todas las plataformas</option>
               {Object.entries(plataformas).map(([valor, nombre]) => (
                 <option key={valor} value={valor}>{nombre}</option>
               ))}
             </select>
 
-            <select name="moneda" defaultValue={moneda} className="rounded-xl border border-slate-300 bg-white p-3 text-sm">
+            <select name="moneda" defaultValue={moneda} className="input">
               <option value="">Todas las monedas</option>
               <option value="BOB">Bolivianos</option>
               <option value="USD">Dólares</option>
@@ -252,12 +252,12 @@ export default async function GastosMarketingPage({ searchParams }) {
 
             <div>
               <label className="mb-1 block text-xs text-slate-500">Desde</label>
-              <input type="date" name="desde" defaultValue={desde} className="w-full rounded-xl border border-slate-300 p-3 text-sm" />
+              <input type="date" name="desde" defaultValue={desde} className="input" />
             </div>
 
             <div>
               <label className="mb-1 block text-xs text-slate-500">Hasta</label>
-              <input type="date" name="hasta" defaultValue={hasta} className="w-full rounded-xl border border-slate-300 p-3 text-sm" />
+              <input type="date" name="hasta" defaultValue={hasta} className="input" />
             </div>
 
             <div className="flex gap-2">
