@@ -72,24 +72,24 @@ export default async function MisClientes({ searchParams }) {
             defaultValue={q}
             maxLength={100}
             placeholder="Nombre, teléfono o correo"
-            className="rounded-xl border border-slate-300 p-3 sm:col-span-2"
+            className="input sm:col-span-2"
           />
           <select
             name="rol"
             defaultValue={rol}
-            className="rounded-xl border border-slate-300 bg-white p-3"
+            className="input"
           >
             <option value="">Todos los perfiles</option>
             {roles.map(r => (
               <option key={r} value={r}>{etiquetas[r]}</option>
             ))}
           </select>
-          <button className="rounded-xl bg-brand-600 px-5 py-3 font-semibold text-white">
+          <button type="submit" className="btn-primary">
             Buscar clientes
           </button>
           <Link
             href="/agente/clientes"
-            className="rounded-xl border px-5 py-3 text-center font-semibold"
+            className="btn-ghost"
           >
             Limpiar
           </Link>

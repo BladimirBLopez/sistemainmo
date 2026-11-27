@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 
-const clasesInput = "min-w-0 flex-1 rounded-xl border border-slate-300 p-3 text-sm";
+const clasesInput = "input min-w-0 flex-1";
 
 export default function AsignacionesAgente({
   agenteId,

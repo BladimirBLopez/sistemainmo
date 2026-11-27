@@ -96,25 +96,25 @@ export default async function MisLeads({ searchParams }) {
         <form method="GET" className="grid gap-3 rounded-2xl bg-white p-5 sm:grid-cols-4">
           <input name="q" defaultValue={q}
             placeholder="Nombre, teléfono o ciudad"
-            className="rounded-xl border p-3 text-sm sm:col-span-2" />
+            className="input sm:col-span-2" />
 
-          <select name="estado" defaultValue={estado} className="rounded-xl border bg-white p-3 text-sm">
+          <select name="estado" defaultValue={estado} className="input">
             <option value="">Todos los estados</option>
             {Object.entries(estados).map(([v, t]) => (
               <option key={v} value={v}>{t}</option>
             ))}
           </select>
 
-          <select name="prioridad" defaultValue={prioridad} className="rounded-xl border bg-white p-3 text-sm">
+          <select name="prioridad" defaultValue={prioridad} className="input">
             <option value="">Todas las prioridades</option>
             {prioridades.map(v => <option key={v} value={v}>{v}</option>)}
           </select>
 
-          <button className="rounded-xl bg-slate-900 p-3 font-semibold text-white">
+          <button type="submit" className="btn-primary">
             Buscar
           </button>
           <Link href="/agente/leads"
-            className="rounded-xl border p-3 text-center font-semibold text-slate-700">
+            className="btn-ghost">
             Limpiar
           </Link>
         </form>
