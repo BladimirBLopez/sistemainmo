@@ -2,6 +2,8 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import AvisoCambios from "@/components/AvisoCambios";
+import { toast } from "sonner";
 
 const clase = "input";
 
@@ -9,7 +11,6 @@ export default function FormularioContenido({ campanas, contenido = null }) {
   const router = useRouter();
   const [guardando, setGuardando] = useState(false);
   const [error, setError] = useState("");
-  const [mensaje, setMensaje] = useState("");
 
   async function guardar(evento) {
     evento.preventDefault();
@@ -18,7 +19,6 @@ export default function FormularioContenido({ campanas, contenido = null }) {
     const formulario = evento.currentTarget;
     setGuardando(true);
     setError("");
-    setMensaje("");
 
     try {
       const datos = Object.fromEntries(
@@ -43,16 +43,20 @@ export default function FormularioContenido({ campanas, contenido = null }) {
       }
 
       if (contenido) {
+        formulario.dispatchEvent(new Event("guardado"));
+        toast.success("Publicación actualizada");
         router.push("/admin/marketing/contenidos");
         router.refresh();
         return;
       }
 
+      formulario.dispatchEvent(new Event("guardado"));
+      toast.success("Publicación registrada");
       formulario.reset();
-      setMensaje("Publicación registrada correctamente.");
       router.refresh();
 
     } catch (fallo) {
+      toast.error(fallo.message || "Error al registrar publicación");
       setError(fallo.message || "Error al registrar publicación");
     } finally {
       setGuardando(false);
@@ -61,9 +65,10 @@ export default function FormularioContenido({ campanas, contenido = null }) {
 
   return (
     <form onSubmit={guardar} className="space-y-4">
+      <AvisoCambios />
 
       <div>
-        <label className="mb-2 block text-sm font-semibold">
+        <label className="label">
           Título de publicación *
         </label>
         <input
@@ -78,7 +83,7 @@ export default function FormularioContenido({ campanas, contenido = null }) {
       </div>
 
       <div>
-        <label className="mb-2 block text-sm font-semibold">
+        <label className="label">
           Campaña relacionada
         </label>
         <select name="campana_id" defaultValue={contenido?.campana_id || ""} className={clase}>
@@ -93,7 +98,7 @@ export default function FormularioContenido({ campanas, contenido = null }) {
 
       <div className="grid gap-4 sm:grid-cols-2">
         <div>
-          <label className="mb-2 block text-sm font-semibold">
+          <label className="label">
             Plataforma *
           </label>
           <select name="plataforma" required defaultValue={contenido?.plataforma || "facebook"} className={clase}>
@@ -108,7 +113,7 @@ export default function FormularioContenido({ campanas, contenido = null }) {
         </div>
 
         <div>
-          <label className="mb-2 block text-sm font-semibold">
+          <label className="label">
             Formato *
           </label>
           <select name="formato" defaultValue={contenido?.formato || "post"} className={clase}>
@@ -124,7 +129,7 @@ export default function FormularioContenido({ campanas, contenido = null }) {
       </div>
 
       <div>
-        <label className="mb-2 block text-sm font-semibold">
+        <label className="label">
           Texto de publicación
         </label>
         <textarea
@@ -138,7 +143,7 @@ export default function FormularioContenido({ campanas, contenido = null }) {
       </div>
 
       <div>
-        <label className="mb-2 block text-sm font-semibold">
+        <label className="label">
           Fecha y hora programada
         </label>
         <input
@@ -150,7 +155,7 @@ export default function FormularioContenido({ campanas, contenido = null }) {
       </div>
 
       <div>
-        <label className="mb-2 block text-sm font-semibold">
+        <label className="label">
           Estado *
         </label>
         <select name="estado" defaultValue={contenido?.estado || "idea"} className={clase}>
@@ -163,7 +168,7 @@ export default function FormularioContenido({ campanas, contenido = null }) {
       </div>
 
       <div>
-        <label className="mb-2 block text-sm font-semibold">
+        <label className="label">
           Enlace del recurso gráfico
         </label>
         <input
@@ -177,7 +182,7 @@ export default function FormularioContenido({ campanas, contenido = null }) {
       </div>
 
       <div>
-        <label className="mb-2 block text-sm font-semibold">
+        <label className="label">
           Enlace de publicación
         </label>
         <input
@@ -196,15 +201,9 @@ export default function FormularioContenido({ campanas, contenido = null }) {
         </p>
       )}
 
-      {mensaje && (
-        <p className="rounded-xl bg-emerald-50 p-3 text-sm text-emerald-700">
-          {mensaje}
-        </p>
-      )}
-
       <button
         disabled={guardando}
-        className="w-full rounded-xl bg-brand-600 px-5 py-3 font-bold text-white hover:bg-brand-700 disabled:opacity-50"
+        className="btn-primary w-full px-5 py-3"
       >
         {guardando ? "Guardando..." : contenido ? "Guardar cambios" : "Registrar publicación"}
       </button>
