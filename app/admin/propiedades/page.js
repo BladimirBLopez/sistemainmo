@@ -297,7 +297,7 @@ export default async function PropiedadesPage({ searchParams }) {
                 {hayFiltros ? "Resultados de búsqueda" : "Inventario registrado"}
               </h3>
               <span className="badge-brand">
-                {propiedades.length} propiedades
+                {propiedades.length} {propiedades.length === 1 ? "propiedad" : "propiedades"}
                 {propiedades.length === 100 ? " (máximo por consulta)" : ""}
               </span>
             </div>

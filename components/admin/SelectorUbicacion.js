@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import dynamic from "next/dynamic";
 import { FiMapPin, FiMap } from "react-icons/fi";
 
@@ -15,9 +15,6 @@ const MapaUbicacion = dynamic(
     )
   }
 );
-
-const claseInput =
-  "w-full rounded-xl border border-slate-300 bg-white px-3.5 py-3 text-sm text-slate-900 outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-100";
 
 export default function SelectorUbicacion({ inicial = {}, modo = "admin" }) {
   const rutaApi = modo === "agente" ? "/api/agente/ubicaciones" : "/api/admin/ubicaciones";
@@ -51,6 +48,9 @@ export default function SelectorUbicacion({ inicial = {}, modo = "admin" }) {
   const [error, setError] = useState("");
 
   const [mapaAbierto, setMapaAbierto] = useState(false);
+  const [listaAbierta, setListaAbierta] = useState(false);
+  const [activo, setActivo] = useState(-1);
+  const contenedor = useRef(null);
 
   // Buscar municipios y localidades
   useEffect(() => {
@@ -87,6 +87,8 @@ export default function SelectorUbicacion({ inicial = {}, modo = "admin" }) {
 
         if (vigente) {
           setResultados(datos.results || []);
+          setListaAbierta(true);
+          setActivo(-1);
           setError("");
         }
       } catch (fallo) {
@@ -107,6 +109,47 @@ export default function SelectorUbicacion({ inicial = {}, modo = "admin" }) {
       controlador.abort();
     };
   }, [busqueda, seleccionada, rutaApi]);
+
+  // Cerrar la lista al tocar fuera
+  useEffect(() => {
+    function fuera(evento) {
+      if (contenedor.current && !contenedor.current.contains(evento.target)) {
+        setListaAbierta(false);
+      }
+    }
+    document.addEventListener("pointerdown", fuera);
+    return () => document.removeEventListener("pointerdown", fuera);
+  }, []);
+
+  function teclado(evento) {
+    const visible = listaAbierta && resultados.length > 0;
+
+    if (evento.key === "Escape") {
+      setListaAbierta(false);
+      setActivo(-1);
+      return;
+    }
+
+    if (!visible) {
+      if (evento.key === "ArrowDown" && resultados.length > 0) {
+        evento.preventDefault();
+        setListaAbierta(true);
+        setActivo(0);
+      }
+      return;
+    }
+
+    if (evento.key === "ArrowDown") {
+      evento.preventDefault();
+      setActivo(i => (i + 1) % resultados.length);
+    } else if (evento.key === "ArrowUp") {
+      evento.preventDefault();
+      setActivo(i => (i <= 0 ? resultados.length - 1 : i - 1));
+    } else if (evento.key === "Enter") {
+      evento.preventDefault();
+      if (activo >= 0) seleccionar(resultados[activo]);
+    }
+  }
 
   // Seleccionar localidad manualmente
   function seleccionar(lugar) {
@@ -255,7 +298,7 @@ export default function SelectorUbicacion({ inicial = {}, modo = "admin" }) {
             type="button"
             onClick={usarUbicacionActual}
             disabled={obteniendoGps}
-            className="inline-flex items-center gap-2 rounded-lg bg-brand-600 px-3 py-2 text-xs font-semibold text-white hover:bg-brand-700 disabled:opacity-50"
+            className="btn-primary px-3 py-2 text-xs"
           >
             <FiMapPin size={15} />
             {obteniendoGps
@@ -264,7 +307,7 @@ export default function SelectorUbicacion({ inicial = {}, modo = "admin" }) {
           </button>
         </div>
 
-        <div className="relative">
+        <div className="relative" ref={contenedor}>
           <div className="relative">
             <FiMapPin className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
 
@@ -277,9 +320,11 @@ export default function SelectorUbicacion({ inicial = {}, modo = "admin" }) {
               autoComplete="off"
               role="combobox"
               aria-autocomplete="list"
-              aria-expanded={resultados.length > 0}
+              aria-expanded={listaAbierta && resultados.length > 0}
+              onKeyDown={teclado}
+              onFocus={() => setListaAbierta(true)}
               placeholder="Ej. Santa Cruz de la Sierra, Tarija..."
-              className={`${claseInput} pl-10 pr-4`}
+              className="input pl-10 pr-4"
             />
 
             {cargando && (
@@ -289,19 +334,19 @@ export default function SelectorUbicacion({ inicial = {}, modo = "admin" }) {
             )}
           </div>
 
-          {resultados.length > 0 && (
+          {listaAbierta && resultados.length > 0 && (
             <ul
               role="listbox"
               className="absolute z-[1000] mt-1 max-h-64 w-full overflow-y-auto rounded-xl border border-slate-200 bg-white shadow-xl"
             >
-              {resultados.map(lugar => (
+              {resultados.map((lugar, indice) => (
                 <li key={lugar.placeId}>
                   <button
                     type="button"
                     role="option"
-                    aria-selected="false"
+                    aria-selected={indice === activo}
                     onClick={() => seleccionar(lugar)}
-                    className="flex w-full flex-col gap-1 border-b border-slate-100 px-4 py-3 text-left hover:bg-brand-50"
+                    className={`flex w-full flex-col gap-1 border-b border-slate-100 px-4 py-3 text-left hover:bg-brand-50 ${indice === activo ? "bg-brand-50" : ""}`}
                   >
                     <span className="text-sm font-semibold text-slate-800">
                       {lugar.ciudad}
@@ -358,7 +403,7 @@ export default function SelectorUbicacion({ inicial = {}, modo = "admin" }) {
           onChange={e => setZona(e.target.value)}
           maxLength={120}
           placeholder="Ej. Plan 3000, Equipetrol, frente al mercado"
-          className={claseInput}
+          className="input"
         />
 
         <p className="mt-1 text-xs text-slate-500">
@@ -397,7 +442,7 @@ export default function SelectorUbicacion({ inicial = {}, modo = "admin" }) {
             type="button"
             disabled={!mapaDisponible}
             onClick={() => setMapaAbierto(v => !v)}
-            className="inline-flex items-center gap-2 rounded-lg bg-brand-600 px-3 py-2 text-xs font-semibold text-white hover:bg-brand-700 disabled:cursor-not-allowed disabled:opacity-40"
+            className="btn-primary px-3 py-2 text-xs"
           >
             <FiMap size={15} />
             {mapaAbierto ? "Ocultar mapa" : "Ubicar en el mapa"}
