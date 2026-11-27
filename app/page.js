@@ -140,13 +140,13 @@ export default async function Home({ searchParams }) {
             type="search"
             defaultValue={busqueda}
             placeholder="Ciudad, zona o inmueble..."
-            className="rounded-xl border border-slate-200 p-3 text-sm"
+            className="input"
           />
 
           <select
             name="operacion"
             defaultValue={operacion}
-            className="rounded-xl border border-slate-200 bg-white p-3 text-sm"
+            className="input"
           >
             <option value="">Todas las operaciones</option>
             {operaciones.map(([valor, etiqueta]) => (
@@ -157,7 +157,7 @@ export default async function Home({ searchParams }) {
           <select
             name="tipo"
             defaultValue={tipo}
-            className="rounded-xl border border-slate-200 bg-white p-3 text-sm"
+            className="input"
           >
             <option value="">Todos los inmuebles</option>
             {tipos.map(valor => (
@@ -167,7 +167,7 @@ export default async function Home({ searchParams }) {
 
           <button
             type="submit"
-            className="rounded-xl bg-blue-600 px-5 py-3 font-bold text-white hover:bg-blue-700"
+            className="btn-primary min-h-[2.75rem]"
           >
             Buscar propiedades
           </button>
