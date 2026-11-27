@@ -1,12 +1,15 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
+import AvisoCambios from "@/components/AvisoCambios";
+import { toast } from "sonner";
 
 const clases = "input";
 
 export default function FormularioAgente({ agente = null }) {
   const router = useRouter();
+  const formRef = useRef(null);
   const [guardando, setGuardando] = useState(false);
   const [error, setError] = useState("");
 
@@ -44,10 +47,13 @@ export default function FormularioAgente({ agente = null }) {
         throw new Error(resultado.error || "No se pudo guardar el agente");
       }
 
+      toast.success(agente ? "Agente actualizado" : "Agente registrado");
+      formRef.current?.dispatchEvent(new Event("guardado"));
       router.push(`/admin/agentes/${resultado.id}`);
       router.refresh();
 
     } catch (fallo) {
+      toast.error(fallo instanceof Error ? fallo.message : "Error al guardar");
       setError(fallo instanceof Error ? fallo.message : "Error al guardar");
     } finally {
       setGuardando(false);
@@ -55,7 +61,8 @@ export default function FormularioAgente({ agente = null }) {
   }
 
   return (
-    <form onSubmit={guardar} className="space-y-5">
+    <form ref={formRef} onSubmit={guardar} className="space-y-5">
+      <AvisoCambios />
       <section className="rounded-2xl bg-white p-6 shadow-sm">
         <h3 className="mb-5 text-lg font-bold text-slate-900">
           Información del agente
@@ -63,7 +70,7 @@ export default function FormularioAgente({ agente = null }) {
 
         <div className="grid gap-4 sm:grid-cols-2">
           <div className="sm:col-span-2">
-            <label className="mb-2 block text-sm font-semibold">
+            <label className="label">
               Nombre completo *
             </label>
             <input
@@ -78,7 +85,7 @@ export default function FormularioAgente({ agente = null }) {
           </div>
 
           <div>
-            <label className="mb-2 block text-sm font-semibold">
+            <label className="label">
               Correo electrónico *
             </label>
             <input
@@ -93,7 +100,7 @@ export default function FormularioAgente({ agente = null }) {
           </div>
 
           <div>
-            <label className="mb-2 block text-sm font-semibold">
+            <label className="label">
               Teléfono
             </label>
             <input
@@ -107,7 +114,7 @@ export default function FormularioAgente({ agente = null }) {
           </div>
 
           <div className="sm:col-span-2">
-            <label className="mb-2 block text-sm font-semibold">
+            <label className="label">
               {agente ? "Nueva contraseña (opcional)" : "Contraseña *"}
             </label>
             <input
@@ -127,7 +134,7 @@ export default function FormularioAgente({ agente = null }) {
 
           {agente && (
             <div>
-              <label className="mb-2 block text-sm font-semibold">
+              <label className="label">
                 Estado de la cuenta
               </label>
               <select
@@ -161,7 +168,7 @@ export default function FormularioAgente({ agente = null }) {
         <button
           type="button"
           onClick={() => router.back()}
-          className="rounded-xl border border-slate-300 px-6 py-3 font-semibold text-slate-700"
+          className="btn-ghost px-6 py-3"
         >
           Cancelar
         </button>
