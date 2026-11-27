@@ -5,10 +5,13 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { subirFotosPropiedad } from "@/lib/subir-fotos-cliente";
 import SelectorUbicacion from "@/components/admin/SelectorUbicacion";
+import AvisoCambios from "@/components/AvisoCambios";
+import { toast } from "sonner";
 
 export default function FormularioPropiedad() {
   const router = useRouter();
   const fotosRef = useRef(null);
+  const formRef = useRef(null);
   const [guardando, setGuardando] = useState(false);
   const [error, setError] = useState("");
   const [propiedadId, setPropiedadId] = useState(null);
@@ -102,6 +105,7 @@ export default function FormularioPropiedad() {
         );
 
         pendientesRef.current = pendientes;
+        formRef.current?.dispatchEvent(new Event("guardado"));
 
         if (pendientes.length > 0) {
           setError(
@@ -111,9 +115,16 @@ export default function FormularioPropiedad() {
         }
       }
 
+      toast.success("Propiedad creada");
+      formRef.current?.dispatchEvent(new Event("guardado"));
       router.push(`/admin/propiedades/${id}`);
       router.refresh();
     } catch (fallo) {
+      toast.error(
+        fallo instanceof Error
+          ? fallo.message
+          : "Error al guardar la propiedad"
+      );
       setError(
         fallo instanceof Error
           ? fallo.message
@@ -125,7 +136,8 @@ export default function FormularioPropiedad() {
   }
 
   return (
-    <form onSubmit={enviar} className="space-y-5">
+    <form ref={formRef} onSubmit={enviar} className="space-y-5">
+      <AvisoCambios />
       <div>
         <label htmlFor="titulo" className="mb-2 block text-sm font-medium">
           Titulo de la propiedad *
