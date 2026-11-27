@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 export default function BotonPortada({ propiedadId, fotoId, alActualizar, modo = "admin" }) {
   const router = useRouter();
@@ -29,9 +30,15 @@ export default function BotonPortada({ propiedadId, fotoId, alActualizar, modo =
         );
       }
 
+      toast.success("Portada actualizada");
       router.refresh();
       alActualizar?.();
     } catch (fallo) {
+      toast.error(
+        fallo instanceof Error
+          ? fallo.message
+          : "Error al cambiar la portada"
+      );
       setError(
         fallo instanceof Error
           ? fallo.message

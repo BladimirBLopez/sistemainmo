@@ -2,20 +2,21 @@
 
 import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
+import AvisoCambios from "@/components/AvisoCambios";
+import { toast } from "sonner";
 
 export default function FormularioFoto({ propiedadId, alActualizar, modo = "admin" }) {
   const router = useRouter();
   const archivoRef = useRef(null);
   const [subiendo, setSubiendo] = useState(false);
   const [error, setError] = useState("");
-  const [exito, setExito] = useState("");
 
   async function enviar(evento) {
     evento.preventDefault();
     if (subiendo) return;
+    const formulario = evento.currentTarget;
 
     setError("");
-    setExito("");
 
     const archivo = archivoRef.current?.files?.[0];
 
@@ -62,10 +63,16 @@ export default function FormularioFoto({ propiedadId, alActualizar, modo = "admi
         archivoRef.current.value = "";
       }
 
-      setExito("Fotografia guardada correctamente");
+      formulario.dispatchEvent(new Event("guardado"));
+      toast.success("Fotografia guardada");
       router.refresh();
       alActualizar?.();
     } catch (fallo) {
+      toast.error(
+        fallo instanceof Error
+          ? fallo.message
+          : "Error al subir fotografia"
+      );
       setError(
         fallo instanceof Error
           ? fallo.message
@@ -78,10 +85,11 @@ export default function FormularioFoto({ propiedadId, alActualizar, modo = "admi
 
   return (
     <form onSubmit={enviar} className="mt-5 space-y-4">
+      <AvisoCambios />
       <div>
         <label
           htmlFor="fotografia"
-          className="mb-2 block text-sm font-medium text-slate-700"
+          className="label"
         >
           Seleccionar fotografia
         </label>
@@ -107,16 +115,10 @@ export default function FormularioFoto({ propiedadId, alActualizar, modo = "admi
         </p>
       )}
 
-      {exito && (
-        <p role="status" className="text-sm text-green-700">
-          {exito}
-        </p>
-      )}
-
       <button
         type="submit"
         disabled={subiendo}
-        className="rounded-xl bg-brand-600 px-5 py-3 font-semibold text-white disabled:opacity-50"
+        className="btn-primary px-5 py-3"
       >
         {subiendo ? "Subiendo..." : "Subir fotografia"}
       </button>
