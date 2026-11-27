@@ -17,7 +17,7 @@ export default function TarjetaInteractiva({ id, titulo, children, modo = "admin
   }
 
   return (
-    <div>
+    <div className="h-full">
       <div
         role="button"
         tabIndex={0}

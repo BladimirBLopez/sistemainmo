@@ -1,6 +1,6 @@
 import Link from "next/link";
-import Image from "next/image";
 import TarjetaInteractiva from "@/components/admin/TarjetaInteractiva";
+import TarjetaPropiedad from "@/components/TarjetaPropiedad";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { sql } from "@/lib/db";
@@ -82,44 +82,16 @@ export default async function MisPropiedades({ searchParams }) {
           </Link>
         </form>
 
-        <section className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+        <section className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
           {propiedades.map(p => (
             <TarjetaInteractiva
               key={String(p.id)}
               id={String(p.id)}
               titulo={p.titulo}
               modo="agente"
-              className="overflow-hidden rounded-2xl bg-white shadow-sm transition hover:shadow-md"
+              className="block h-full rounded-2xl"
             >
-              <div className="relative aspect-video bg-slate-200">
-                {p.portada_url && (
-                  <Image
-                    src={p.portada_url}
-                    alt={p.titulo}
-                    fill
-                    sizes="(max-width: 768px) 100vw, 33vw"
-                    className="object-cover"
-                  />
-                )}
-              </div>
-
-              <div className="space-y-2 p-5">
-                <p className="text-xs font-semibold text-brand-600">
-                  {p.estado_publicacion}
-                </p>
-                <h2 className="font-bold text-slate-900">{p.titulo}</h2>
-                <p className="text-sm text-slate-500">
-                  {p.tipo} · {[p.zona, p.ciudad].filter(Boolean).join(", ")}
-                </p>
-                <p className="font-bold text-slate-900">
-                  {p.precio != null
-                    ? `${p.moneda === "BOB" ? "Bs" : "USD"} ${Number(p.precio).toLocaleString("es-BO")}`
-                    : "Precio no registrado"}
-                </p>
-                <span className="inline-block text-sm font-semibold text-brand-600">
-                  Ver detalles →
-                </span>
-              </div>
+              <TarjetaPropiedad propiedad={p} />
             </TarjetaInteractiva>
           ))}
         </section>
