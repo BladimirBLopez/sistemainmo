@@ -1,7 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
+import AvisoCambios from "@/components/AvisoCambios";
+import { toast } from "sonner";
 
 const clase = "w-full rounded-xl border border-slate-300 bg-white p-3 text-sm text-slate-900";
 
@@ -12,6 +14,7 @@ export default function FormularioLead({
   edicion = false
 }) {
   const router = useRouter();
+  const formRef = useRef(null);
   const [guardando, setGuardando] = useState(false);
   const [error, setError] = useState("");
   const [estado, setEstado] = useState(lead?.estado || "nuevo");
@@ -51,6 +54,8 @@ export default function FormularioLead({
         throw new Error(resultado.error || "No se pudo guardar el prospecto");
       }
 
+      toast.success(edicion ? "Prospecto actualizado" : "Prospecto creado");
+      formRef.current?.dispatchEvent(new Event("guardado"));
       router.push(
         edicion
           ? `/admin/leads/${lead.id}`
@@ -62,6 +67,7 @@ export default function FormularioLead({
       router.refresh();
 
     } catch (e) {
+      toast.error(e.message || "Error al guardar el prospecto");
       setError(e.message || "Error al guardar el prospecto");
     } finally {
       setGuardando(false);
@@ -69,7 +75,8 @@ export default function FormularioLead({
   }
 
   return (
-    <form onSubmit={guardar} className="space-y-5">
+    <form ref={formRef} onSubmit={guardar} className="space-y-5">
+      <AvisoCambios />
 
       {edicion && (
         <>

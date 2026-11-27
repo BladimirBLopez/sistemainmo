@@ -2,6 +2,8 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import AvisoCambios from "@/components/AvisoCambios";
+import { toast } from "sonner";
 
 const tipos = {
   nota: "Nota",
@@ -79,12 +81,15 @@ export default function PanelActividadesLead({
         throw new Error(resultado.error || "No se pudo registrar la actividad");
       }
 
+      formulario.dispatchEvent(new Event("guardado"));
+      toast.success("Actividad registrada");
       formulario.reset();
       setEstadoActividad("completada");
       setTipoActividad("nota");
       router.refresh();
 
     } catch (fallo) {
+      toast.error(fallo.message || "Error al guardar");
       setError(fallo.message || "Error al guardar");
     } finally {
       setGuardando(false);
@@ -134,6 +139,7 @@ export default function PanelActividadesLead({
         </p>
 
         <form onSubmit={guardar} className="mt-5 space-y-4">
+          <AvisoCambios />
 
           <div className="grid gap-4 sm:grid-cols-2">
             <div>
