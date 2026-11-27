@@ -1,5 +1,8 @@
 "use client";
 
+import { toast } from "sonner";
+import AvisoCambios from "@/components/AvisoCambios";
+
 import { useRef, useState } from "react";
 import AsistenteGemini from "@/components/admin/AsistenteGemini";
 import { useRouter } from "next/navigation";
@@ -141,11 +144,13 @@ export default function FormularioEdicionPropiedad({ propiedad, modo = "admin" }
         );
       }
 
+      toast.success("Cambios guardados");
+      formRef.current?.dispatchEvent(new Event("guardado"));
       router.replace(`${modo === "agente" ? "/agente/propiedades" : "/admin/propiedades"}?ficha=${propiedad.id}`);
       router.refresh();
 
     } catch (fallo) {
-      setError(
+      toast.error(
         fallo instanceof Error
           ? fallo.message
           : "No se pudieron guardar los cambios."
@@ -515,6 +520,7 @@ export default function FormularioEdicionPropiedad({ propiedad, modo = "admin" }
           </button>
         </div>
       </footer>
+      <AvisoCambios />
     </form>
   );
 }
