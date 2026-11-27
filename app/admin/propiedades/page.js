@@ -32,6 +32,7 @@ export default async function PropiedadesPage({ searchParams }) {
   ];
 
   const busqueda = leer("q").slice(0, 100);
+  const ficha = leer("ficha");
   const tipoSolicitado = leer("tipo");
   const tipo = tipos.includes(tipoSolicitado) ? tipoSolicitado : "";
 
@@ -309,6 +310,8 @@ export default async function PropiedadesPage({ searchParams }) {
                   id={String(propiedad.id)}
                   titulo={propiedad.titulo}
                   className="block h-full rounded-2xl"
+                  abiertaInicial={ficha === String(propiedad.id)}
+                  paramUrl="ficha"
                 >
                   <TarjetaPropiedad propiedad={propiedad} />
                 </TarjetaInteractiva>

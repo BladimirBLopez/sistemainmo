@@ -68,7 +68,7 @@ export default async function EditarPropiedadPage({ params }) {
     <PanelShell>
       <div className="mx-auto max-w-5xl space-y-4">
         <Link
-          href={`/admin/propiedades/${id}`}
+          href={`/admin/propiedades?ficha=${id}`}
           className="inline-flex items-center gap-2 text-sm font-semibold text-brand-600 hover:text-brand-800"
         >
           ← Volver a la ficha del inmueble

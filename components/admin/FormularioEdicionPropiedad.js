@@ -141,7 +141,7 @@ export default function FormularioEdicionPropiedad({ propiedad, modo = "admin" }
         );
       }
 
-      router.replace(`${modo === "agente" ? "/agente/propiedades" : "/admin/propiedades"}/${propiedad.id}`);
+      router.replace(`${modo === "agente" ? "/agente/propiedades" : "/admin/propiedades"}?ficha=${propiedad.id}`);
       router.refresh();
 
     } catch (fallo) {
@@ -498,7 +498,7 @@ export default function FormularioEdicionPropiedad({ propiedad, modo = "admin" }
 
         <div className="flex gap-3">
           <Link
-            href={`${modo === "agente" ? "/agente/propiedades" : "/admin/propiedades"}/${propiedad.id}`}
+            href={`${modo === "agente" ? "/agente/propiedades" : "/admin/propiedades"}?ficha=${propiedad.id}`}
             className="inline-flex items-center justify-center gap-2 rounded-xl border border-slate-300 px-4 py-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-50"
           >
             <FiArrowLeft size={17} />

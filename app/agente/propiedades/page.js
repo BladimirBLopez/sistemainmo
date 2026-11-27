@@ -18,6 +18,7 @@ export default async function MisPropiedades({ searchParams }) {
   if (!agente) redirect("/agente/login");
 
   const parametros = searchParams ? await searchParams : {};
+  const ficha = typeof parametros.ficha === "string" ? parametros.ficha : "";
   const q = typeof parametros.q === "string"
     ? parametros.q.trim().slice(0, 100)
     : "";
@@ -89,6 +90,8 @@ export default async function MisPropiedades({ searchParams }) {
               id={String(p.id)}
               titulo={p.titulo}
               modo="agente"
+              abiertaInicial={ficha === String(p.id)}
+              paramUrl="ficha"
               className="block h-full rounded-2xl"
             >
               <TarjetaPropiedad propiedad={p} />
