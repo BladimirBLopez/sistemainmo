@@ -1,3 +1,4 @@
+import EstadoBadge from "@/components/EstadoBadge";
 import Link from "next/link";
 import Image from "next/image";
 import { cookies } from "next/headers";
@@ -85,9 +86,7 @@ export default async function DetallePropiedad({ params }) {
                   ? "Alquiler"
                   : "Operacion no registrada"}
             </span>
-            <span className="rounded-full bg-emerald-50 px-3 py-1 text-sm font-semibold capitalize text-emerald-700">
-              {propiedad.estado_comercial || "Sin estado"}
-            </span>
+            <EstadoBadge estado={propiedad.estado_comercial} />
           </div>
 
           <p className="mt-4 text-2xl font-bold text-slate-900">

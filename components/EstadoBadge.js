@@ -1,8 +1,10 @@
 const ESTILOS = {
   disponible: "badge-ok",
   reservado: "badge-warn",
+  reservada: "badge-warn",
   "en negociacion": "badge-warn",
   vendido: "badge-bad",
+  vendida: "badge-bad",
   alquilado: "badge-bad",
   anticretado: "badge-bad"
 };
