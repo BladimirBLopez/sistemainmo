@@ -2,15 +2,14 @@
 
 import { useState } from "react";
 import { FiLogOut } from "react-icons/fi";
+import { toast } from "sonner";
 
 export default function BotonSalir() {
   const [cargando, setCargando] = useState(false);
-  const [error, setError] = useState("");
 
   async function salir() {
     if (cargando) return;
     setCargando(true);
-    setError("");
 
     try {
       const res = await fetch("/api/logout", {
@@ -22,7 +21,7 @@ export default function BotonSalir() {
 
       window.location.replace("/admin/login");
     } catch {
-      setError("No se pudo cerrar la sesión.");
+      toast.error("No se pudo cerrar la sesión.");
       setCargando(false);
     }
   }
@@ -38,11 +37,6 @@ export default function BotonSalir() {
         <FiLogOut size={18} />
         {cargando ? "Cerrando..." : "Cerrar sesión"}
       </button>
-      {error && (
-        <p role="alert" className="mt-2 px-4 text-sm text-red-300">
-          {error}
-        </p>
-      )}
     </div>
   );
 }
