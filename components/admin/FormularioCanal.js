@@ -2,6 +2,8 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import AvisoCambios from "@/components/AvisoCambios";
+import { toast } from "sonner";
 
 const clase = "input";
 
@@ -9,7 +11,6 @@ export default function FormularioCanal({ campanaId }) {
   const router = useRouter();
   const [guardando, setGuardando] = useState(false);
   const [error, setError] = useState("");
-  const [mensaje, setMensaje] = useState("");
 
   async function guardar(evento) {
     evento.preventDefault();
@@ -18,7 +19,6 @@ export default function FormularioCanal({ campanaId }) {
 
     setGuardando(true);
     setError("");
-    setMensaje("");
 
     const formulario = evento.currentTarget;
 
@@ -42,11 +42,13 @@ export default function FormularioCanal({ campanaId }) {
         throw new Error(resultado.error || "No se pudo guardar");
       }
 
+      formulario.dispatchEvent(new Event("guardado"));
+      toast.success("Canal registrado");
       formulario.reset();
-      setMensaje("Canal registrado correctamente.");
       router.refresh();
 
     } catch (fallo) {
+      toast.error(fallo.message || "Error al registrar canal");
       setError(fallo.message || "Error al registrar canal");
     } finally {
       setGuardando(false);
@@ -55,9 +57,10 @@ export default function FormularioCanal({ campanaId }) {
 
   return (
     <form onSubmit={guardar} className="space-y-4">
+      <AvisoCambios />
 
       <div>
-        <label className="mb-2 block text-sm font-semibold">
+        <label className="label">
           Plataforma *
         </label>
 
@@ -73,7 +76,7 @@ export default function FormularioCanal({ campanaId }) {
       </div>
 
       <div>
-        <label className="mb-2 block text-sm font-semibold">
+        <label className="label">
           Identificador externo
         </label>
         <input
@@ -85,7 +88,7 @@ export default function FormularioCanal({ campanaId }) {
       </div>
 
       <div>
-        <label className="mb-2 block text-sm font-semibold">
+        <label className="label">
           URL externa
         </label>
         <input
@@ -98,7 +101,7 @@ export default function FormularioCanal({ campanaId }) {
       </div>
 
       <div>
-        <label className="mb-2 block text-sm font-semibold">
+        <label className="label">
           Estado
         </label>
         <select name="estado" className={clase}>
@@ -111,12 +114,6 @@ export default function FormularioCanal({ campanaId }) {
       {error && (
         <p className="rounded-xl bg-red-50 p-3 text-sm text-red-700">
           {error}
-        </p>
-      )}
-
-      {mensaje && (
-        <p className="rounded-xl bg-emerald-50 p-3 text-sm text-emerald-700">
-          {mensaje}
         </p>
       )}
 
