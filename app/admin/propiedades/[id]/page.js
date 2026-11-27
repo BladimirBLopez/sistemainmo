@@ -84,7 +84,9 @@ export default async function DetallePropiedad({ params }) {
                 ? "Venta"
                 : propiedad.tipo_operacion === "alquiler"
                   ? "Alquiler"
-                  : "Operacion no registrada"}
+                  : propiedad.tipo_operacion === "anticretico"
+                    ? "Anticrético"
+                    : "Operación no registrada"}
             </span>
             <EstadoBadge estado={propiedad.estado_comercial} />
           </div>

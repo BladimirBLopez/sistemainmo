@@ -6,6 +6,8 @@ const ESTILOS = {
   vendido: "badge-bad",
   vendida: "badge-bad",
   alquilado: "badge-bad",
+  alquilada: "badge-bad",
+  retirada: "badge bg-slate-100 text-slate-600",
   anticretado: "badge-bad"
 };
 
