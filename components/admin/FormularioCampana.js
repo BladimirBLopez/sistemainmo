@@ -1,13 +1,16 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
+import AvisoCambios from "@/components/AvisoCambios";
+import { toast } from "sonner";
 
 const campo = "input";
 
 export default function FormularioCampana({ campana = null }) {
   const editando = Boolean(campana);
   const router = useRouter();
+  const formRef = useRef(null);
   const [guardando, setGuardando] = useState(false);
   const [error, setError] = useState("");
 
@@ -38,10 +41,13 @@ export default function FormularioCampana({ campana = null }) {
         throw new Error(resultado.error || "No se pudo registrar");
       }
 
+      toast.success(editando ? "Campaña actualizada" : "Campaña registrada");
+      formRef.current?.dispatchEvent(new Event("guardado"));
       router.push(editando ? `/admin/marketing/${campana.id}` : "/admin/marketing");
       router.refresh();
 
     } catch (fallo) {
+      toast.error(fallo.message || "Error al registrar campaña");
       setError(fallo.message || "Error al registrar campaña");
     } finally {
       setGuardando(false);
@@ -49,7 +55,8 @@ export default function FormularioCampana({ campana = null }) {
   }
 
   return (
-    <form onSubmit={guardar} className="space-y-6">
+    <form ref={formRef} onSubmit={guardar} className="space-y-6">
+      <AvisoCambios />
 
       <section className="rounded-2xl bg-white p-6 shadow-sm">
         <h3 className="mb-5 text-lg font-bold text-slate-900">
@@ -58,7 +65,7 @@ export default function FormularioCampana({ campana = null }) {
 
         <div className="space-y-4">
           <div>
-            <label className="mb-2 block text-sm font-semibold">
+            <label className="label">
               Nombre de campaña *
             </label>
             <input
@@ -73,7 +80,7 @@ export default function FormularioCampana({ campana = null }) {
           </div>
 
           <div>
-            <label className="mb-2 block text-sm font-semibold">
+            <label className="label">
               Descripción
             </label>
             <textarea
@@ -88,7 +95,7 @@ export default function FormularioCampana({ campana = null }) {
 
           <div className="grid gap-4 sm:grid-cols-2">
             <div>
-              <label className="mb-2 block text-sm font-semibold">
+              <label className="label">
                 Objetivo
               </label>
               <select name="objetivo" defaultValue={campana?.objetivo || "captacion"} className={campo}>
@@ -102,7 +109,7 @@ export default function FormularioCampana({ campana = null }) {
             </div>
 
             <div>
-              <label className="mb-2 block text-sm font-semibold">
+              <label className="label">
                 Tipo de campaña
               </label>
               <select name="tipo" defaultValue={campana?.tipo || "paga"} className={campo}>
@@ -114,7 +121,7 @@ export default function FormularioCampana({ campana = null }) {
           </div>
 
           <div>
-            <label className="mb-2 block text-sm font-semibold">
+            <label className="label">
               Estado
             </label>
             <select name="estado" defaultValue={campana?.estado || "borrador"} className={campo}>
@@ -136,7 +143,7 @@ export default function FormularioCampana({ campana = null }) {
 
         <div className="grid gap-4 sm:grid-cols-2">
           <div>
-            <label className="mb-2 block text-sm font-semibold">
+            <label className="label">
               Presupuesto *
             </label>
             <input
@@ -152,7 +159,7 @@ export default function FormularioCampana({ campana = null }) {
           </div>
 
           <div>
-            <label className="mb-2 block text-sm font-semibold">
+            <label className="label">
               Moneda
             </label>
             <select name="moneda" defaultValue={campana?.moneda || "BOB"} className={campo}>
@@ -170,7 +177,7 @@ export default function FormularioCampana({ campana = null }) {
 
         <div className="grid gap-4 sm:grid-cols-2">
           <div>
-            <label className="mb-2 block text-sm font-semibold">
+            <label className="label">
               Fecha de inicio
             </label>
             <input
@@ -182,7 +189,7 @@ export default function FormularioCampana({ campana = null }) {
           </div>
 
           <div>
-            <label className="mb-2 block text-sm font-semibold">
+            <label className="label">
               Fecha de finalización
             </label>
             <input
@@ -206,7 +213,7 @@ export default function FormularioCampana({ campana = null }) {
           type="button"
           disabled={guardando}
           onClick={() => router.push(editando ? `/admin/marketing/${campana.id}` : "/admin/marketing")}
-          className="rounded-xl border border-slate-300 px-5 py-3 text-sm font-semibold text-slate-700"
+          className="btn-ghost px-5 py-3"
         >
           Cancelar
         </button>
@@ -214,7 +221,7 @@ export default function FormularioCampana({ campana = null }) {
         <button
           type="submit"
           disabled={guardando}
-          className="rounded-xl bg-brand-600 px-6 py-3 text-sm font-bold text-white hover:bg-brand-700 disabled:opacity-50"
+          className="btn-primary px-6 py-3"
         >
           {guardando ? "Guardando..." : editando ? "Guardar cambios" : "Registrar campaña"}
         </button>
