@@ -2,11 +2,14 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { FiLock, FiLogIn } from "react-icons/fi";
+import {
+  FiLock, FiLogIn, FiEye, FiEyeOff, FiAlertCircle
+} from "react-icons/fi";
 
 export default function LoginForm() {
   const router = useRouter();
   const [password, setPassword] = useState("");
+  const [visible, setVisible] = useState(false);
   const [cargando, setCargando] = useState(false);
   const [error, setError] = useState("");
 
@@ -45,23 +48,42 @@ export default function LoginForm() {
   return (
     <form onSubmit={ingresar} className="space-y-5">
       <div>
-        <label className="block mb-2 text-sm font-medium text-slate-700">
+        <label htmlFor="password" className="label">
           Contraseña
         </label>
-        <input
-          type="password"
-          required
-          maxLength={256}
-          autoComplete="current-password"
-          value={password}
-          onChange={e => setPassword(e.target.value)}
-          placeholder="Ingresa tu contraseña"
-          className="w-full rounded-xl border-slate-300"
-        />
+        <div className="relative">
+          <FiLock
+            size={18}
+            className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400"
+          />
+          <input
+            id="password"
+            type={visible ? "text" : "password"}
+            required
+            maxLength={256}
+            autoComplete="current-password"
+            value={password}
+            onChange={e => setPassword(e.target.value)}
+            placeholder="Ingresa tu contraseña"
+            className="input py-3 pl-11 pr-11"
+          />
+          <button
+            type="button"
+            onClick={() => setVisible(v => !v)}
+            aria-label={visible ? "Ocultar contraseña" : "Mostrar contraseña"}
+            className="absolute right-2 top-1/2 -translate-y-1/2 rounded-lg p-2 text-slate-400 transition hover:bg-slate-100 hover:text-slate-600"
+          >
+            {visible ? <FiEyeOff size={18} /> : <FiEye size={18} />}
+          </button>
+        </div>
       </div>
 
       {error && (
-        <p role="alert" className="text-sm text-red-600">
+        <p
+          role="alert"
+          className="flex items-center gap-2 rounded-xl border border-red-100 bg-red-50 px-4 py-3 text-sm text-red-700"
+        >
+          <FiAlertCircle size={18} className="shrink-0" />
           {error}
         </p>
       )}
@@ -69,13 +91,14 @@ export default function LoginForm() {
       <button
         type="submit"
         disabled={cargando}
-        className="flex w-full items-center justify-center gap-2 rounded-xl bg-blue-600 p-3 font-semibold text-white hover:bg-blue-700 disabled:opacity-60"
+        className="btn-primary w-full py-3"
       >
         {cargando ? "Verificando..." : (
-          <><FiLogIn /> Iniciar sesión</>
+          <><FiLogIn size={18} /> Iniciar sesión</>
         )}
       </button>
-      <p className="flex justify-center items-center gap-2 text-xs text-slate-400">
+
+      <p className="flex items-center justify-center gap-2 text-xs text-slate-400">
         <FiLock /> Acceso exclusivo para administradores
       </p>
     </form>

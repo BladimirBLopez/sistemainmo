@@ -25,7 +25,7 @@ export default function TarjetaInteractiva({ id, titulo, children, modo = "admin
         aria-label={`Abrir ficha de ${titulo}`}
         onClick={() => setAbierta(true)}
         onKeyDown={teclado}
-        className={`cursor-pointer outline-none focus-visible:ring-2 focus-visible:ring-blue-600 ${className || "rounded-xl transition-shadow hover:shadow-md"}`}
+        className={`cursor-pointer outline-none focus-visible:ring-2 focus-visible:ring-brand-500 ${className || "rounded-xl transition-shadow hover:shadow-md"}`}
       >
         {children}
       </div>

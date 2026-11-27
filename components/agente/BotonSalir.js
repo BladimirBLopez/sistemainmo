@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { toast } from "sonner";
 import { FiLogOut } from "react-icons/fi";
 
 export default function BotonSalir() {
@@ -21,7 +22,7 @@ export default function BotonSalir() {
 
       window.location.replace("/agente/login");
     } catch {
-      alert("No se pudo cerrar la sesión.");
+      toast.error("No se pudo cerrar la sesión.");
       setCargando(false);
     }
   }
@@ -31,9 +32,9 @@ export default function BotonSalir() {
       type="button"
       onClick={salir}
       disabled={cargando}
-      className="flex w-full items-center justify-center gap-2 rounded-xl border border-red-400/20 bg-red-500/10 px-4 py-3 text-sm font-semibold text-red-200 transition hover:bg-red-500/20 disabled:opacity-50"
+      className="flex w-full items-center gap-3 rounded-xl px-4 py-2.5 text-sm font-medium text-brand-100/80 transition hover:bg-red-500/15 hover:text-red-200 disabled:opacity-50"
     >
-      <FiLogOut size={17} />
+      <FiLogOut size={18} />
       {cargando ? "Cerrando..." : "Cerrar sesión"}
     </button>
   );
