@@ -2,6 +2,8 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import AvisoCambios from "@/components/AvisoCambios";
+import { toast } from "sonner";
 
 const clase = "input";
 
@@ -9,7 +11,6 @@ export default function FormularioGasto({ campanas, fechaActual }) {
   const router = useRouter();
   const [guardando, setGuardando] = useState(false);
   const [error, setError] = useState("");
-  const [mensaje, setMensaje] = useState("");
 
   async function guardar(evento) {
     evento.preventDefault();
@@ -18,7 +19,6 @@ export default function FormularioGasto({ campanas, fechaActual }) {
     const formulario = evento.currentTarget;
     setGuardando(true);
     setError("");
-    setMensaje("");
 
     try {
       const datos = Object.fromEntries(
@@ -39,10 +39,12 @@ export default function FormularioGasto({ campanas, fechaActual }) {
 
       formulario.reset();
       formulario.elements.fecha.value = fechaActual;
-      setMensaje("Gasto registrado correctamente.");
+      formulario.dispatchEvent(new Event("guardado"));
+      toast.success("Gasto registrado");
       router.refresh();
 
     } catch (fallo) {
+      toast.error(fallo.message || "Error al registrar el gasto");
       setError(fallo.message || "Error al registrar el gasto");
     } finally {
       setGuardando(false);
@@ -51,9 +53,10 @@ export default function FormularioGasto({ campanas, fechaActual }) {
 
   return (
     <form onSubmit={guardar} className="space-y-4">
+      <AvisoCambios />
 
       <div>
-        <label className="mb-2 block text-sm font-semibold">
+        <label className="label">
           Campaña relacionada
         </label>
         <select name="campana_id" className={clase}>
@@ -68,7 +71,7 @@ export default function FormularioGasto({ campanas, fechaActual }) {
 
       <div className="grid gap-4 sm:grid-cols-2">
         <div>
-          <label className="mb-2 block text-sm font-semibold">
+          <label className="label">
             Categoría *
           </label>
           <select name="categoria" required className={clase}>
@@ -82,7 +85,7 @@ export default function FormularioGasto({ campanas, fechaActual }) {
         </div>
 
         <div>
-          <label className="mb-2 block text-sm font-semibold">
+          <label className="label">
             Plataforma
           </label>
           <select name="plataforma" className={clase}>
@@ -99,7 +102,7 @@ export default function FormularioGasto({ campanas, fechaActual }) {
       </div>
 
       <div>
-        <label className="mb-2 block text-sm font-semibold">
+        <label className="label">
           Concepto del gasto *
         </label>
         <input
@@ -114,7 +117,7 @@ export default function FormularioGasto({ campanas, fechaActual }) {
 
       <div className="grid gap-4 sm:grid-cols-2">
         <div>
-          <label className="mb-2 block text-sm font-semibold">
+          <label className="label">
             Fecha *
           </label>
           <input
@@ -127,7 +130,7 @@ export default function FormularioGasto({ campanas, fechaActual }) {
         </div>
 
         <div>
-          <label className="mb-2 block text-sm font-semibold">
+          <label className="label">
             Importe *
           </label>
           <input
@@ -143,7 +146,7 @@ export default function FormularioGasto({ campanas, fechaActual }) {
       </div>
 
       <div>
-        <label className="mb-2 block text-sm font-semibold">
+        <label className="label">
           Moneda *
         </label>
         <select name="moneda" required className={clase}>
@@ -153,7 +156,7 @@ export default function FormularioGasto({ campanas, fechaActual }) {
       </div>
 
       <div>
-        <label className="mb-2 block text-sm font-semibold">
+        <label className="label">
           Enlace del comprobante
         </label>
         <input
@@ -171,12 +174,6 @@ export default function FormularioGasto({ campanas, fechaActual }) {
       {error && (
         <p className="rounded-xl bg-red-50 p-3 text-sm text-red-700">
           {error}
-        </p>
-      )}
-
-      {mensaje && (
-        <p className="rounded-xl bg-emerald-50 p-3 text-sm text-emerald-700">
-          {mensaje}
         </p>
       )}
 
