@@ -69,14 +69,14 @@ export default async function MisPropiedades({ searchParams }) {
             defaultValue={q}
             maxLength={100}
             placeholder="Buscar por título, ciudad o zona"
-            className="min-w-0 flex-1 rounded-xl border border-slate-300 p-3"
+            className="input min-w-0 flex-1"
           />
-          <button className="rounded-xl bg-brand-600 px-5 py-3 font-semibold text-white">
+          <button type="submit" className="btn-primary">
             Buscar
           </button>
           <Link
             href="/agente/propiedades"
-            className="rounded-xl border bg-white px-5 py-3 font-semibold"
+            className="btn-ghost"
           >
             Limpiar
           </Link>

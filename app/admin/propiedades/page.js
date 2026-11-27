@@ -6,6 +6,7 @@ import { FiHome, FiSearch, FiPlus, FiMapPin, FiFilter } from "react-icons/fi";
 import { COOKIE_NAME, verificarSesion } from "@/lib/auth";
 import PanelShell from "@/components/admin/PanelShell";
 import TarjetaInteractiva from "@/components/admin/TarjetaInteractiva";
+import EstadoBadge from "@/components/EstadoBadge";
 import { sql } from "@/lib/db";
 
 export const dynamic = "force-dynamic";
@@ -376,9 +377,7 @@ export default async function PropiedadesPage({ searchParams }) {
                         <span className="badge-brand capitalize">
                           {propiedad.tipo}
                         </span>
-                        <span className="badge-ok capitalize">
-                          {propiedad.estado_comercial || "Sin estado"}
-                        </span>
+                        <EstadoBadge estado={propiedad.estado_comercial} />
                       </div>
                     </div>
                   </article>
