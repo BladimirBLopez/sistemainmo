@@ -17,7 +17,7 @@ export default async function EditarProyectoPage({ params }) {
 
   const [proyecto] = await sql`
     SELECT id, nombre, descripcion, tipo, departamento, ciudad, zona, direccion,
-      estado, avance_porcentaje, presupuesto::text AS presupuesto, moneda,
+      estado, avance_porcentaje, avance_modo, presupuesto::text AS presupuesto, moneda,
       fecha_inicio::text AS fecha_inicio,
       fecha_fin_estimada::text AS fecha_fin_estimada,
       fecha_fin_real::text AS fecha_fin_real

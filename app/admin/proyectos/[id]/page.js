@@ -4,6 +4,7 @@ import { redirect, notFound } from "next/navigation";
 import { COOKIE_NAME, verificarSesion } from "@/lib/auth";
 import { sql } from "@/lib/db";
 import PanelShell from "@/components/admin/PanelShell";
+import EtapasProyecto from "@/components/admin/EtapasProyecto";
 
 export const dynamic = "force-dynamic";
 
@@ -19,7 +20,7 @@ export default async function ProyectoPage({ params }) {
 
   const [proyecto] = await sql`
     SELECT id, nombre, descripcion, tipo, departamento, ciudad, zona, direccion,
-      estado, avance_porcentaje, presupuesto::text AS presupuesto, moneda,
+      estado, avance_porcentaje, avance_modo, presupuesto::text AS presupuesto, moneda,
       fecha_inicio::text AS fecha_inicio,
       fecha_fin_estimada::text AS fecha_fin_estimada,
       fecha_fin_real::text AS fecha_fin_real
@@ -27,11 +28,14 @@ export default async function ProyectoPage({ params }) {
   `;
   if (!proyecto) notFound();
 
-  const [unidades, gastos] = await Promise.all([
+  const [unidades, gastos, etapas] = await Promise.all([
     sql`SELECT id, titulo, tipo, estado_comercial
         FROM public.propiedades WHERE proyecto_id = ${id}::bigint ORDER BY id`,
     sql`SELECT moneda, COALESCE(SUM(monto),0)::text AS total
-        FROM public.proyecto_gastos WHERE proyecto_id = ${id}::bigint GROUP BY moneda`
+        FROM public.proyecto_gastos WHERE proyecto_id = ${id}::bigint GROUP BY moneda`,
+    sql`SELECT id::text AS id, nombre, orden, estado, avance_porcentaje,
+          fecha_inicio::text AS fecha_inicio, fecha_fin::text AS fecha_fin
+        FROM public.proyecto_etapas WHERE proyecto_id = ${id}::bigint ORDER BY orden, id`
   ]);
 
   const datos = [
@@ -93,6 +97,8 @@ export default async function ProyectoPage({ params }) {
             ))}
           </article>
         </section>
+
+        <EtapasProyecto proyectoId={String(id)} etapas={etapas} modo={proyecto.avance_modo} />
 
         <section className="rounded-2xl bg-white p-6 shadow-sm">
           <h3 className="font-bold text-slate-900">Unidades del proyecto</h3>

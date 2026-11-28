@@ -13,6 +13,7 @@ export default function FormularioProyecto({ proyecto = null }) {
   const formRef = useRef(null);
   const [guardando, setGuardando] = useState(false);
   const [error, setError] = useState("");
+  const [modo, setModo] = useState(proyecto?.avance_modo ?? "manual");
 
   async function guardar(evento) {
     evento.preventDefault();
@@ -90,9 +91,22 @@ export default function FormularioProyecto({ proyecto = null }) {
             </div>
           </div>
           <div>
+            <label className="label">Modo de avance</label>
+            <select name="avance_modo" value={modo} onChange={e => setModo(e.target.value)} className={campo}>
+              <option value="manual">Manual (yo lo escribo)</option>
+              <option value="auto">Automático (promedio de las etapas)</option>
+            </select>
+          </div>
+          <div>
             <label className="label">Avance general (%)</label>
             <input name="avance_porcentaje" type="number" min="0" max="100" step="1"
-              required defaultValue={v("avance_porcentaje", "0")} className={campo} />
+              required disabled={modo === "auto"} defaultValue={v("avance_porcentaje", "0")} className={campo} />
+            {modo === "auto" && (
+              <>
+                <input type="hidden" name="avance_porcentaje" value={v("avance_porcentaje", "0")} />
+                <p className="mt-1 text-xs text-slate-500">Se calcula solo con las etapas al guardar.</p>
+              </>
+            )}
           </div>
         </div>
       </section>
