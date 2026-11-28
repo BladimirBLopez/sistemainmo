@@ -10,6 +10,8 @@ const rolesDisponibles = [
   ["arrendatario", "Arrendatario"],
   ["buscador", "Buscador de inmuebles"],
   ["vendedor", "Vendedor"],
+  ["contratista", "Contratista"],
+  ["proveedor", "Proveedor"],
   ["otro", "Otro"]
 ];
 

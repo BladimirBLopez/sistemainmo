@@ -169,7 +169,8 @@ export async function POST(request) {
         tipo_operacion, precio, moneda,
         estado_publicacion, estado_comercial,
         dormitorios, banos, parqueos,
-        superficie_terreno_m2, superficie_construida_m2
+        superficie_terreno_m2, superficie_construida_m2,
+        proyecto_id
       )
       VALUES (
         ${titulo}, ${tipo}, ${limpiar("descripcion")},
@@ -184,7 +185,8 @@ export async function POST(request) {
         ${caracteristicas.banos},
         ${caracteristicas.parqueos},
         ${caracteristicas.superficie_terreno_m2},
-        ${caracteristicas.superficie_construida_m2}
+        ${caracteristicas.superficie_construida_m2},
+        ${caracteristicas.proyecto_id}
       )
       RETURNING id
     `;

@@ -4,6 +4,7 @@ import { redirect } from "next/navigation";
 import { FiArrowLeft, FiHome } from "react-icons/fi";
 import { COOKIE_NAME, verificarSesion } from "@/lib/auth";
 import PanelShell from "@/components/admin/PanelShell";
+import { sql } from "@/lib/db";
 import FormularioPropiedad from "@/components/admin/FormularioPropiedad";
 
 export const dynamic = "force-dynamic";
@@ -15,6 +16,9 @@ export default async function NuevaPropiedadPage() {
   if (!(await verificarSesion(token))) {
     redirect("/admin/login");
   }
+
+  const proyectos = (await sql`SELECT id, nombre FROM public.proyectos ORDER BY nombre`)
+    .map(p => ({ id: String(p.id), nombre: p.nombre }));
 
   return (
     <PanelShell>
@@ -45,7 +49,7 @@ export default async function NuevaPropiedadPage() {
             Datos de la propiedad
           </h3>
           <div className="mt-6">
-            <FormularioPropiedad />
+            <FormularioPropiedad proyectos={proyectos} />
           </div>
         </section>
       </div>

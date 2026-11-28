@@ -181,6 +181,7 @@ export async function PUT(request, { params }) {
         parqueos = ${p.parqueos},
         superficie_terreno_m2 = ${p.superficie_terreno_m2},
         superficie_construida_m2 = ${p.superficie_construida_m2},
+        proyecto_id = ${p.proyecto_id},
         actualizado_en = NOW()
       WHERE id = ${id}
       RETURNING id

@@ -8,7 +8,7 @@ import SelectorUbicacion from "@/components/admin/SelectorUbicacion";
 import AvisoCambios from "@/components/AvisoCambios";
 import { toast } from "sonner";
 
-export default function FormularioPropiedad() {
+export default function FormularioPropiedad({ proyectos = [] }) {
   const router = useRouter();
   const fotosRef = useRef(null);
   const formRef = useRef(null);
@@ -209,6 +209,20 @@ export default function FormularioPropiedad() {
           </select>
         </div>
       </div>
+
+      {proyectos.length > 0 && (
+        <div>
+          <label htmlFor="proyecto_id" className="mb-2 block text-sm font-medium">
+            Proyecto (opcional)
+          </label>
+          <select id="proyecto_id" name="proyecto_id" defaultValue="" className="input">
+            <option value="">Sin proyecto</option>
+            {proyectos.map(p => (
+              <option key={p.id} value={p.id}>{p.nombre}</option>
+            ))}
+          </select>
+        </div>
+      )}
 
       <div>
         <label htmlFor="descripcion" className="mb-2 block text-sm font-medium">

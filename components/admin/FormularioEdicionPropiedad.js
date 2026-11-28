@@ -67,7 +67,7 @@ const seccionPorCampo = {
   estado_comercial: "estado"
 };
 
-export default function FormularioEdicionPropiedad({ propiedad, modo = "admin" }) {
+export default function FormularioEdicionPropiedad({ propiedad, modo = "admin", proyectos = [] }) {
   const router = useRouter();
   const formRef = useRef(null);
 
@@ -341,6 +341,25 @@ export default function FormularioEdicionPropiedad({ propiedad, modo = "admin" }
               placeholder="Describe las características y ventajas del inmueble..."
             />
           </div>
+
+          {modo === "admin" && (
+            <div>
+              <label htmlFor="proyecto_id" className={clases.label}>
+                Proyecto (opcional)
+              </label>
+              <select
+                id="proyecto_id"
+                name="proyecto_id"
+                defaultValue={propiedad.proyecto_id || ""}
+                className={clases.input}
+              >
+                <option value="">Sin proyecto</option>
+                {proyectos.map(p => (
+                  <option key={p.id} value={p.id}>{p.nombre}</option>
+                ))}
+              </select>
+            </div>
+          )}
 
           <AsistenteGemini
             propiedadId={propiedad.id}

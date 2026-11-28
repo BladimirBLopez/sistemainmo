@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation";
 import {
   FiGrid, FiHome, FiUsers, FiUserCheck,
   FiTarget, FiCalendar, FiFileText, FiCreditCard,
-  FiBarChart2
+  FiBarChart2, FiBriefcase
 } from "react-icons/fi";
 
 const modulos = [
@@ -74,6 +74,17 @@ export default function MenuAdmin() {
           </div>
         )
       )}
+
+      <Titulo>Constructora</Titulo>
+
+      <Link
+        href="/admin/proyectos"
+        aria-current={esActivo("/admin/proyectos") ? "page" : undefined}
+        className={`${base} ${esActivo("/admin/proyectos") ? activo : inactivo}`}
+      >
+        <FiBriefcase size={18} />
+        <span>Proyectos</span>
+      </Link>
 
       <Titulo>Marketing y crecimiento</Titulo>
 
